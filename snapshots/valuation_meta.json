@@ -1,0 +1,111 @@
+{
+  "mode": "categories",
+  "pool_n": 112,
+  "replacement_value": -6.1,
+  "categories": [
+    "FT%",
+    "3PT%",
+    "DD",
+    "REB",
+    "FGM",
+    "FTM",
+    "PTS",
+    "BLK",
+    "3PM",
+    "STL",
+    "AST",
+    "FG%"
+  ],
+  "league_rates": {
+    "FT%": 0.8104,
+    "3PT%": 0.3689,
+    "FG%": 0.4867
+  },
+  "params": {
+    "FT%": {
+      "kind": "ratio",
+      "rate": 0.8103642530716805,
+      "mu": -1.6256837146296934e-16,
+      "sd": 0.34221213334027883,
+      "reverse": false
+    },
+    "3PT%": {
+      "kind": "ratio",
+      "rate": 0.3688596406854712,
+      "mu": 1.2669676815616324e-16,
+      "sd": 0.15984328326724734,
+      "reverse": false
+    },
+    "DD": {
+      "kind": "count",
+      "rate": null,
+      "mu": 0.2223644789191438,
+      "sd": 0.20548616324352773,
+      "reverse": false
+    },
+    "REB": {
+      "kind": "count",
+      "rate": null,
+      "mu": 6.3855,
+      "sd": 2.6480341933754774,
+      "reverse": false
+    },
+    "FGM": {
+      "kind": "count",
+      "rate": null,
+      "mu": 7.130098214285714,
+      "sd": 1.5546609527012487,
+      "reverse": false
+    },
+    "FTM": {
+      "kind": "count",
+      "rate": null,
+      "mu": 3.660473214285714,
+      "sd": 1.5615632789876066,
+      "reverse": false
+    },
+    "PTS": {
+      "kind": "count",
+      "rate": null,
+      "mu": 19.80388392857143,
+      "sd": 4.721734033294366,
+      "reverse": false
+    },
+    "BLK": {
+      "kind": "count",
+      "rate": null,
+      "mu": 0.728125,
+      "sd": 0.5566868208587815,
+      "reverse": false
+    },
+    "3PM": {
+      "kind": "count",
+      "rate": null,
+      "mu": 1.8831964285714287,
+      "sd": 1.0174519279560734,
+      "reverse": false
+    },
+    "STL": {
+      "kind": "count",
+      "rate": null,
+      "mu": 1.0720625,
+      "sd": 0.29008961919582466,
+      "reverse": false
+    },
+    "AST": {
+      "kind": "count",
+      "rate": null,
+      "mu": 4.557026785714286,
+      "sd": 2.1038392985029497,
+      "reverse": false
+    },
+    "FG%": {
+      "kind": "ratio",
+      "rate": 0.48666409085701334,
+      "mu": -4.24263798696042e-16,
+      "sd": 0.6953950535611794,
+      "reverse": false
+    }
+  },
+  "warnings": []
+}
