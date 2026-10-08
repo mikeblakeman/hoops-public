@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-10-07T12:49-05:00",
- "data_run_ct": "2026-10-07T12:49-05:00",
+ "generated_ct": "2026-10-07T19:24-05:00",
+ "data_run_ct": "2026-10-07T19:24-05:00",
  "date": "2026-10-07",
  "matchup_period": 1,
  "period": {
@@ -511,6 +511,64 @@
  "moves": [
   {
    "add": {
+    "id": "4600663",
+    "name": "Zach Edey",
+    "team": "MEM",
+    "pos": "C",
+    "inj": "",
+    "rank": 72,
+    "matchup_value": 0.1389,
+    "line": {
+     "PTS": 12.7,
+     "REB": 10.8,
+     "AST": 1.2,
+     "STL": 0.7,
+     "BLK": 1.8,
+     "3PM": 0.2,
+     "DD": 0.47
+    },
+    "helps": [
+     "DD",
+     "REB",
+     "FG%"
+    ]
+   },
+   "drop": {
+    "id": "3936099",
+    "name": "Derrick Jones Jr.",
+    "team": "LAC",
+    "pos": "SF/PF",
+    "inj": "",
+    "rank": 234,
+    "matchup_value": 0.0453,
+    "line": {
+     "PTS": 9.7,
+     "REB": 3.4,
+     "AST": 1.1,
+     "STL": 0.9,
+     "BLK": 0.8,
+     "3PM": 1.1,
+     "DD": 0.01
+    },
+    "helps": [
+     "STL",
+     "AST",
+     "REB"
+    ]
+   },
+   "gain": 0.197,
+   "games_left": 3,
+   "plays_today": false,
+   "helps": [
+    "DD",
+    "REB",
+    "FG%"
+   ]
+  }
+ ],
+ "alternatives": [
+  {
+   "add": {
     "id": "4278104",
     "name": "Michael Porter Jr.",
     "team": "BKN",
@@ -564,9 +622,7 @@
     "STL",
     "AST"
    ]
-  }
- ],
- "alternatives": [
+  },
   {
    "add": {
     "id": "4065733",
@@ -790,88 +846,10 @@
     "STL",
     "REB"
    ]
-  },
-  {
-   "add": {
-    "id": "6478",
-    "name": "Nikola Vucevic",
-    "team": "ORL",
-    "pos": "C",
-    "inj": "",
-    "rank": 124,
-    "matchup_value": 0.1022,
-    "line": {
-     "PTS": 13.8,
-     "REB": 7.7,
-     "AST": 2.7,
-     "STL": 0.6,
-     "BLK": 0.6,
-     "3PM": 1.2,
-     "DD": 0.3
-    },
-    "helps": [
-     "DD",
-     "AST",
-     "STL"
-    ]
-   },
-   "drop": {
-    "id": "3936099",
-    "name": "Derrick Jones Jr.",
-    "team": "LAC",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 234,
-    "matchup_value": 0.0453,
-    "line": {
-     "PTS": 9.7,
-     "REB": 3.4,
-     "AST": 1.1,
-     "STL": 0.9,
-     "BLK": 0.8,
-     "3PM": 1.1,
-     "DD": 0.01
-    },
-    "helps": [
-     "STL",
-     "AST",
-     "REB"
-    ]
-   },
-   "gain": 0.131,
-   "games_left": 3,
-   "plays_today": false,
-   "helps": [
-    "DD",
-    "AST",
-    "STL"
-   ]
   }
  ],
  "ir_moves": [],
  "opp_injuries": [
-  {
-   "id": "4593803",
-   "name": "Jalen Williams",
-   "team": "OKC",
-   "pos": "SF/PF",
-   "inj": "DAY_TO_DAY",
-   "rank": 47,
-   "line": {
-    "PTS": 20.6,
-    "REB": 4.9,
-    "AST": 5.3,
-    "STL": 1.4,
-    "BLK": 0.6,
-    "3PM": 1.5,
-    "DD": 0.05
-   },
-   "helps": [
-    "STL",
-    "AST",
-    "REB"
-   ]
-  },
   {
    "id": "1966",
    "name": "LeBron James",
