@@ -1,7 +1,7 @@
 {
- "generated_ct": "2026-10-11T19:46-05:00",
- "data_run_ct": "2026-10-11T19:46-05:00",
- "date": "2026-10-11",
+ "generated_ct": "2026-10-12T14:51-05:00",
+ "data_run_ct": "2026-10-12T14:51-05:00",
+ "date": "2026-10-12",
  "matchup_period": 1,
  "period": {
   "start": "2026-10-20",
@@ -20,60 +20,82 @@
   "name": "Team 8",
   "owners": ""
  },
- "expected_cats": 10.16,
+ "expected_cats": 10.02,
  "player_games_left": {
-  "mine": 35.8,
+  "mine": 35.0,
   "theirs": 27.5
  },
  "categories": [
   {
    "cat": "FT%",
-   "mine": 0.807,
+   "mine": 0.81,
    "theirs": 0.794,
    "now_mine": null,
    "now_theirs": null,
-   "p": 0.575,
+   "p": 0.594,
    "label": "toss-up",
-   "weight": 5.93272,
-   "att_mine": 162.2
+   "weight": 5.84494,
+   "att_mine": 156.1
   },
   {
    "cat": "3PT%",
-   "mine": 0.365,
+   "mine": 0.366,
    "theirs": 0.357,
    "now_mine": null,
    "now_theirs": null,
-   "p": 0.54,
+   "p": 0.551,
    "label": "toss-up",
-   "weight": 5.62986,
-   "att_mine": 202.0
+   "weight": 5.59058,
+   "att_mine": 198.5
   },
   {
    "cat": "DD",
-   "mine": 5.7,
+   "mine": 5.1,
    "theirs": 4.7,
    "now_mine": 0.0,
    "now_theirs": 0.0,
-   "p": 0.671,
-   "label": "favored",
-   "weight": 0.14867,
+   "p": 0.571,
+   "label": "toss-up",
+   "weight": 0.16487,
    "att_mine": null
   },
   {
    "cat": "REB",
-   "mine": 202.9,
+   "mine": 194.1,
    "theirs": 154.2,
    "now_mine": 0.0,
    "now_theirs": 0.0,
-   "p": 0.985,
+   "p": 0.966,
    "label": "safe",
-   "weight": 0.00167,
+   "weight": 0.00346,
    "att_mine": null
   },
   {
    "cat": "FGM",
-   "mine": 263.0,
+   "mine": 258.2,
    "theirs": 166.9,
+   "now_mine": 0.0,
+   "now_theirs": 0.0,
+   "p": 1.0,
+   "label": "safe",
+   "weight": 2e-05,
+   "att_mine": null
+  },
+  {
+   "cat": "FTM",
+   "mine": 126.4,
+   "theirs": 77.9,
+   "now_mine": 0.0,
+   "now_theirs": 0.0,
+   "p": 0.992,
+   "label": "safe",
+   "weight": 0.00108,
+   "att_mine": null
+  },
+  {
+   "cat": "PTS",
+   "mine": 715.3,
+   "theirs": 456.4,
    "now_mine": 0.0,
    "now_theirs": 0.0,
    "p": 1.0,
@@ -82,81 +104,59 @@
    "att_mine": null
   },
   {
-   "cat": "FTM",
-   "mine": 130.8,
-   "theirs": 77.9,
-   "now_mine": 0.0,
-   "now_theirs": 0.0,
-   "p": 0.995,
-   "label": "safe",
-   "weight": 0.00068,
-   "att_mine": null
-  },
-  {
-   "cat": "PTS",
-   "mine": 730.2,
-   "theirs": 456.4,
-   "now_mine": 0.0,
-   "now_theirs": 0.0,
-   "p": 1.0,
-   "label": "safe",
-   "weight": 0.0,
-   "att_mine": null
-  },
-  {
    "cat": "BLK",
-   "mine": 29.4,
+   "mine": 27.0,
    "theirs": 13.3,
    "now_mine": 0.0,
    "now_theirs": 0.0,
-   "p": 0.98,
+   "p": 0.97,
    "label": "safe",
-   "weight": 0.00624,
+   "weight": 0.0093,
    "att_mine": null
   },
   {
    "cat": "3PM",
-   "mine": 73.6,
+   "mine": 72.7,
    "theirs": 45.0,
    "now_mine": 0.0,
    "now_theirs": 0.0,
-   "p": 0.99,
+   "p": 0.988,
    "label": "safe",
-   "weight": 0.00222,
+   "weight": 0.0026,
    "att_mine": null
   },
   {
    "cat": "STL",
-   "mine": 41.5,
+   "mine": 40.9,
    "theirs": 31.0,
    "now_mine": 0.0,
    "now_theirs": 0.0,
-   "p": 0.89,
+   "p": 0.878,
    "label": "safe",
-   "weight": 0.02191,
+   "weight": 0.02357,
    "att_mine": null
   },
   {
    "cat": "AST",
-   "mine": 148.7,
+   "mine": 142.9,
    "theirs": 112.7,
    "now_mine": 0.0,
    "now_theirs": 0.0,
-   "p": 0.963,
+   "p": 0.936,
    "label": "safe",
-   "weight": 0.00401,
+   "weight": 0.0063,
    "att_mine": null
   },
   {
    "cat": "FG%",
-   "mine": 0.482,
+   "mine": 0.483,
    "theirs": 0.474,
    "now_mine": null,
    "now_theirs": null,
-   "p": 0.569,
+   "p": 0.574,
    "label": "toss-up",
-   "weight": 8.88708,
-   "att_mine": 545.4
+   "weight": 8.8349,
+   "att_mine": 534.9
   }
  ],
  "lineup": {
@@ -168,13 +168,13 @@
     "name": "Victor Wembanyama",
     "team": "SAS",
     "pos": "C",
-    "inj": "",
+    "inj": "DAY_TO_DAY",
     "rank": 3,
     "slot": "C",
     "opp": "OKC",
     "tip": "20:30",
     "home_away": "home",
-    "matchup_value": 0.2008,
+    "matchup_value": 0.1929,
     "line": {
      "PTS": 26.9,
      "REB": 12.4,
@@ -186,7 +186,7 @@
     },
     "helps": [
      "DD",
-     "STL",
+     "REB",
      "BLK"
     ]
    },
@@ -201,7 +201,7 @@
     "opp": "PHL",
     "tip": "18:00",
     "home_away": "home",
-    "matchup_value": 0.0979,
+    "matchup_value": 0.1264,
     "line": {
      "PTS": 26.9,
      "REB": 3.3,
@@ -222,13 +222,13 @@
     "name": "Stephon Castle",
     "team": "SAS",
     "pos": "PG/SG",
-    "inj": "",
+    "inj": "DAY_TO_DAY",
     "rank": 76,
     "slot": "SG",
     "opp": "OKC",
     "tip": "20:30",
     "home_away": "home",
-    "matchup_value": 0.0907,
+    "matchup_value": 0.0949,
     "line": {
      "PTS": 18.1,
      "REB": 5.6,
@@ -239,8 +239,8 @@
      "DD": 0.28
     },
     "helps": [
-     "DD",
      "AST",
+     "DD",
      "STL"
     ]
    },
@@ -255,7 +255,7 @@
     "opp": "DET",
     "tip": "14:00",
     "home_away": "away",
-    "matchup_value": 0.058,
+    "matchup_value": 0.0854,
     "line": {
      "PTS": 16.6,
      "REB": 4.5,
@@ -266,9 +266,9 @@
      "DD": 0.04
     },
     "helps": [
-     "STL",
      "AST",
-     "FT%"
+     "STL",
+     "REB"
     ]
    }
   ],
@@ -294,7 +294,7 @@
     "helps": [
      "STL",
      "AST",
-     "DD"
+     "REB"
     ]
    },
    {
@@ -315,9 +315,9 @@
      "DD": 0.0
     },
     "helps": [
-     "STL",
      "AST",
-     "3PT%"
+     "STL",
+     "REB"
     ]
    },
    {
@@ -339,7 +339,7 @@
     },
     "helps": [
      "STL",
-     "DD",
+     "REB",
      "BLK"
     ]
    },
@@ -348,7 +348,7 @@
     "name": "Kawhi Leonard",
     "team": "TOR",
     "pos": "SF/PF",
-    "inj": "DAY_TO_DAY",
+    "inj": "",
     "rank": 7,
     "why": "no game",
     "line": {
@@ -362,8 +362,8 @@
     },
     "helps": [
      "STL",
-     "DD",
-     "AST"
+     "AST",
+     "REB"
     ]
    },
    {
@@ -385,8 +385,8 @@
     },
     "helps": [
      "DD",
-     "FG%",
-     "STL"
+     "REB",
+     "FG%"
     ]
    },
    {
@@ -407,8 +407,8 @@
      "DD": 0.13
     },
     "helps": [
+     "REB",
      "DD",
-     "STL",
      "AST"
     ]
    },
@@ -430,9 +430,9 @@
      "DD": 0.0
     },
     "helps": [
-     "STL",
      "AST",
-     "3PM"
+     "STL",
+     "REB"
     ]
    },
    {
@@ -455,7 +455,7 @@
     "helps": [
      "STL",
      "AST",
-     "3PM"
+     "REB"
     ]
    },
    {
@@ -477,8 +477,8 @@
     },
     "helps": [
      "STL",
-     "DD",
-     "AST"
+     "AST",
+     "DD"
     ]
    },
    {
@@ -517,7 +517,7 @@
     "pos": "C",
     "inj": "",
     "rank": 73,
-    "matchup_value": 0.1314,
+    "matchup_value": 0.1684,
     "line": {
      "PTS": 12.7,
      "REB": 10.8,
@@ -540,7 +540,7 @@
     "pos": "SF/PF",
     "inj": "",
     "rank": 238,
-    "matchup_value": 0.0373,
+    "matchup_value": 0.0505,
     "line": {
      "PTS": 9.7,
      "REB": 3.4,
@@ -556,7 +556,7 @@
      "BLK"
     ]
    },
-   "gain": 0.196,
+   "gain": 0.243,
    "games_left": 3,
    "plays_today": false,
    "helps": [
@@ -569,26 +569,26 @@
  "alternatives": [
   {
    "add": {
-    "id": "4065733",
-    "name": "Ty Jerome",
-    "team": "MEM",
-    "pos": "PG/SG",
+    "id": "4278104",
+    "name": "Michael Porter Jr.",
+    "team": "BKN",
+    "pos": "SF/PF",
     "inj": "",
-    "rank": 29,
-    "matchup_value": 0.1031,
+    "rank": 35,
+    "matchup_value": 0.122,
     "line": {
-     "PTS": 20.5,
-     "REB": 3.3,
-     "AST": 5.8,
-     "STL": 1.4,
-     "BLK": 0.2,
-     "3PM": 2.8,
-     "DD": 0.08
+     "PTS": 23.5,
+     "REB": 7.2,
+     "AST": 2.9,
+     "STL": 1.0,
+     "BLK": 0.3,
+     "3PM": 3.3,
+     "DD": 0.23
     },
     "helps": [
-     "STL",
-     "AST",
-     "DD"
+     "DD",
+     "REB",
+     "STL"
     ]
    },
    "drop": {
@@ -598,7 +598,7 @@
     "pos": "SF/PF",
     "inj": "",
     "rank": 238,
-    "matchup_value": 0.0373,
+    "matchup_value": 0.0505,
     "line": {
      "PTS": 9.7,
      "REB": 3.4,
@@ -614,13 +614,13 @@
      "BLK"
     ]
    },
-   "gain": 0.157,
+   "gain": 0.204,
    "games_left": 3,
    "plays_today": false,
    "helps": [
-    "STL",
-    "AST",
-    "DD"
+    "DD",
+    "REB",
+    "STL"
    ]
   },
   {
@@ -631,7 +631,7 @@
     "pos": "PF",
     "inj": "",
     "rank": 63,
-    "matchup_value": 0.1,
+    "matchup_value": 0.1312,
     "line": {
      "PTS": 18.5,
      "REB": 7.9,
@@ -643,8 +643,8 @@
     },
     "helps": [
      "DD",
-     "STL",
-     "REB"
+     "REB",
+     "STL"
     ]
    },
    "drop": {
@@ -654,7 +654,7 @@
     "pos": "SF/PF",
     "inj": "",
     "rank": 238,
-    "matchup_value": 0.0373,
+    "matchup_value": 0.0505,
     "line": {
      "PTS": 9.7,
      "REB": 3.4,
@@ -670,37 +670,37 @@
      "BLK"
     ]
    },
-   "gain": 0.143,
+   "gain": 0.185,
    "games_left": 3,
    "plays_today": false,
    "helps": [
     "DD",
-    "STL",
-    "REB"
+    "REB",
+    "STL"
    ]
   },
   {
    "add": {
-    "id": "4397140",
-    "name": "Kevin Porter Jr.",
-    "team": "MIL",
+    "id": "4065733",
+    "name": "Ty Jerome",
+    "team": "MEM",
     "pos": "PG/SG",
     "inj": "",
-    "rank": 86,
-    "matchup_value": 0.0984,
+    "rank": 29,
+    "matchup_value": 0.1285,
     "line": {
-     "PTS": 14.1,
-     "REB": 4.3,
-     "AST": 5.7,
-     "STL": 1.7,
-     "BLK": 0.4,
-     "3PM": 1.0,
-     "DD": 0.17
+     "PTS": 20.5,
+     "REB": 3.3,
+     "AST": 5.8,
+     "STL": 1.4,
+     "BLK": 0.2,
+     "3PM": 2.8,
+     "DD": 0.08
     },
     "helps": [
+     "AST",
      "STL",
-     "DD",
-     "AST"
+     "DD"
     ]
    },
    "drop": {
@@ -710,7 +710,7 @@
     "pos": "SF/PF",
     "inj": "",
     "rank": 238,
-    "matchup_value": 0.0373,
+    "matchup_value": 0.0505,
     "line": {
      "PTS": 9.7,
      "REB": 3.4,
@@ -726,36 +726,36 @@
      "BLK"
     ]
    },
-   "gain": 0.134,
+   "gain": 0.179,
    "games_left": 3,
    "plays_today": false,
    "helps": [
+    "AST",
     "STL",
-    "DD",
-    "AST"
+    "DD"
    ]
   },
   {
    "add": {
-    "id": "5095151",
-    "name": "Caleb Wilson",
-    "team": "CHI",
-    "pos": "SF",
+    "id": "6442",
+    "name": "Kyrie Irving",
+    "team": "DAL",
+    "pos": "PG",
     "inj": "",
-    "rank": 68,
-    "matchup_value": 0.0952,
+    "rank": 18,
+    "matchup_value": 0.1239,
     "line": {
-     "PTS": 17.9,
-     "REB": 8.1,
-     "AST": 1.9,
-     "STL": 1.1,
-     "BLK": 1.4,
-     "3PM": 0.7,
-     "DD": 0.31
+     "PTS": 24.6,
+     "REB": 4.8,
+     "AST": 4.8,
+     "STL": 1.3,
+     "BLK": 0.5,
+     "3PM": 2.8,
+     "DD": 0.05
     },
     "helps": [
-     "DD",
      "STL",
+     "AST",
      "REB"
     ]
    },
@@ -766,7 +766,7 @@
     "pos": "SF/PF",
     "inj": "",
     "rank": 238,
-    "matchup_value": 0.0373,
+    "matchup_value": 0.0505,
     "line": {
      "PTS": 9.7,
      "REB": 3.4,
@@ -782,37 +782,37 @@
      "BLK"
     ]
    },
-   "gain": 0.125,
+   "gain": 0.179,
    "games_left": 3,
    "plays_today": false,
    "helps": [
-    "DD",
     "STL",
+    "AST",
     "REB"
    ]
   },
   {
    "add": {
-    "id": "6478",
-    "name": "Nikola Vucevic",
-    "team": "ORL",
+    "id": "4431680",
+    "name": "Onyeka Okongwu",
+    "team": "ATL",
     "pos": "C",
     "inj": "",
-    "rank": 125,
-    "matchup_value": 0.0909,
+    "rank": 77,
+    "matchup_value": 0.1256,
     "line": {
-     "PTS": 13.8,
-     "REB": 7.7,
-     "AST": 2.7,
-     "STL": 0.6,
-     "BLK": 0.6,
-     "3PM": 1.2,
-     "DD": 0.3
+     "PTS": 15.0,
+     "REB": 7.8,
+     "AST": 3.0,
+     "STL": 1.1,
+     "BLK": 1.0,
+     "3PM": 1.8,
+     "DD": 0.24
     },
     "helps": [
      "DD",
-     "STL",
-     "REB"
+     "REB",
+     "STL"
     ]
    },
    "drop": {
@@ -822,7 +822,7 @@
     "pos": "SF/PF",
     "inj": "",
     "rank": 238,
-    "matchup_value": 0.0373,
+    "matchup_value": 0.0505,
     "line": {
      "PTS": 9.7,
      "REB": 3.4,
@@ -838,13 +838,13 @@
      "BLK"
     ]
    },
-   "gain": 0.125,
+   "gain": 0.177,
    "games_left": 3,
    "plays_today": false,
    "helps": [
     "DD",
-    "STL",
-    "REB"
+    "REB",
+    "STL"
    ]
   }
  ],
@@ -867,8 +867,8 @@
     "DD": 0.05
    },
    "helps": [
-    "STL",
     "AST",
+    "STL",
     "REB"
    ]
   },
@@ -913,7 +913,7 @@
    "helps": [
     "AST",
     "STL",
-    "FT%"
+    "REB"
    ]
   },
   {
@@ -957,7 +957,7 @@
    "helps": [
     "STL",
     "AST",
-    "FT%"
+    "REB"
    ]
   },
   {
@@ -979,7 +979,7 @@
    "helps": [
     "STL",
     "AST",
-    "3PT%"
+    "REB"
    ]
   }
  ]
