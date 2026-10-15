@@ -73,9 +73,9 @@ def main(snap, out):
         bd["opponent"]["name"] = f"Team {bd['opponent'].get('team_id')}"
         bd["opponent"]["owners"] = ""
         (s_out / "brief_data.json").write_text(scrub(json.dumps(bd, indent=1), secrets))
-    hist = snap / "history"
-    if hist.exists():
-        shutil.copytree(hist, s_out / "history")
+    for sub in ("history", "preseason"):
+        if (snap / sub).exists():
+            shutil.copytree(snap / sub, s_out / sub)
 
     # code and public playbooks
     for d in ("relay", "tools"):

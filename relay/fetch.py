@@ -15,6 +15,7 @@ from pathlib import Path
 from . import bio as B
 from . import calendar as C
 from . import matchup as MU
+from . import preseason as PS
 from . import normalize as N
 from . import valuations as V
 from .espn_client import EspnAuthError, EspnClient
@@ -188,6 +189,16 @@ def run(out_dir, client, my_swid):
     nw = step("news", client.news)
     if nw:
         write_csv(out / "news.csv", N.news(nw))
+
+    # preseason box scores (only until the regular season starts)
+    today_ct = datetime.now(timezone.utc).astimezone(N.CT).date()
+    if today_ct.isoformat() <= "2026-10-21" and hasattr(client, "_get"):
+        res = step("preseason", lambda: PS.update(
+            lambda url, params: client._get(url, params=params, auth=False), out, today_ct))
+        if res:
+            status["preseason_games"], status["preseason_new"] = res[0], res[1]
+            if res[2]:
+                write_json(out / "debug" / "preseason_sample.json", res[2])
 
     # small raw samples so parsing can be checked without the full payloads
     raw_settings = (league.get("settings") or {})
