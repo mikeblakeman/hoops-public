@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-10-14T18:27-05:00",
- "data_run_ct": "2026-10-14T18:27-05:00",
+ "generated_ct": "2026-10-14T19:09-05:00",
+ "data_run_ct": "2026-10-14T19:09-05:00",
  "date": "2026-10-14",
  "matchup_period": 1,
  "period": {
@@ -681,62 +681,6 @@
   },
   {
    "add": {
-    "id": "4397140",
-    "name": "Kevin Porter Jr.",
-    "team": "MIL",
-    "pos": "PG/SG",
-    "inj": "",
-    "rank": 86,
-    "matchup_value": 0.1635,
-    "line": {
-     "PTS": 14.1,
-     "REB": 4.3,
-     "AST": 5.7,
-     "STL": 1.7,
-     "BLK": 0.4,
-     "3PM": 1.0,
-     "DD": 0.17
-    },
-    "helps": [
-     "AST",
-     "STL",
-     "DD"
-    ]
-   },
-   "drop": {
-    "id": "3936099",
-    "name": "Derrick Jones Jr.",
-    "team": "LAC",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 238,
-    "matchup_value": 0.0629,
-    "line": {
-     "PTS": 9.7,
-     "REB": 3.4,
-     "AST": 1.1,
-     "STL": 0.9,
-     "BLK": 0.8,
-     "3PM": 1.1,
-     "DD": 0.01
-    },
-    "helps": [
-     "STL",
-     "REB",
-     "AST"
-    ]
-   },
-   "gain": 0.223,
-   "games_left": 3,
-   "plays_today": false,
-   "helps": [
-    "AST",
-    "STL",
-    "DD"
-   ]
-  },
-  {
-   "add": {
     "id": "4600663",
     "name": "Zach Edey",
     "team": "MEM",
@@ -845,6 +789,62 @@
     "DD",
     "STL",
     "AST"
+   ]
+  },
+  {
+   "add": {
+    "id": "3917376",
+    "name": "Jaylen Brown",
+    "team": "PHL",
+    "pos": "SG/SF",
+    "inj": "DAY_TO_DAY",
+    "rank": 56,
+    "matchup_value": 0.0958,
+    "line": {
+     "PTS": 23.9,
+     "REB": 5.9,
+     "AST": 4.3,
+     "STL": 1.1,
+     "BLK": 0.4,
+     "3PM": 1.9,
+     "DD": 0.15
+    },
+    "helps": [
+     "AST",
+     "STL",
+     "DD"
+    ]
+   },
+   "drop": {
+    "id": "3936099",
+    "name": "Derrick Jones Jr.",
+    "team": "LAC",
+    "pos": "SF/PF",
+    "inj": "",
+    "rank": 238,
+    "matchup_value": 0.0629,
+    "line": {
+     "PTS": 9.7,
+     "REB": 3.4,
+     "AST": 1.1,
+     "STL": 0.9,
+     "BLK": 0.8,
+     "3PM": 1.1,
+     "DD": 0.01
+    },
+    "helps": [
+     "STL",
+     "REB",
+     "AST"
+    ]
+   },
+   "gain": 0.185,
+   "games_left": 4,
+   "plays_today": true,
+   "helps": [
+    "AST",
+    "STL",
+    "DD"
    ]
   }
  ],
