@@ -93,8 +93,13 @@ def build(snap, kind="morning", teams=None):
                                f"+{m['gain']:.2f} expected categories."})
     if lu.get("open_slots"):
         n = lu["open_slots"]
-        actions.append({"kind": "watch", "text": f"{n} lineup spot{'s' if n != 1 else ''} empty today.",
-                        "why": "Fill them with a free agent who plays today if a move above does not."})
+        room = bd.get("roster_room") or {}
+        has_room = bool(bd.get("fills") or room.get("empty") or room.get("via_ir"))
+        why = ("Fill them with a free agent who plays today if a move above does not." if has_room or top else
+               "Your roster is full and the model finds no add worth a drop, so no move is needed.")
+        actions.append({"kind": "watch", "text": f"{n} lineup spot{'s' if n != 1 else ''} empty today "
+                                                 f"(only {len(lu.get('starters', []))} of your players have games).",
+                        "why": why})
 
     doc = {
         "date": bd["date"],

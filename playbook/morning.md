@@ -16,7 +16,8 @@ Follow `playbook/common.md` first.
    - `headline`: one sentence on what matters most today (mention any game that tips before 6 PM Central).
    - `summary`: two or three sentences on the matchup state and the plan.
    - `news`: `[{player, text, source, url}]`, only items that affect a decision.
-5. Mondays (or the first day of a new matchup): weekly review.
+5. Mondays (or the first day of a new matchup): weekly review. Skip it, and leave `weekly` null, until a matchup
+   has finished (the brief's `matchup_period` is 2 or later and `ledger/summary.json` exists).
    - Decisions: read `ledger/summary.json` (graded by the data job): `add_win_rate`, `adds_graded`, `misses`.
    - Expert calls: export the page database collection `calls` (ArtifactData list with `out_dir` ~/calls), then run
      `python tools/grade.py snapshots --ledger ~/ledger --calls-dir ~/calls` and read `~/ledger/summary.json` `sources`.
