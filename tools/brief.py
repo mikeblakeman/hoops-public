@@ -19,6 +19,12 @@ ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "ledger"
 DEC_FIELDS = ["date", "kind", "matchup_period", "rec", "player_id", "name", "team",
               "related_id", "related_name", "gain", "note"]
+# the brief page renders every pickup as "Add X ... Drop Y"; a fill drops no one
+OPEN_SPOT = {"id": "", "name": "no one (open spot)", "team": "", "pos": "", "inj": "", "line": {}, "helps": []}
+
+
+def as_move(f):
+    return dict(f, drop=OPEN_SPOT)
 
 
 def rows(p):
@@ -68,6 +74,15 @@ def build(snap, kind="morning", teams=None):
                             "why": "Your starters with games rate higher in this matchup."})
     for p in bd.get("ir_moves", []):
         actions.append({"kind": "ir", "text": sentence(f"Move {p['name']} to IR"), "why": "He is out; this frees a roster spot for a streamer."})
+    for f in bd.get("fills", []):
+        a = f["add"]
+        where = (f"Then add {a['name']} ({a['team']}) to the spot that opens" if f.get("after_ir_move")
+                 else f"Add {a['name']} ({a['team']}) to your open roster spot")
+        today = "plays today, " if f["plays_today"] else ""
+        helps = ", ".join(f["helps"]) or "several categories"
+        actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"),
+                        "why": f"{today}{f['games_left']} games left this matchup; helps {helps}. "
+                               f"+{f['gain']:.2f} expected categories."})
     top = [m for m in bd["moves"] if m["gain"] >= 0.05][:2]
     for m in top:
         a, d = m["add"], m["drop"]
@@ -92,8 +107,9 @@ def build(snap, kind="morning", teams=None):
                                        "expected_cats", "player_games_left", "categories")},
         "actions": actions,
         "lineup": lu,
-        "moves": bd["moves"],
-        "alternatives": bd["alternatives"],
+        "moves": [as_move(f) for f in bd.get("fills", [])] + bd["moves"],
+        "alternatives": [as_move(f) for f in bd.get("fill_alternatives", [])] + bd["alternatives"],
+        "roster_room": bd.get("roster_room"),
         "opp_injuries": bd.get("opp_injuries", []),
         "injury_notes": [{"name": inj[i]["name"], "status": inj[i]["status"], "comment": inj[i]["comment"]}
                          for i in mine_ids if i in inj],
@@ -120,6 +136,10 @@ def log_decisions(bd, kind):
         new.append({"rec": "start", "player_id": p["id"], "name": p["name"], "team": p["team"]})
     for p in bd["lineup"]["bench"]:
         new.append({"rec": "bench", "player_id": p["id"], "name": p["name"], "team": p["team"], "note": p.get("why", "")})
+    for recs, rec in ((bd.get("fills", []), "add"), (bd.get("fill_alternatives", []), "pass")):
+        for f in recs:
+            new.append({"rec": rec, "player_id": f["add"]["id"], "name": f["add"]["name"], "team": f["add"]["team"],
+                        "related_id": "", "related_name": "open spot", "gain": f["gain"]})
     for m in bd["moves"]:
         new.append({"rec": "add", "player_id": m["add"]["id"], "name": m["add"]["name"], "team": m["add"]["team"],
                     "related_id": m["drop"]["id"], "related_name": m["drop"]["name"], "gain": m["gain"]})

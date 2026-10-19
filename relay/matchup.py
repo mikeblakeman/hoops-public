@@ -15,6 +15,10 @@ Model
 - Matchup weights: marginal win probability per unit of each category. A
   player's matchup value is his stat line priced by those weights, so close
   categories matter and settled ones don't.
+- Moves: "fills" add a free agent into an open roster spot (empty now, or
+  opened by moving an out player to IR), picked greedily by expected
+  categories gained. "moves" swap a free agent for a droppable player
+  (ranked worse than 100).
 """
 import csv
 import json
@@ -274,6 +278,18 @@ def helps(p, O, top=3):
     return [c for x, c in parts[:top] if x > 0.002]
 
 
+def roster_room(D, ir_moves):
+    """(empty active roster spots now, ir_moves that fit in open IR slots).
+    Active capacity is every non-IR lineup slot, bench included."""
+    ls = D.settings.get("lineup_slots") or {}
+    cap_active = sum(int(v) for k, v in ls.items() if k != "IR")
+    cap_ir = int(ls.get("IR", 0))
+    rows = [r for r in D.roster if r["team_id"] == D.my_tid]
+    n_ir = sum(1 for r in rows if r.get("slot") == "IR")
+    empty = max(0, cap_active - (len(rows) - n_ir))
+    return empty, ir_moves[:max(0, cap_ir - n_ir)]
+
+
 def outlook(D, mine, opp_sim, sps, key_m, cur_m, cur_o, bench_negative=False):
     rm, vm, gm = simulate(D, mine, sps, key_m, bench_negative)
     ro, vo, go = opp_sim
@@ -281,7 +297,7 @@ def outlook(D, mine, opp_sim, sps, key_m, cur_m, cur_o, bench_negative=False):
 
 
 # ---------------------------------------------------------------- main
-def build(snap, today=None, n_fa=60, n_moves=5):
+def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
     D = Data(snap)
     today = today or today_ct()
     mp, sps, prow = current_period(D, today)
@@ -332,6 +348,43 @@ def build(snap, today=None, n_fa=60, n_moves=5):
     fa = [p for p in fa if p and p["avail"] > 0 and any(plays(D, p, sp) for sp in sps)]
     fa.sort(key=lambda p: -key(p) * sum(1 for sp in sps if plays(D, p, sp)))
     fa = fa[:n_fa]
+
+    def games_left(x):
+        return sum(1 for sp in sps if plays(D, x, sp))
+
+    def move_info(x, gain, drop=None):
+        m = {"add": _pinfo(x, O, mv=key(x)), "gain": round(gain, 3), "games_left": games_left(x),
+             "plays_today": bool(sp0 and plays(D, x, sp0)), "helps": helps(x, O)}
+        if drop is not None:
+            m["drop"] = _pinfo(drop, O, mv=key(drop))
+        return m
+
+    # fills: open roster spots (empty now, then any opened by IR moves), one
+    # greedy pick at a time so each add accounts for the ones before it
+    empty, ir_room = roster_room(D, ir_moves)
+    spots = ([None] * empty + list(ir_room))[:max_fills]
+    fills, fill_alts = [], []
+    roster_f, base_f, pool = list(mine), base_exp, list(fa)
+    for via_ir in spots:
+        scored = []
+        for x in pool:
+            O2, _, _ = outlook(D, roster_f + [x], opp_sim, sps, key, cur_m, cur_o, True)
+            scored.append((sum(o["p"] for o in O2.values()) - base_f, x))
+        scored.sort(key=lambda t: -t[0])
+        if not scored or scored[0][0] <= 0.005:
+            break
+        gain, x = scored[0]
+        f = move_info(x, gain)
+        f["after_ir_move"] = via_ir["name"] if via_ir else None
+        fills.append(f)
+        if not fill_alts:
+            fill_alts = [move_info(y, g) for g, y in scored[1:1 + n_moves] if g > 0.005]
+        roster_f.append(x)
+        base_f += gain
+        pool.remove(x)
+    fill_ids = {f["add"]["id"] for f in fills}
+    fa = [x for x in fa if x["id"] not in fill_ids]
+
     moves = []
     for x in fa:
         best = None
@@ -342,11 +395,7 @@ def build(snap, today=None, n_fa=60, n_moves=5):
             if best is None or gain > best[0]:
                 best = (gain, d)
         if best and best[0] > 0.01:
-            g_left = sum(1 for sp in sps if plays(D, x, sp))
-            moves.append({"add": _pinfo(x, O, mv=key(x)), "drop": _pinfo(best[1], O, mv=key(best[1])),
-                          "gain": round(best[0], 3), "games_left": g_left,
-                          "plays_today": bool(sp0 and plays(D, x, sp0)),
-                          "helps": helps(x, O)})
+            moves.append(move_info(x, best[0], drop=best[1]))
     moves.sort(key=lambda m: -m["gain"])
     # keep one move per drop candidate at the top, then the rest as alternatives
     chosen, used = [], set()
@@ -381,6 +430,9 @@ def build(snap, today=None, n_fa=60, n_moves=5):
         "player_games_left": {"mine": round(gm, 1), "theirs": round(go, 1)},
         "categories": cats,
         "lineup": lineup,
+        "roster_room": {"empty": empty, "via_ir": [p["name"] for p in ir_room]},
+        "fills": fills,
+        "fill_alternatives": fill_alts,
         "moves": chosen,
         "alternatives": alternatives,
         "ir_moves": [_pinfo(p, O) for p in ir_moves],
