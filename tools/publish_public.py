@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SAFE_CSV = ["valuations.csv", "players.csv", "rosters.csv", "matchups.csv", "schedule.csv",
             "daily_slate.csv", "schedule_grid.csv", "matchup_calendar.csv", "matchup_periods.csv",
             "scoring_period_dates.csv", "injuries.csv", "news.csv", "draft_picks.csv", "player_bio.csv"]
-SAFE_JSON = ["current_scores.json", "valuation_meta.json", "draft_meta.json"]
+SAFE_JSON = ["current_scores.json", "valuation_meta.json", "draft_meta.json", "calibration.json"]
 TEAM_KEEP = ["team_id", "is_me", "wins", "losses", "ties", "points_for", "points_against", "playoff_seed",
              "waiver_rank", "acquisitions", "drops", "trades", "acq_this_matchup"]
 

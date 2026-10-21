@@ -14,6 +14,8 @@ from pathlib import Path
 
 from . import bio as B
 from . import calendar as C
+from . import calibrate as CAL
+from . import history as H
 from . import matchup as MU
 from . import preseason as PS
 from . import normalize as N
@@ -174,14 +176,15 @@ def run(out_dir, client, my_swid):
     write_json(out / "current_scores.json", step("scores", lambda: N.current_scores(league, cur_mp)) or {})
     if pool:
         tot = step("history", lambda: N.season_totals(pool, client.season))
-        if tot:
-            day = datetime.now(timezone.utc).astimezone(N.CT).date().isoformat()
-            write_csv(out / "history" / "totals" / f"{day}.csv", tot)
+        now_h = datetime.now(timezone.utc).astimezone(N.CT)
+        # history files mean "state before the day's games": runs after 5 PM CT never overwrite them
+        if tot and now_h.hour < 17:
+            write_csv(out / "history" / "totals" / f"{now_h.date().isoformat()}.csv", tot)
 
-    if roster_rows and status.get("my_team_id") is not None:
+    if roster_rows and status.get("my_team_id") is not None and datetime.now(timezone.utc).astimezone(N.CT).hour < 17:
         day = datetime.now(timezone.utc).astimezone(N.CT).date().isoformat()
-        mine_rows = [r for r in roster_rows if str(r["team_id"]) == str(status["my_team_id"])]
-        write_csv(out / "history" / "lineups" / f"{day}.csv", mine_rows)
+        # every team's slots, so the prior-day review can compare you with your opponent
+        write_csv(out / "history" / "lineups" / f"{day}.csv", roster_rows)
 
     inj = step("injuries", client.injuries)
     if inj:
@@ -211,6 +214,12 @@ def run(out_dir, client, my_swid):
 
     status["ok"] = not status["errors"]
     write_json(out / "status.json", status)
+    # keep the day's pre-game projection (first run before 5 PM CT), then learn from past days
+    now_ct = datetime.now(timezone.utc).astimezone(N.CT)
+    if now_ct.hour < 17:
+        step("proj_history", lambda: H.save_proj(out, now_ct.date().isoformat()))
+        step("scores_history", lambda: H.save_scores(out, now_ct.date().isoformat()))
+    step("calibrate", lambda: CAL.update(out))
     bd = step("matchup", lambda: MU.build(out))
     if bd:
         write_json(out / "brief_data.json", bd)

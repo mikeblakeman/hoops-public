@@ -58,6 +58,26 @@ def _dow(d):
     return datetime.strptime(d, "%Y-%m-%d").strftime("%a %-m/%-d")
 
 
+def yesterday_doc(snap):
+    """Last finished day: actual vs projected. Never breaks the brief."""
+    try:
+        import sys
+        sys.path.insert(0, str(ROOT))
+        from relay import review
+        return review.yesterday(snap)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def model_check(snap):
+    """How far the model has been off, and whether any correction is applied yet."""
+    try:
+        d = json.loads((Path(snap) / "calibration.json").read_text())
+    except (OSError, ValueError):
+        return None
+    return {k: d.get(k) for k in ("through", "days", "player_games", "min_games_needed", "active", "raw_ratio", "factors")}
+
+
 def week_doc(wp, teams=None):
     """The brief's 'week ahead' block: coverage by day, streaming plan, trade ideas."""
     teams = teams or {}
@@ -174,6 +194,8 @@ def build(snap, kind="morning", teams=None):
             [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
         "week": week_doc(wp, teams) if wp_ok else None,
+        "yesterday": yesterday_doc(snap),
+        "model_check": model_check(snap),
         "opp_injuries": bd.get("opp_injuries", []),
         "injury_notes": [{"name": inj[i]["name"], "status": inj[i]["status"], "comment": inj[i]["comment"]}
                          for i in mine_ids if i in inj],

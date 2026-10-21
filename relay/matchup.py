@@ -90,6 +90,11 @@ class Data:
         for g in self.sched:
             self.games[(int(g["scoring_period"]), g["team"])] = g
         self.my_tid = str(self.status.get("my_team_id"))
+        try:
+            from . import calibrate
+            self.calib = calibrate.load(snap)  # league-wide actual/projected correction, {} until earned
+        except Exception:  # noqa: BLE001
+            self.calib = {}
 
 
 def player_line(v):
@@ -105,6 +110,11 @@ def player_line(v):
     }
 
 
+def calibrated(D, line):
+    f = getattr(D, "calib", None) or {}
+    return {k: (x * f.get(k, 1.0)) for k, x in line.items()}
+
+
 def availability(status):
     return AVAIL.get((status or "").upper(), 1.0)
 
@@ -116,7 +126,7 @@ def make_player(D, pid, slot=None):
     inj = v.get("injury_status") or ""
     return {"id": str(pid), "name": v["name"], "team": v["pro_team"],
             "pos": set((v.get("eligible") or "").split("/")) - {""},
-            "eligible": v.get("eligible") or "", "line": player_line(v),
+            "eligible": v.get("eligible") or "", "line": calibrated(D, player_line(v)),
             "avail": availability(inj), "inj": inj if inj not in ("ACTIVE", "NORMAL") else "",
             "value": _num(v.get("value"), -99), "rank": int(_num(v.get("rank"), 999)),
             "slot": slot, "status": v.get("status")}
