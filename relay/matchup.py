@@ -415,7 +415,7 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
                      "p": round(o["p"], 3), "label": label(o["p"]), "weight": round(o["w"], 5),
                      "att_mine": round(o["att_m"], 1) if o["att_m"] else None})
 
-    return {
+    result = {
         "generated_ct": datetime.now(CT).isoformat(timespec="minutes"),
         "data_run_ct": D.status.get("run_ct"),
         "date": today.isoformat(),
@@ -438,6 +438,14 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
         "ir_moves": [_pinfo(p, O) for p in ir_moves],
         "opp_injuries": [_pinfo(p, O) for p in theirs if p["inj"]],
     }
+    # day-by-day plan for the whole matchup (coverage, streaming spot, trades); advisory,
+    # so a failure here must never cost the daily brief
+    try:
+        from . import weekplan
+        result["week_plan"] = weekplan.plan(snap, today, D)
+    except Exception as e:  # noqa: BLE001
+        result["week_plan"] = {"error": f"{type(e).__name__}: {e}"}
+    return result
 
 
 def _now(cur, c):

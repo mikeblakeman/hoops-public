@@ -3,8 +3,13 @@
 Follow `playbook/common.md` first.
 
 1. Build: `python tools/brief.py snapshots out/brief.json --kind morning --no-log --teams ~/teams.json`
+1b. Week plan: `out/brief.json` has a `week` block (day-by-day slot coverage, the streaming-spot plan, trade ideas) built
+   by `relay/weekplan.py`. The action marked "Week plan" is today's call for the streaming spot; the "Plan ahead"
+   action lists the later adds and the light days. The plan replaces the engine's single-day swap moves. Plan adds are
+   made in the morning, before the day's first tip. Do not invent trades: only report `week.trades`.
 2. News check (about 5 searches): late injury, rest and lineup news for the user's players with games today, the
-   top recommended pickups, and the opponent's key players. If news changes a recommendation (a starter ruled out,
+   top recommended pickups (today's planned add and the next day's), and the opponent's key players. If a planned
+   player is hurt or his minutes are cut, use one of the step's `alternatives` and say why. If news changes a recommendation (a starter ruled out,
    a pickup's minutes cut), edit `actions` and say why.
 3. Expert calls (about 3 searches): today's public fantasy basketball waiver, streaming and start/sit articles (for
    example ESPN, CBS, Yahoo, NBC Sports, FantasyPros, Hashtag Basketball, RotoBaller, Basketball Monster).
@@ -14,7 +19,10 @@ Follow `playbook/common.md` first.
    Put up to 6 calls that matter to today's decisions in the brief's `experts` (`source, url, player, call, note`).
 4. Judgment fields in `out/brief.json`:
    - `headline`: one sentence on what matters most today (mention any game that tips before 6 PM Central).
-   - `summary`: two or three sentences on the matchup state and the plan.
+   - `summary`: two or three sentences on the matchup state and the plan, including any light day ahead (a day with 4+
+     empty slots) and the next planned add.
+   - Mondays and the first day of a matchup: add one note with the best `week.trades` idea (partner, who goes, who comes,
+     cats per week for each side, ages). Trades are Mike's call; never imply they are urgent.
    - `news`: `[{player, text, source, url}]`, only items that affect a decision.
 5. Mondays (or the first day of a new matchup): weekly review. Skip it, and leave `weekly` null, until a matchup
    has finished (the brief's `matchup_period` is 2 or later and `ledger/summary.json` exists).

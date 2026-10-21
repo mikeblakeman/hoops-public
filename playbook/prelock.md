@@ -6,6 +6,9 @@ Follow `playbook/common.md` first.
 2. Rebuild: `python tools/brief.py snapshots out/prelock.json --kind prelock --no-log --teams ~/teams.json`.
 3. Search for late news on the user's starters with games tonight (ruled out, minutes limit, rest) and on the
    recommended pickups.
+3b. Check the week plan in the rebuilt brief: if tomorrow has a planned add, confirm the player is healthy and note it
+   so Mike can add him in the morning (adds should be made before the first tip). If today's planned add was not made
+   and the player tips later tonight, say so.
 4. Compare with the morning brief. Write `prelock = {checked_ct, notes[]}` with only what changed: a starter now out
    and who replaces him, a better pickup for tonight, a bench swap. If nothing changed, notes = [].
    If the lineup changed, also replace `lineup` and `actions` with the pre-lock versions.

@@ -27,6 +27,17 @@ def as_move(f):
     return dict(f, drop=OPEN_SPOT)
 
 
+def plan_move(d, add=None):
+    """A week-plan step (or one of its alternatives) as the page's move card."""
+    a = add or d
+    drop = ({"id": d.get("drop_id") or "", "name": d["drop"], "team": "", "pos": "", "inj": "", "line": {}, "helps": []}
+            if d.get("drop") else OPEN_SPOT)
+    return {"add": {"id": a["id"], "name": a.get("occupant") or a.get("name"), "team": a["team"], "pos": a["pos"],
+                    "inj": "", "rank": a.get("rank"), "line": a.get("line", {}), "helps": a.get("helps", [])},
+            "gain": a.get("day_gain", a.get("gain")), "games_left": a.get("games_left", 0),
+            "plays_today": True, "helps": a.get("helps", []), "drop": drop}
+
+
 def rows(p):
     p = Path(p)
     if not p.exists() or p.stat().st_size == 0:
@@ -41,6 +52,28 @@ def sentence(t):
 
 def pct(x):
     return f"{x:.3f}".lstrip("0") if isinstance(x, (int, float)) else "–"
+
+
+def _dow(d):
+    return datetime.strptime(d, "%Y-%m-%d").strftime("%a %-m/%-d")
+
+
+def week_doc(wp, teams=None):
+    """The brief's 'week ahead' block: coverage by day, streaming plan, trade ideas."""
+    teams = teams or {}
+    trades = []
+    for t in (wp.get("trades") or {}).get("top", [])[:5]:
+        pid = str(t["partner_team_id"])
+        trades.append(dict(t, partner=(teams.get(pid) or {}).get("name") or f"Team {pid}"))
+    return {
+        "coverage": [{k: d[k] for k in ("date", "nba_games", "my_starters", "my_open_slots", "my_no_slot",
+                                         "opp_starters", "opp_open_slots")} for d in wp.get("days", [])],
+        "light_days": wp.get("light_days", []),
+        "expected_cats": wp.get("expected_cats_now"),
+        "banked_past_days_at_projection": wp.get("banked_past_days_at_projection"),
+        "stream_plan": wp["stream_plan"],
+        "trades": trades,
+    }
 
 
 def build(snap, kind="morning", teams=None):
@@ -83,7 +116,30 @@ def build(snap, kind="morning", teams=None):
         actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"),
                         "why": f"{today}{f['games_left']} games left this matchup; helps {helps}. "
                                f"+{f['gain']:.2f} expected categories."})
-    top = [m for m in bd["moves"] if m["gain"] >= 0.05][:2]
+    wp = bd.get("week_plan") or {}
+    wp_ok = bool(wp.get("stream_plan")) and not wp.get("error")
+    plan_days = wp["stream_plan"]["plans"]["low_effort"]["days"] if wp_ok else []
+    # the week plan owns the streaming spot (it sees every remaining day); engine swap moves only
+    # show when there is no plan. Open-spot fills stay, they cost no drop.
+    step = plan_days[0] if plan_days and plan_days[0]["swap"] and not bd.get("fills") else None
+    if step:
+        where = (f"Add {step['occupant']} ({step['team']}), drop {step['drop']}" if step.get("drop")
+                 else f"Add {step['occupant']} ({step['team']}) to your open roster spot")
+        helps = ", ".join(step["helps"]) or "several categories"
+        actions.append({"kind": "add", "text": sentence(where),
+                        "why": f"Week plan: tips {step['tip_ct']} CT vs {step['plays_vs']}; helps {helps}. "
+                               f"+{step['day_gain']:.2f} expected categories today."})
+    later = [d for d in plan_days[1:] if d["swap"]]
+    light = [d for d in wp.get("days", [])[1:] if len(d["my_open_slots"]) >= 4] if wp_ok else []
+    if later or light:
+        parts = [f"{_dow(d['date'])}: add {d['occupant']} ({d['team']})" + (f" for {d['drop']}" if d.get("drop") else "")
+                 for d in later]
+        thin = [f"{_dow(d['date'])} ({d['nba_games']} games, {len(d['my_open_slots'])} slots empty)" for d in light]
+        actions.append({"kind": "watch",
+                        "text": "Plan ahead: " + ("; ".join(parts) if parts else "no more streaming moves") + ".",
+                        "why": ("Light days: " + ", ".join(thin) + ". " if thin else "") +
+                               "Make each add in the morning, before the day's first tip."})
+    top = [] if wp_ok else [m for m in bd["moves"] if m["gain"] >= 0.05][:2]
     for m in top:
         a, d = m["add"], m["drop"]
         today = "plays today, " if m["plays_today"] else ""
@@ -95,7 +151,7 @@ def build(snap, kind="morning", teams=None):
         n = lu["open_slots"]
         room = bd.get("roster_room") or {}
         has_room = bool(bd.get("fills") or room.get("empty") or room.get("via_ir"))
-        why = ("Fill them with a free agent who plays today if a move above does not." if has_room or top else
+        why = ("Fill them with a free agent who plays today if a move above does not." if has_room or top or step else
                "Your roster is full and the model finds no add worth a drop, so no move is needed.")
         actions.append({"kind": "watch", "text": f"{n} lineup spot{'s' if n != 1 else ''} empty today "
                                                  f"(only {len(lu.get('starters', []))} of your players have games).",
@@ -112,9 +168,12 @@ def build(snap, kind="morning", teams=None):
                                        "expected_cats", "player_games_left", "categories")},
         "actions": actions,
         "lineup": lu,
-        "moves": [as_move(f) for f in bd.get("fills", [])] + bd["moves"],
-        "alternatives": [as_move(f) for f in bd.get("fill_alternatives", [])] + bd["alternatives"],
+        "moves": [as_move(f) for f in bd.get("fills", [])] + ([plan_move(step)] if step else (
+            [] if wp_ok else bd["moves"])),
+        "alternatives": [as_move(f) for f in bd.get("fill_alternatives", [])] + (
+            [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
+        "week": week_doc(wp, teams) if wp_ok else None,
         "opp_injuries": bd.get("opp_injuries", []),
         "injury_notes": [{"name": inj[i]["name"], "status": inj[i]["status"], "comment": inj[i]["comment"]}
                          for i in mine_ids if i in inj],
@@ -145,10 +204,23 @@ def log_decisions(bd, kind):
         for f in recs:
             new.append({"rec": rec, "player_id": f["add"]["id"], "name": f["add"]["name"], "team": f["add"]["team"],
                         "related_id": "", "related_name": "open spot", "gain": f["gain"]})
-    for m in bd["moves"]:
+    wp = bd.get("week_plan") or {}
+    if wp.get("stream_plan") and not wp.get("error") and not bd.get("fills"):
+        d0 = wp["stream_plan"]["plans"]["low_effort"]["days"][0]
+        if d0["swap"]:
+            new.append({"rec": "add", "player_id": d0["id"], "name": d0["occupant"], "team": d0["team"],
+                        "related_id": d0.get("drop_id") or "", "related_name": d0.get("drop") or "open spot",
+                        "gain": d0["day_gain"], "note": "week_plan"})
+            for a in d0["alternatives"]:
+                new.append({"rec": "pass", "player_id": a["id"], "name": a["name"], "team": a["team"],
+                            "related_id": d0.get("drop_id") or "", "related_name": d0.get("drop") or "open spot",
+                            "gain": a["gain"], "note": "week_plan"})
+    moves_to_log = [] if wp.get("stream_plan") and not wp.get("error") else bd["moves"]
+    alts_to_log = [] if wp.get("stream_plan") and not wp.get("error") else bd["alternatives"]
+    for m in moves_to_log:
         new.append({"rec": "add", "player_id": m["add"]["id"], "name": m["add"]["name"], "team": m["add"]["team"],
                     "related_id": m["drop"]["id"], "related_name": m["drop"]["name"], "gain": m["gain"]})
-    for m in bd["alternatives"]:
+    for m in alts_to_log:
         new.append({"rec": "pass", "player_id": m["add"]["id"], "name": m["add"]["name"], "team": m["add"]["team"],
                     "related_id": m["drop"]["id"], "related_name": m["drop"]["name"], "gain": m["gain"]})
     for r in new:
