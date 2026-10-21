@@ -163,20 +163,42 @@ def opponent(D, mp):
 
 # ---------------------------------------------------------------- lineups
 def assign(players, slots, key, bench_negative=False):
-    """Greedy lineup: best players first, each into the most restrictive open slot.
+    """Best lineup: players are taken in priority order, and each is kept only if the
+    whole group can still be seated (bipartite matching with re-seating), so a
+    multi-position player never blocks someone else from a slot.
     bench_negative: sit players whose matchup value is negative (they hurt)."""
-    free = list(slots)
-    starters, bench = [], []
+    slots = list(slots)
+    seat = {}  # slot index -> player index
+    cand = []
+    bench = []
     for p in sorted(players, key=key, reverse=True):
         if bench_negative and key(p) < 0:
             bench.append((p, "negative"))
-            continue
-        spot = next((s for s in free if p["pos"] & SLOT_ELIG.get(s, set())), None)
-        if spot is None:
-            bench.append((p, "no_slot"))
         else:
-            free.remove(spot)
-            starters.append((p, spot))
+            cand.append(p)
+
+    def fits(pi, i):
+        return bool(cand[pi]["pos"] & SLOT_ELIG.get(slots[i], set()))
+
+    def place(pi, seen):
+        for i in range(len(slots)):
+            if i in seen or not fits(pi, i):
+                continue
+            seen.add(i)
+            if i not in seat or place(seat[i], seen):
+                seat[i] = pi
+                return True
+        return False
+
+    kept = set()
+    for pi in range(len(cand)):
+        if place(pi, set()):
+            kept.add(pi)
+    for pi in range(len(cand)):
+        if pi not in kept:
+            bench.append((cand[pi], "no_slot"))
+    starters = [(cand[pi], slots[i]) for i, pi in sorted(seat.items(), key=lambda kv: key(cand[kv[1]]), reverse=True)]
+    free = [slots[i] for i in range(len(slots)) if i not in seat]
     return starters, bench, free
 
 
