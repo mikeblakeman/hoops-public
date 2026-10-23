@@ -119,17 +119,74 @@ def fresh_week_plan(snap, bd):
     return bd.get("week_plan") or {}, None
 
 
-def stale_note(status, hours=10):
-    """A visible warning when the data run behind the brief is old (GitHub often starts the morning job late)."""
+def _drop_past_days(wp, today):
+    wp = dict(wp, days=[d for d in wp.get("days", []) if d.get("date", "") >= today])
+    sp = dict(wp["stream_plan"])
+    sp["plans"] = {k: dict(p, days=[d for d in p.get("days", []) if d.get("date", "") >= today])
+                   for k, p in sp.get("plans", {}).items()}
+    wp["stream_plan"] = sp
+    return wp
+
+
+def fresh_brief_data(snap, bd):
+    """The newest data run can be from an earlier day (GitHub starts scheduled jobs hours late). Every section of
+    the brief must describe the same day, so rebuild the whole matchup output (lineup, odds, moves, week plan)
+    for today from the same snapshots. Returns (brief_data, date it was originally built for or None)."""
+    today = datetime.now(CT).date()
+    if not bd.get("date") or bd["date"] >= today.isoformat():
+        return bd, None
+    try:
+        import sys
+        sys.path.insert(0, str(ROOT))
+        from relay import matchup
+        nb = matchup.build(snap, today)
+        if nb.get("lineup") and not nb.get("error"):
+            old = bd.get("week_plan") or {}
+            if (nb.get("week_plan") or {}).get("error") and old.get("stream_plan") and not old.get("error"):
+                # planner failed on the rebuild: keep the stored plan, minus the days already played
+                nb["week_plan"], nb["week_plan_date"] = _drop_past_days(old, today.isoformat()), bd["date"]
+            return nb, bd["date"]
+    except Exception:  # noqa: BLE001
+        pass
+    return bd, None
+
+
+IDLE_GAIN = 0.02
+
+
+def defer_idle_swap(days):
+    """The planner may schedule a swap on a day the new player adds nothing (no open slot or no game) just so he
+    is rostered for the next day. Tell Mike to make that add on the day it starts paying off instead: same
+    result, and the current player stays in case news changes the plan. Returns a new list of day dicts."""
+    days = [dict(d) for d in days]
+    if (len(days) > 1 and days[0].get("swap") and (days[0].get("day_gain") or 0) < IDLE_GAIN
+            and not days[1].get("swap") and days[1].get("occupant") == days[0].get("occupant")):
+        days[1].update(swap=True, drop=days[0].get("drop"))
+        days[0].update(swap=False, occupant=days[0].get("drop"), team=None, drop=None, day_gain=0.0,
+                       deferred_to=days[1]["date"])
+    return days
+
+
+def stale_note(status, hours=10, rebuilt_from=None, lineup_date=None):
+    """A visible warning when the data run behind the brief is old, saying exactly what that means for this brief."""
     try:
         run = datetime.fromisoformat(status["run_ct"])
     except (KeyError, TypeError, ValueError):
         return []
     age = (datetime.now(CT) - run).total_seconds() / 3600
-    if age < hours:
+    today = datetime.now(CT).date().isoformat()
+    if age < hours and not rebuilt_from and (not lineup_date or lineup_date >= today):
         return []
-    return [f"Data warning: the last data run was {age:.0f} hours ago ({run.strftime('%a %-I:%M %p')} CT), so rosters, "
-            "scores and injuries may be behind. The week plan was rebuilt for today."]
+    when = f"{run.strftime('%a %-I:%M %p')} CT"
+    if rebuilt_from:
+        return [f"Data warning: the newest data is from {when} ({age:.0f} hours old). Every section was rebuilt for "
+                "today from it, but games and roster moves since then (including any you made last night) are not "
+                "counted yet. Check ESPN before acting."]
+    if lineup_date and lineup_date < today:
+        return [f"Data warning: the newest data is from {when} and could not be rebuilt for today, so the lineup "
+                f"below is for {_dow(lineup_date)}. Check ESPN before acting."]
+    return [f"Data warning: the last data run was {age:.0f} hours ago ({when}), so rosters, scores and injuries may "
+            "be behind."]
 
 
 def build(snap, kind="morning", teams=None, plan="daily"):
@@ -140,6 +197,7 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         raise ValueError(f"plan must be one of {PLANS}")
     snap = Path(snap)
     bd = json.loads((snap / "brief_data.json").read_text())
+    bd, rebuilt_from = fresh_brief_data(snap, bd)
     if teams:
         for side in ("me", "opponent"):
             t = teams.get(str(bd.get(side, {}).get("team_id")))
@@ -176,6 +234,9 @@ def build(snap, kind="morning", teams=None, plan="daily"):
                         "why": f"{today}{f['games_left']} games left this matchup; helps {helps}. "
                                f"+{f['gain']:.2f} expected categories."})
     wp, replanned = fresh_week_plan(snap, bd)
+    if wp.get("stream_plan") and not wp.get("error"):   # actions, week card and ledger all read these days
+        for p in wp["stream_plan"].get("plans", {}).values():
+            p["days"] = defer_idle_swap(p.get("days", []))
     bd["week_plan"] = wp   # the ledger logs the same plan the actions follow
     wp_ok = bool(wp.get("stream_plan")) and not wp.get("error")
     plan_days = wp["stream_plan"]["plans"][plan]["days"] if wp_ok else []
@@ -233,7 +294,7 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         "alternatives": [as_move(f) for f in bd.get("fill_alternatives", [])] + (
             [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
-        "week": dict(week_doc(wp, teams, plan), plan_date=replanned or bd["date"]) if wp_ok else None,
+        "week": dict(week_doc(wp, teams, plan), plan_date=replanned or bd.get("week_plan_date") or bd["date"]) if wp_ok else None,
         "yesterday": yesterday_doc(snap),
         "model_check": model_check(snap),
         "opp_injuries": bd.get("opp_injuries", []),
@@ -243,7 +304,7 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         "experts": [],
         "prelock": None,
         "weekly": None,
-        "notes": stale_note(status),
+        "notes": stale_note(status, rebuilt_from=rebuilt_from, lineup_date=lu.get("date")),
         "data_status": {"ok": status.get("ok"), "warnings": status.get("warnings", [])[:5]},
     }
     return doc, bd

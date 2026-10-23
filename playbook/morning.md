@@ -6,17 +6,20 @@ Follow `playbook/common.md` first.
    The actions and the page's Week ahead card must show ONE stream plan. `brief.py` uses `daily` (add on every day
    the gain is worth it; Mike's choice, 2026-10-22) unless you pass `--plan low_effort` (few adds, then hold); the doc's `week.plan_used` records which, and
    the card draws that plan. Pick the plan when you build. Never hand-write actions from the other plan (that is how
-   the top section and the card once named different players). If the data run is a day old, brief.py rebuilds the
-   week plan for today by itself (`week.plan_date` shows the day it was built for).
+   the top section and the card once named different players). If the newest data run is from an earlier day,
+   brief.py rebuilds EVERY section (lineup, odds, moves, week plan) for today from that data and adds a "Data warning"
+   note; do not add your own notes about stale cards. A planned swap that adds nothing on its first day is moved to
+   the day it starts paying off.
 1b. Week plan: `out/brief.json` has a `week` block (day-by-day slot coverage, the streaming-spot plan, trade ideas) built
    by `relay/weekplan.py`. The action marked "Week plan" is today's call for the streaming spot; the "Plan ahead"
    action lists the later adds and the light days. The plan replaces the engine's single-day swap moves. Plan adds are
    made in the morning, before the day's first tip. Do not invent trades: only report `week.trades`.
 2. News check (about 5 searches): late injury, rest and lineup news for the user's players with games today, the
    top recommended pickups (today's planned add and the next day's), and the opponent's key players. If a planned
-   player is hurt or his minutes are cut, use one of the step's `alternatives` and say why, and add a `notes` line
-   naming the player the card still shows so the two sections do not look contradictory. If news changes a recommendation (a starter ruled out,
-   a pickup's minutes cut), edit `actions` and say why.
+   player is hurt or his minutes are cut, use one of the step's `alternatives` (or hold the current streamer) and say
+   why. Edit BOTH the action and that day in `week.stream_plan.plans[<plan_used>].days` (`occupant`, `team`, `drop`,
+   `swap`) so the Week ahead card shows the same players; never leave a note explaining a mismatch. If news changes
+   any other recommendation (a starter ruled out), edit `actions` and `lineup` together and say why.
 3. Expert calls (about 3 searches): today's public fantasy basketball waiver, streaming and start/sit articles (for
    example ESPN, CBS, Yahoo, NBC Sports, FantasyPros, Hashtag Basketball, RotoBaller, Basketball Monster).
    Collect up to 15 specific calls: `{date, source, url, player, call, horizon_days, note}` where call is one of
