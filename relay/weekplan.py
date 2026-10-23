@@ -363,16 +363,22 @@ def plan(snap, today=None, D=None, with_trades=True):
         O2, _ = outlook(team_for_day, key_fn, True)
         return exp_cats(O2)
 
+    # candidate_gains only keeps players with a game in the window, so a current streamer with no game
+    # this week (for example a big with a Friday start) would be missing; look him up here too
+    names = dict(obj1)
+    if occupant:
+        names.setdefault(occ_id, occupant)
+
     def describe(path):
         out, prev = [], occ_id
         for i, sp in enumerate(sps):
             pid = path[i]
-            p = obj1.get(pid)
+            p = names.get(pid)
             g = D.games.get((sp, p["team"])) if p else None
             out.append({"date": D.sp_dates[sp], "occupant": p["name"] if p else None, "id": pid,
                         "team": p["team"] if p else None, "pos": p["eligible"] if p else None,
-                        "swap": pid != prev, "drop": (obj1[prev]["name"] if prev in obj1 else None) if pid != prev else None,
-                        "drop_id": (prev if prev in obj1 else None) if pid != prev else None,
+                        "swap": pid != prev, "drop": (names[prev]["name"] if prev in names else None) if pid != prev else None,
+                        "drop_id": (prev if prev in names else None) if pid != prev else None,
                         "day_gain": round(gain1.get((pid, sp), 0.0), 3),
                         "plays_vs": g["opp"] if g else None, "tip_ct": g["tip_ct"] if g else None,
                         "helps": MU.helps(p, O) if p else [], "rank": p["rank"] if p else None,

@@ -78,8 +78,12 @@ def model_check(snap):
     return {k: d.get(k) for k in ("through", "days", "player_games", "min_games_needed", "active", "raw_ratio", "factors")}
 
 
-def week_doc(wp, teams=None):
-    """The brief's 'week ahead' block: coverage by day, streaming plan, trade ideas."""
+PLANS = ("low_effort", "daily")
+
+
+def week_doc(wp, teams=None, plan="low_effort"):
+    """The brief's 'week ahead' block: coverage by day, streaming plan, trade ideas.
+    `plan_used` names the stream plan the actions follow; the page's week card draws that same plan."""
     teams = teams or {}
     trades = []
     for t in (wp.get("trades") or {}).get("top", [])[:5]:
@@ -91,14 +95,36 @@ def week_doc(wp, teams=None):
         "light_days": wp.get("light_days", []),
         "expected_cats": wp.get("expected_cats_now"),
         "banked_past_days_at_projection": wp.get("banked_past_days_at_projection"),
+        "plan_used": plan,
         "stream_plan": wp["stream_plan"],
         "trades": trades,
     }
 
 
-def build(snap, kind="morning", teams=None):
+def fresh_week_plan(snap, bd):
+    """The data run can be a day old (a morning run that did not land). Its week plan then starts on a day that is
+    already played, so rebuild the plan from the same snapshots for today. Falls back to the stored plan."""
+    today = datetime.now(CT).date().isoformat()
+    if not bd.get("date") or bd["date"] >= today:
+        return bd.get("week_plan") or {}, None
+    try:
+        import sys
+        sys.path.insert(0, str(ROOT))
+        from relay import weekplan
+        wp = weekplan.plan(snap, today)
+        if wp.get("stream_plan") and not wp.get("error"):
+            return wp, today
+    except Exception:  # noqa: BLE001
+        pass
+    return bd.get("week_plan") or {}, None
+
+
+def build(snap, kind="morning", teams=None, plan="low_effort"):
     """teams: optional {team_id: {"name": ..., "owners": ...}} to restore names
-    (the public data mirror carries team ids only)."""
+    (the public data mirror carries team ids only). plan: which stream plan the actions and the week card
+    follow ("low_effort" = few adds and hold, "daily" = chase every gain)."""
+    if plan not in PLANS:
+        raise ValueError(f"plan must be one of {PLANS}")
     snap = Path(snap)
     bd = json.loads((snap / "brief_data.json").read_text())
     if teams:
@@ -136,9 +162,10 @@ def build(snap, kind="morning", teams=None):
         actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"),
                         "why": f"{today}{f['games_left']} games left this matchup; helps {helps}. "
                                f"+{f['gain']:.2f} expected categories."})
-    wp = bd.get("week_plan") or {}
+    wp, replanned = fresh_week_plan(snap, bd)
+    bd["week_plan"] = wp   # the ledger logs the same plan the actions follow
     wp_ok = bool(wp.get("stream_plan")) and not wp.get("error")
-    plan_days = wp["stream_plan"]["plans"]["low_effort"]["days"] if wp_ok else []
+    plan_days = wp["stream_plan"]["plans"][plan]["days"] if wp_ok else []
     # the week plan owns the streaming spot (it sees every remaining day); engine swap moves only
     # show when there is no plan. Open-spot fills stay, they cost no drop.
     step = plan_days[0] if plan_days and plan_days[0]["swap"] and not bd.get("fills") else None
@@ -193,7 +220,7 @@ def build(snap, kind="morning", teams=None):
         "alternatives": [as_move(f) for f in bd.get("fill_alternatives", [])] + (
             [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
-        "week": week_doc(wp, teams) if wp_ok else None,
+        "week": dict(week_doc(wp, teams, plan), plan_date=replanned or bd["date"]) if wp_ok else None,
         "yesterday": yesterday_doc(snap),
         "model_check": model_check(snap),
         "opp_injuries": bd.get("opp_injuries", []),
@@ -209,7 +236,7 @@ def build(snap, kind="morning", teams=None):
     return doc, bd
 
 
-def log_decisions(bd, kind):
+def log_decisions(bd, kind, plan="low_effort"):
     LEDGER.mkdir(exist_ok=True)
     path = LEDGER / "decisions.csv"
     existing = rows(path)
@@ -228,7 +255,7 @@ def log_decisions(bd, kind):
                         "related_id": "", "related_name": "open spot", "gain": f["gain"]})
     wp = bd.get("week_plan") or {}
     if wp.get("stream_plan") and not wp.get("error") and not bd.get("fills"):
-        d0 = wp["stream_plan"]["plans"]["low_effort"]["days"][0]
+        d0 = wp["stream_plan"]["plans"][plan]["days"][0]
         if d0["swap"]:
             new.append({"rec": "add", "player_id": d0["id"], "name": d0["occupant"], "team": d0["team"],
                         "related_id": d0.get("drop_id") or "", "related_name": d0.get("drop") or "open spot",
@@ -268,13 +295,15 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--kind", default="morning")
     ap.add_argument("--no-log", action="store_true")
+    ap.add_argument("--plan", choices=PLANS, default="low_effort",
+                    help="stream plan the actions and the week card follow (one plan, never a mix)")
     ap.add_argument("--teams", help="JSON file {team_id: {name, owners}} to restore team names")
     a = ap.parse_args()
     teams = json.loads(Path(a.teams).read_text()) if a.teams else None
-    doc, bd = build(a.snap, a.kind, teams)
+    doc, bd = build(a.snap, a.kind, teams, a.plan)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(doc, indent=1))
-    n = 0 if a.no_log else log_decisions(bd, a.kind)
+    n = 0 if a.no_log else log_decisions(bd, a.kind, a.plan)
     print(json.dumps({"out": a.out, "actions": len(doc["actions"]), "logged": n,
                       "expected_cats": bd["expected_cats"], "opponent": bd["opponent"]["name"]}))
 
