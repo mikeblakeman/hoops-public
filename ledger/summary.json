@@ -1,10 +1,35 @@
 {
- "through": "2026-10-22",
+ "through": "2026-10-23",
  "since": "2026-10-20",
- "adds_graded": 0,
+ "adds_graded": 1,
  "adds_beat_alternatives": 0,
- "add_win_rate": null,
- "misses": [],
+ "add_win_rate": 0.0,
+ "misses": [
+  {
+   "date": "2026-10-22",
+   "name": "Alex Caruso",
+   "value": 0.1625,
+   "best_add": 0.0653,
+   "engine_rank_among_alternatives": 3,
+   "kind": "likely noise or blind spot"
+  },
+  {
+   "date": "2026-10-22",
+   "name": "Peyton Watson",
+   "value": 0.1371,
+   "best_add": 0.0653,
+   "engine_rank_among_alternatives": 1,
+   "kind": "near miss"
+  },
+  {
+   "date": "2026-10-22",
+   "name": "Mario Hezonja",
+   "value": 0.1184,
+   "best_add": 0.0653,
+   "engine_rank_among_alternatives": 2,
+   "kind": "near miss"
+  }
+ ],
  "expert_calls_graded": 0,
  "sources": []
 }
