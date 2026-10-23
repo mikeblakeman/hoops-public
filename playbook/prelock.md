@@ -3,7 +3,7 @@
 Follow `playbook/common.md` first.
 
 1. ArtifactData get `brief/latest` on the brief page (note its version).
-2. Rebuild with the same stream plan the morning brief used (`week.plan_used` in `brief/latest`; default `low_effort`):
+2. Rebuild with the same stream plan the morning brief used (`week.plan_used` in `brief/latest`; default `daily`):
    `python tools/brief.py snapshots out/prelock.json --kind prelock --no-log --teams ~/teams.json --plan <plan_used>`.
 3. Search for late news on the user's starters with games tonight (ruled out, minutes limit, rest) and on the
    recommended pickups.

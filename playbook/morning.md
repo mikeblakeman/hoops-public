@@ -3,8 +3,8 @@
 Follow `playbook/common.md` first.
 
 1. Build: `python tools/brief.py snapshots out/brief.json --kind morning --no-log --teams ~/teams.json`
-   The actions and the page's Week ahead card must show ONE stream plan. `brief.py` uses `low_effort` (few adds, hold)
-   unless you pass `--plan daily` (add every day the gain is worth it); the doc's `week.plan_used` records which, and
+   The actions and the page's Week ahead card must show ONE stream plan. `brief.py` uses `daily` (add on every day
+   the gain is worth it; Mike's choice, 2026-10-22) unless you pass `--plan low_effort` (few adds, then hold); the doc's `week.plan_used` records which, and
    the card draws that plan. Pick the plan when you build. Never hand-write actions from the other plan (that is how
    the top section and the card once named different players). If the data run is a day old, brief.py rebuilds the
    week plan for today by itself (`week.plan_date` shows the day it was built for).
@@ -30,6 +30,7 @@ Follow `playbook/common.md` first.
    - Mondays and the first day of a matchup: add one note with the best `week.trades` idea (partner, who goes, who comes,
      cats per week for each side, ages). Trades are Mike's call; never imply they are urgent.
    - `news`: `[{player, text, source, url}]`, only items that affect a decision.
+   - `notes`: keep any line that starts with "Data warning" (the data run behind the brief is old); say so in the summary too.
 5. Mondays (or the first day of a new matchup): weekly review. Skip it, and leave `weekly` null, until a matchup
    has finished (the brief's `matchup_period` is 2 or later and `ledger/summary.json` exists).
    - Decisions: read `ledger/summary.json` (graded by the data job): `add_win_rate`, `adds_graded`, `misses`.

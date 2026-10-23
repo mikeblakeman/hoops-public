@@ -78,10 +78,10 @@ def model_check(snap):
     return {k: d.get(k) for k in ("through", "days", "player_games", "min_games_needed", "active", "raw_ratio", "factors")}
 
 
-PLANS = ("low_effort", "daily")
+PLANS = ("daily", "low_effort")
 
 
-def week_doc(wp, teams=None, plan="low_effort"):
+def week_doc(wp, teams=None, plan="daily"):
     """The brief's 'week ahead' block: coverage by day, streaming plan, trade ideas.
     `plan_used` names the stream plan the actions follow; the page's week card draws that same plan."""
     teams = teams or {}
@@ -119,7 +119,20 @@ def fresh_week_plan(snap, bd):
     return bd.get("week_plan") or {}, None
 
 
-def build(snap, kind="morning", teams=None, plan="low_effort"):
+def stale_note(status, hours=10):
+    """A visible warning when the data run behind the brief is old (GitHub often starts the morning job late)."""
+    try:
+        run = datetime.fromisoformat(status["run_ct"])
+    except (KeyError, TypeError, ValueError):
+        return []
+    age = (datetime.now(CT) - run).total_seconds() / 3600
+    if age < hours:
+        return []
+    return [f"Data warning: the last data run was {age:.0f} hours ago ({run.strftime('%a %-I:%M %p')} CT), so rosters, "
+            "scores and injuries may be behind. The week plan was rebuilt for today."]
+
+
+def build(snap, kind="morning", teams=None, plan="daily"):
     """teams: optional {team_id: {"name": ..., "owners": ...}} to restore names
     (the public data mirror carries team ids only). plan: which stream plan the actions and the week card
     follow ("low_effort" = few adds and hold, "daily" = chase every gain)."""
@@ -230,13 +243,13 @@ def build(snap, kind="morning", teams=None, plan="low_effort"):
         "experts": [],
         "prelock": None,
         "weekly": None,
-        "notes": [],
+        "notes": stale_note(status),
         "data_status": {"ok": status.get("ok"), "warnings": status.get("warnings", [])[:5]},
     }
     return doc, bd
 
 
-def log_decisions(bd, kind, plan="low_effort"):
+def log_decisions(bd, kind, plan="daily"):
     LEDGER.mkdir(exist_ok=True)
     path = LEDGER / "decisions.csv"
     existing = rows(path)
@@ -295,7 +308,7 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--kind", default="morning")
     ap.add_argument("--no-log", action="store_true")
-    ap.add_argument("--plan", choices=PLANS, default="low_effort",
+    ap.add_argument("--plan", choices=PLANS, default="daily",
                     help="stream plan the actions and the week card follow (one plan, never a mix)")
     ap.add_argument("--teams", help="JSON file {team_id: {name, owners}} to restore team names")
     a = ap.parse_args()
