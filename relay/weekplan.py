@@ -23,10 +23,11 @@ the brief. Run alone:  python -m relay.weekplan snapshots [YYYY-MM-DD]
 import itertools
 import json
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from . import matchup as MU
+from . import nextopp as NO
 
 SWAP_COST = 0.03            # category-equivalents charged per streaming add (effort + lost player)
 LOW_EFFORT_COST = 0.10
@@ -282,7 +283,64 @@ def trade_search(D, X, top_n=12):
 
 
 # ------------------------------------------------------------------ main
-def plan(snap, today=None, D=None, with_trades=True):
+def WP_avail(p, D, sp):
+    return MU.plays(D, p, sp) and avail_on(p, D.sp_dates[sp]) > 0
+
+
+def next_opponent(D, X, snap, today, mp, prow, sps, base, occ_id, names, fa_pool, plans, exact_fn, describe):
+    """Scouting report on the next opponent plus the streaming carry-over check (relay/nextopp.py).
+    Changes plans[...]["days"] in place when a carry passes the rule; records the check in plans[...]["carry"]."""
+    nprow, nsps = NO.next_period(D, mp)
+    opp_n = MU.opponent(D, mp + 1) if nprow else None
+    if not nprow or not nsps or not opp_n:
+        return {"error": "next matchup not in the calendar yet"}
+    theirs = team_players(D, X, opp_n)
+
+    def roster_with(pid):
+        return base + ([names[pid]] if pid in names else [])
+
+    end0 = (plans["daily"]["days"][-1]["id"] if plans["daily"]["days"] else occ_id)
+    O_n, key_n, _gm, _go = NO.forecast(sys.modules[__name__], D, roster_with(end0), theirs, nsps)
+    # next-week streaming candidates: the best free agents with a game next week, plus this week's plan players
+    fa_n = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")
+            for p in [mk(D, X, pid)] if p and any(WP_avail(p, D, sp) for sp in nsps)]
+    pool_n = sorted(fa_n, key=lambda p: -p["value"])[:150]
+    plan_ids = {d["id"] for pl in plans.values() for d in pl["days"] if d.get("id")}
+    pool_n += [names[i] for i in plan_ids if i in names and i not in {p["id"] for p in pool_n}]
+    gain_n, obj_n, top_n = candidate_gains(D, nsps, base, {}, key_n, pool_n)
+    for pid, p in obj_n.items():
+        names.setdefault(pid, p)
+    window_start = (date.fromisoformat(prow["end"]) - timedelta(days=NO.WINDOW_DAYS - 1)).isoformat()
+
+    for name, pl in plans.items():
+        path = [d["id"] for d in pl["days"]]
+        ctx = dict(sps=sps, path=path, occ_id=occ_id, names=names, exact=exact_fn, plan_exp=exact_fn(path),
+                   nsps=nsps, gain_n=gain_n, top_n=top_n, window_start=window_start, swap_cost=pl["swap_cost_assumed"])
+        new, info = NO.carry(sys.modules[__name__], D, ctx)
+        if new:
+            days = describe(new)
+            for d in days:
+                if d["date"] >= info["from_date"] and d["swap"]:
+                    d["carry"] = True
+            pl.update(days=days, adds=sum(1 for d in days if d["swap"]), expected_cats=info["expected_cats_this_week"])
+        holder = (new or path)[-1] if (new or path) else occ_id
+        if holder in names:
+            p = names[holder]
+            info["monday_holder"] = {"id": holder, "name": p["name"], "team": p["team"], "pos": p["eligible"],
+                                     "games_next_week": sum(1 for sp in nsps if MU.plays(D, p, sp)),
+                                     "helps_next_week": MU.helps(p, O_n)}
+        pl["carry"] = info
+
+    end1 = plans["daily"]["days"][-1]["id"] if plans["daily"]["days"] else occ_id
+    if end1 != end0:   # the forecast uses the roster Mike will actually have on Monday
+        O_n, key_n, _gm, _go = NO.forecast(sys.modules[__name__], D, roster_with(end1), theirs, nsps)
+    out = NO.report(sys.modules[__name__], D, X, snap, mp, opp_n, nprow, nsps, roster_with(end1), theirs,
+                    O_n, key_n, _gm, _go)
+    out["window_days"] = NO.WINDOW_DAYS
+    return out
+
+
+def plan(snap, today=None, D=None, with_trades=True, with_next=True):
     D = D or MU.Data(snap)
     X = Extra(snap)
     if today is None:
@@ -433,6 +491,17 @@ def plan(snap, today=None, D=None, with_trades=True):
                             "pos": objs[path2[i]]["eligible"], "day_gain": round(gain2.get((path2[i], sp), 0.0), 3)}
                            for i, sp in enumerate(sps) if path2[i] in objs]}
 
+    # ---- next opponent (last days of the matchup only): scouting report, and a carry-over check that may
+    # change the END of this week's streaming plan. It edits the plans above in place, so the actions, the
+    # Week ahead card and the next-opponent card all read one plan (see nextopp.py for the rule).
+    nxt = None
+    if with_next and NO.in_window(prow, today):
+        try:
+            nxt = next_opponent(D, X, snap, today, mp, prow, sps, base, occ_id, names, fa_pool, plans,
+                                lambda pth: exact(base, [pth], names), describe)
+        except Exception as e:  # noqa: BLE001  advisory; never lose the daily plan
+            nxt = {"error": f"{type(e).__name__}: {e}"}
+
     cats = [{"cat": c, "mine": round(O[c]["mine"], 3 if c in MU.RATIO else 1),
              "theirs": round(O[c]["theirs"], 3 if c in MU.RATIO else 1), "p": round(O[c]["p"], 3),
              "label": MU.label(O[c]["p"])} for c in D.cats]
@@ -440,7 +509,8 @@ def plan(snap, today=None, D=None, with_trades=True):
            "banked_past_days_at_projection": banked, "opponent_team_id": opp,
            "expected_cats_now": round(base_exp, 2), "categories": cats, "days": days, "light_days": light,
            "stream_plan": {"occupant_now": occupant["name"] if occupant else None,
-                           "expected_cats_keep": round(keep_exp, 2), "plans": plans, "second_spot": second}}
+                           "expected_cats_keep": round(keep_exp, 2), "plans": plans, "second_spot": second},
+           "next_opponent": nxt}
     if with_trades:
         try:
             out["trades"] = trade_search(D, X)

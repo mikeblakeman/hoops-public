@@ -14,6 +14,13 @@ Follow `playbook/common.md` first.
    by `relay/weekplan.py`. The action marked "Week plan" is today's call for the streaming spot; the "Plan ahead"
    action lists the later adds and the light days. The plan replaces the engine's single-day swap moves. Plan adds are
    made in the morning, before the day's first tip. Do not invent trades: only report `week.trades`.
+1c. Next opponent (last 3 days of a matchup only): `out/brief.json` has a `next_opponent` block (forecast vs next
+   week's opponent, games by day, how they have played, their key players and injuries) and the page shows it as the
+   "Next opponent" card. Rule (Mike, 2026-10-24): this week comes first. The only next-week move is the streaming
+   spot, and the planner already wrote it into the stream plan (days marked `carry`), so the actions, Week ahead card
+   and this card agree. Never suggest any other move for next week (drops, trades, lineup) in notes or the summary.
+   If news changes a carry add, edit the plan day as in step 2 and set `next_opponent.carry` to match. Do not mention
+   the card on other days; `next_opponent` is null then.
 2. News check (about 5 searches): late injury, rest and lineup news for the user's players with games today, the
    top recommended pickups (today's planned add and the next day's), and the opponent's key players. If a planned
    player is hurt or his minutes are cut, use one of the step's `alternatives` (or hold the current streamer) and say

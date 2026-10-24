@@ -179,6 +179,31 @@ def defer_idle_swap(days):
     return days
 
 
+def carry_note(step, carry):
+    """Why a streaming add also looks at next week. Only for adds the carry check put into the plan."""
+    if not step.get("carry") or not carry.get("changed"):
+        return ""
+    return (f" Also sets up next week: +{carry['next_week_gain']:.2f} next week for "
+            f"{carry['this_week_cost']:.2f} this week (limit {carry['max_cost']:.2f}).")
+
+
+def next_opp_doc(wp, teams=None, plan="daily"):
+    """The next-opponent card: shown only in the last days of a matchup (the planner decides the window).
+    Its streaming note comes from the same plan the actions follow, so the two can never disagree."""
+    n = wp.get("next_opponent")
+    if not n or n.get("error"):
+        return None
+    teams = teams or {}
+    tid = str(n.get("opponent_team_id"))
+    t = teams.get(tid) or {}
+    rec = ((n.get("form") or {}).get("this_week") or {}).get("record")
+    if rec:
+        rec = dict(rec, vs=(teams.get(str(rec.get("vs_team_id"))) or {}).get("name") or f"Team {rec.get('vs_team_id')}")
+        n = dict(n, form=dict(n["form"], this_week=dict(n["form"]["this_week"], record=rec)))
+    carry = (wp["stream_plan"]["plans"].get(plan) or {}).get("carry")
+    return dict(n, name=t.get("name") or f"Team {tid}", owners=t.get("owners"), carry=carry, plan_used=plan)
+
+
 def stale_note(status, hours=10, rebuilt_from=None, lineup_date=None):
     """A visible warning when the data run behind the brief is old, saying exactly what that means for this brief."""
     try:
@@ -240,6 +265,7 @@ def build(snap, kind="morning", teams=None, plan="daily"):
     bd["week_plan"] = wp   # the ledger logs the same plan the actions follow
     wp_ok = bool(wp.get("stream_plan")) and not wp.get("error")
     plan_days = wp["stream_plan"]["plans"][plan]["days"] if wp_ok else []
+    carry = (wp["stream_plan"]["plans"][plan].get("carry") or {}) if wp_ok else {}
     # the week plan owns the streaming spot (it sees every remaining day); engine swap moves only
     # show when there is no plan. Open-spot fills stay, they cost no drop.
     step = plan_days[0] if plan_days and plan_days[0]["swap"] and not bd.get("fills") else None
@@ -249,12 +275,12 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         helps = ", ".join(step["helps"]) or "several categories"
         actions.append({"kind": "add", "text": sentence(where),
                         "why": f"Week plan: tips {step['tip_ct']} CT vs {step['plays_vs']}; helps {helps}. "
-                               f"+{step['day_gain']:.2f} expected categories today."})
+                               f"+{step['day_gain']:.2f} expected categories today." + carry_note(step, carry)})
     later = [d for d in plan_days[1:] if d["swap"]]
     light = [d for d in wp.get("days", [])[1:] if len(d["my_open_slots"]) >= 4] if wp_ok else []
     if later or light:
         parts = [f"{_dow(d['date'])}: add {d['occupant']} ({d['team']})" + (f" for {d['drop']}" if d.get("drop") else "")
-                 for d in later]
+                 + (" (also sets up next week)" if d.get("carry") else "") for d in later]
         thin = [f"{_dow(d['date'])} ({d['nba_games']} games, {len(d['my_open_slots'])} slots empty)" for d in light]
         actions.append({"kind": "watch",
                         "text": "Plan ahead: " + ("; ".join(parts) if parts else "no more streaming moves") + ".",
@@ -334,6 +360,7 @@ def build(snap, kind="morning", teams=None, plan="daily"):
             [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
         "week": dict(week_doc(wp, teams, plan), plan_date=replanned or bd.get("week_plan_date") or bd["date"]) if wp_ok else None,
+        "next_opponent": next_opp_doc(wp, teams, plan) if wp_ok else None,
         "yesterday": yesterday_doc(snap),
         "model_check": model_check(snap),
         "opp_injuries": bd.get("opp_injuries", []),
