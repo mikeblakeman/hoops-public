@@ -119,6 +119,18 @@ def fresh_week_plan(snap, bd):
     return bd.get("week_plan") or {}, None
 
 
+def lineup_after(snap, day, add_ids, drop_ids, ir_ids):
+    """Today's lineup with the recommended moves applied (relay.matchup.lineup_after); None if it fails."""
+    try:
+        import sys
+        sys.path.insert(0, str(ROOT))
+        from datetime import date as _date
+        from relay import matchup
+        return matchup.lineup_after(snap, _date.fromisoformat(day), add_ids, drop_ids, ir_ids)
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def _drop_past_days(wp, today):
     wp = dict(wp, days=[d for d in wp.get("days", []) if d.get("date", "") >= today])
     sp = dict(wp["stream_plan"])
@@ -161,9 +173,9 @@ def defer_idle_swap(days):
     days = [dict(d) for d in days]
     if (len(days) > 1 and days[0].get("swap") and (days[0].get("day_gain") or 0) < IDLE_GAIN
             and not days[1].get("swap") and days[1].get("occupant") == days[0].get("occupant")):
-        days[1].update(swap=True, drop=days[0].get("drop"))
-        days[0].update(swap=False, occupant=days[0].get("drop"), team=None, drop=None, day_gain=0.0,
-                       deferred_to=days[1]["date"])
+        days[1].update(swap=True, drop=days[0].get("drop"), drop_id=days[0].get("drop_id"))
+        days[0].update(swap=False, occupant=days[0].get("drop"), id=days[0].get("drop_id"), team=None,
+                       drop=None, drop_id=None, day_gain=0.0, deferred_to=days[1]["date"])
     return days
 
 
@@ -208,20 +220,8 @@ def build(snap, kind="morning", teams=None, plan="daily"):
     status = json.loads((snap / "status.json").read_text())
     inj = {r["player_id"]: r for r in rows(snap / "injuries.csv")}
     lu = bd["lineup"]
-    mine_ids = {p["id"] for k in ("starters", "bench", "no_game", "ir") for p in lu.get(k, [])}
 
     actions = []
-    for p in lu["starters"]:
-        if p.get("inj"):
-            actions.append({"kind": "watch", "text": f"Check {p['name']} before tip ({p['inj'].replace('_', ' ').lower()}).",
-                            "why": "If he is ruled out, start your best bench player with a game instead."})
-    for p in lu["bench"]:
-        if p.get("why") == "negative":
-            actions.append({"kind": "bench", "text": sentence(f"Bench {p['name']} today"),
-                            "why": "His expected line costs more in close categories than it adds."})
-        elif p.get("why") == "no_slot":
-            actions.append({"kind": "bench", "text": f"{p['name']} has a game but no open slot.",
-                            "why": "Your starters with games rate higher in this matchup."})
     for p in bd.get("ir_moves", []):
         actions.append({"kind": "ir", "text": sentence(f"Move {p['name']} to IR"), "why": "He is out; this frees a roster spot for a streamer."})
     for f in bd.get("fills", []):
@@ -268,15 +268,54 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         actions.append({"kind": "add", "text": sentence(f"Add {a['name']} ({a['team']}), drop {d['name']}"),
                         "why": f"{today}{m['games_left']} games left this matchup; helps {helps}. "
                                f"+{m['gain']:.2f} expected categories."})
+    # The lineup card shows today's lineup AFTER the moves above, so it names the same players as the actions.
+    ir_ids = [p["id"] for p in bd.get("ir_moves", [])]
+    add_ids = [f["add"]["id"] for f in bd.get("fills", [])] + [m["add"]["id"] for m in top]
+    drop_ids = [m["drop"]["id"] for m in top]
+    moves_txt = [f"{p['name']} to IR" for p in bd.get("ir_moves", [])] + \
+                [f"add {f['add']['name']}" for f in bd.get("fills", [])] + \
+                [f"add {m['add']['name']} for {m['drop']['name']}" for m in top]
+    if step and step.get("id"):
+        add_ids.append(step["id"])
+        if step.get("drop_id"):
+            drop_ids.append(step["drop_id"])
+        moves_txt.append(f"add {step['occupant']}" + (f" for {step['drop']}" if step.get("drop") else ""))
+    if add_ids or drop_ids or ir_ids:
+        after = lineup_after(snap, bd["date"], add_ids, drop_ids, ir_ids)
+        if after:
+            lu = dict(after, after_moves=moves_txt)
+            bd["lineup"] = lu   # the ledger logs the lineup the brief shows
+        else:
+            lu = dict(lu, after_moves=None)
+
+    first = []
+    for p in lu["starters"]:
+        if p.get("inj"):
+            first.append({"kind": "watch", "text": f"Check {p['name']} before tip ({p['inj'].replace('_', ' ').lower()}).",
+                          "why": "If he is ruled out, start your best bench player with a game instead."})
+    for p in lu["bench"]:
+        if p.get("why") == "negative":
+            first.append({"kind": "bench", "text": sentence(f"Bench {p['name']} today"),
+                          "why": "His expected line costs more in close categories than it adds."})
+        elif p.get("why") == "no_slot":
+            first.append({"kind": "bench", "text": f"{p['name']} has a game but no open slot.",
+                          "why": "Your starters with games rate higher in this matchup."})
+    actions = first + actions
     if lu.get("open_slots"):
         n = lu["open_slots"]
         room = bd.get("roster_room") or {}
-        has_room = bool(bd.get("fills") or room.get("empty") or room.get("via_ir"))
-        why = ("Fill them with a free agent who plays today if a move above does not." if has_room or top or step else
-               "Your roster is full and the model finds no add worth a drop, so no move is needed.")
+        room_left = int(room.get("empty") or 0) + len(room.get("via_ir") or []) - len(bd.get("fills") or [])
+        if room_left > 0:
+            why = "You have an open roster spot: fill it with a free agent who plays today."
+        elif step or top:
+            why = ("Your roster is full, so filling them means dropping someone. The add above is the only drop "
+                   "worth it today; the lineup below already includes it.")
+        else:
+            why = "Your roster is full and no add is worth a drop today, so leave them open."
         actions.append({"kind": "watch", "text": f"{n} lineup spot{'s' if n != 1 else ''} empty today "
                                                  f"(only {len(lu.get('starters', []))} of your players have games).",
                         "why": why})
+    mine_ids = {p["id"] for k in ("starters", "bench", "no_game", "ir") for p in lu.get(k, [])}
 
     doc = {
         "date": bd["date"],

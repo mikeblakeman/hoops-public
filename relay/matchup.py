@@ -329,18 +329,16 @@ def outlook(D, mine, opp_sim, sps, key_m, cur_m, cur_o, bench_negative=False):
 
 
 # ---------------------------------------------------------------- main
-def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
-    D = Data(snap)
-    today = today or today_ct()
+def _context(D, today):
+    """Everything the lineup and move search share: period, both rosters, scores, the opponent's simulated
+    week and the matchup-weighted ordering key. None if no matchup period covers `today`."""
     mp, sps, prow = current_period(D, today)
     if mp is None:
-        return {"error": "no matchup period found", "date": today.isoformat()}
+        return None
     opp = opponent(D, mp)
     mine = team_players(D, D.my_tid)
     theirs = team_players(D, opp) if opp else []
     cur_m, cur_o = current_totals(D, D.my_tid), current_totals(D, opp)
-    in_progress = any(cur_m.values()) or any(cur_o.values())
-
     # opponent: starts its best players by generic value every day
     opp_sim = simulate(D, theirs, sps, lambda p: p["value"])
     # pass 1: generic ordering -> odds -> weights; pass 2: matchup ordering
@@ -348,28 +346,72 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
     key = lambda p: matchup_value(p, O)  # noqa: E731
     O, gm, go = outlook(D, mine, opp_sim, sps, key, cur_m, cur_o, True)
     key = lambda p: matchup_value(p, O)  # noqa: E731
+    return dict(mp=mp, sps=sps, prow=prow, opp=opp, mine=mine, theirs=theirs, cur_m=cur_m, cur_o=cur_o,
+                opp_sim=opp_sim, O=O, gm=gm, go=go, key=key)
+
+
+def _lineup(D, roster, sp0, key, O):
+    """Best lineup for one day from `roster` (IR players stay on IR)."""
+    lineup = {"scoring_period": sp0, "date": D.sp_dates.get(sp0) if sp0 else None,
+              "starters": [], "bench": [], "no_game": [], "ir": [], "open_slots": 0}
+    if not sp0:
+        return lineup
+    active = [p for p in roster if p["slot"] != "IR"]
+    playing = [p for p in active if plays(D, p, sp0) and p["avail"] > 0]
+    st, be, free = assign(playing, D.slots, key, True)
+    lineup["open_slots"] = len(free)
+    for p, slot in st:
+        g = D.games[(sp0, p["team"])]
+        lineup["starters"].append(_pinfo(p, O, slot=slot, game=g, mv=key(p)))
+    for p, why in be:
+        g = D.games[(sp0, p["team"])]
+        lineup["bench"].append(_pinfo(p, O, game=g, mv=key(p), why=why))
+    for p in active:
+        if p not in playing:
+            why = "out" if p["avail"] == 0 else "no game"
+            lineup["no_game"].append(_pinfo(p, O, why=why))
+    lineup["ir"] = [_pinfo(p, O) for p in roster if p["slot"] == "IR"]
+    return lineup
+
+
+def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=()):
+    """Today's lineup after the moves the brief recommends (players added, dropped or moved to IR), so the
+    page's lineup card shows the same players as its actions. None if it cannot be built."""
+    D = Data(snap)
+    ctx = _context(D, today)
+    if not ctx or not ctx["sps"]:
+        return None
+    drop_ids, ir_ids = {str(i) for i in drop_ids}, {str(i) for i in ir_ids}
+    roster = []
+    for p in ctx["mine"]:
+        if str(p["id"]) in drop_ids:
+            continue
+        if str(p["id"]) in ir_ids:
+            p = dict(p, slot="IR")
+        roster.append(p)
+    have = {str(p["id"]) for p in roster}
+    for pid in add_ids:
+        x = make_player(D, str(pid))
+        if x and str(x["id"]) not in have:
+            roster.append(x)
+    return _lineup(D, roster, ctx["sps"][0], ctx["key"], ctx["O"])
+
+
+def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
+    D = Data(snap)
+    today = today or today_ct()
+    ctx = _context(D, today)
+    if ctx is None:
+        return {"error": "no matchup period found", "date": today.isoformat()}
+    mp, sps, prow, opp = ctx["mp"], ctx["sps"], ctx["prow"], ctx["opp"]
+    mine, theirs, cur_m, cur_o = ctx["mine"], ctx["theirs"], ctx["cur_m"], ctx["cur_o"]
+    opp_sim, O, gm, go, key = ctx["opp_sim"], ctx["O"], ctx["gm"], ctx["go"], ctx["key"]
+    in_progress = any(cur_m.values()) or any(cur_o.values())
     base_exp = sum(o["p"] for o in O.values())
 
     # today's lineup (first remaining day)
     sp0 = sps[0] if sps else None
-    lineup = {"scoring_period": sp0, "date": D.sp_dates.get(sp0) if sp0 else None,
-              "starters": [], "bench": [], "no_game": [], "ir": [], "open_slots": 0}
-    if sp0:
-        active = [p for p in mine if p["slot"] != "IR"]
-        playing = [p for p in active if plays(D, p, sp0) and p["avail"] > 0]
-        st, be, free = assign(playing, D.slots, key, True)
-        lineup["open_slots"] = len(free)
-        for p, slot in st:
-            g = D.games[(sp0, p["team"])]
-            lineup["starters"].append(_pinfo(p, O, slot=slot, game=g, mv=key(p)))
-        for p, why in be:
-            g = D.games[(sp0, p["team"])]
-            lineup["bench"].append(_pinfo(p, O, game=g, mv=key(p), why=why))
-        for p in active:
-            if p not in playing:
-                why = "out" if p["avail"] == 0 else "no game"
-                lineup["no_game"].append(_pinfo(p, O, why=why))
-        lineup["ir"] = [_pinfo(p, O) for p in mine if p["slot"] == "IR"]
+    lineup = _lineup(D, mine, sp0, key, O)
 
     # moves: add a free agent, drop a non-core player
     droppable = [p for p in mine if p["slot"] != "IR" and p["rank"] > 100]

@@ -20,6 +20,10 @@ Follow `playbook/common.md` first.
    why. Edit BOTH the action and that day in `week.stream_plan.plans[<plan_used>].days` (`occupant`, `team`, `drop`,
    `swap`) so the Week ahead card shows the same players; never leave a note explaining a mismatch. If news changes
    any other recommendation (a starter ruled out), edit `actions` and `lineup` together and say why.
+   The lineup card shows today's lineup AFTER the recommended moves (`lineup.after_moves` lists them). If you change
+   or cancel a move, rebuild the card to match: `python -c "import json;from relay import matchup as M;
+   print(json.dumps(M.lineup_after('snapshots', M.today_ct(), [ADD_IDS], [DROP_IDS])))"` and set `lineup`
+   (and `lineup.after_moves`) from it.
 3. Expert calls (about 3 searches): today's public fantasy basketball waiver, streaming and start/sit articles (for
    example ESPN, CBS, Yahoo, NBC Sports, FantasyPros, Hashtag Basketball, RotoBaller, Basketball Monster).
    Collect up to 15 specific calls: `{date, source, url, player, call, horizon_days, note}` where call is one of
