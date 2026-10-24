@@ -89,6 +89,11 @@ def main(snap, out):
     for name in ("summary.json", "graded_decisions.csv"):
         if (led / name).exists():
             (out / "ledger" / name).write_text(scrub((led / name).read_text(), secrets))
+    # daily category odds (no names), used for the brief page's week trend
+    if (led / "context").exists():
+        (out / "ledger" / "context").mkdir()
+        for fp in sorted((led / "context").glob("*.json")):
+            (out / "ledger" / "context" / fp.name).write_text(scrub(fp.read_text(), secrets))
 
     # final check: nothing identifying slipped through
     leaks = []

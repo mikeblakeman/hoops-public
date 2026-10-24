@@ -373,7 +373,34 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         "notes": stale_note(status, rebuilt_from=rebuilt_from, lineup_date=lu.get("date")),
         "data_status": {"ok": status.get("ok"), "warnings": status.get("warnings", [])[:5]},
     }
+    doc["matchup"]["trend"] = trend_doc(bd)
     return doc, bd
+
+
+def trend_doc(bd, ledger=None):
+    """Win chance per category, one point per day of this matchup, for the page's trend lines.
+    Past days come from ledger/context/<date>.json (the last data run of that day, written before
+    the day's games); today comes from the fresh build. [] when there is nothing to draw."""
+    ctx_dir = (ledger or LEDGER) / "context"
+    mp, start, today = bd["matchup_period"], bd["period"]["start"], bd["date"]
+    pts = []
+    for fp in sorted(ctx_dir.glob("*.json")) if ctx_dir.exists() else []:
+        day = fp.stem
+        if day < start or day >= today:
+            continue
+        try:
+            d = json.loads(fp.read_text())
+        except (OSError, ValueError):
+            continue
+        if d.get("matchup_period") != mp:
+            continue
+        p = {c: v["p"] for c, v in (d.get("projected") or {}).items()}
+        if p:
+            exp = d.get("expected_cats")
+            pts.append({"date": day, "expected_cats": round(exp if exp is not None else sum(p.values()), 2), "p": p})
+    pts.append({"date": today, "expected_cats": bd["expected_cats"],
+                "p": {c["cat"]: c["p"] for c in bd["categories"]}})
+    return pts if len(pts) >= 2 else []
 
 
 def log_decisions(bd, kind, plan="daily"):
@@ -421,7 +448,7 @@ def log_decisions(bd, kind, plan="daily"):
     ctx = LEDGER / "context"
     ctx.mkdir(exist_ok=True)
     (ctx / f"{day}.json").write_text(json.dumps({
-        "date": day, "matchup_period": mp,
+        "date": day, "matchup_period": mp, "expected_cats": bd["expected_cats"],
         "weights": {c["cat"]: c["weight"] for c in bd["categories"]},
         "projected": {c["cat"]: {"mine": c["mine"], "theirs": c["theirs"], "p": c["p"]} for c in bd["categories"]},
         "attempts": {c["cat"]: c.get("att_mine") for c in bd["categories"] if c.get("att_mine")},

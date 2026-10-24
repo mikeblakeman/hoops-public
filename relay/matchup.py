@@ -281,7 +281,9 @@ def odds(cats, cur_m, cur_o, rm, vm, ro, vo):
 
 
 def label(p):
-    return "safe" if p >= 0.8 else "favored" if p >= 0.6 else "toss-up" if p > 0.4 else "underdog" if p > 0.2 else "likely loss"
+    """Category status shown on the page. Cutoffs (Mike, 2026-10-24): only 85%+ is safe and only 15% or
+    less is a likely loss, so a category like DD at 20% with days left stays in play."""
+    return "safe" if p >= 0.85 else "favored" if p >= 0.6 else "toss-up" if p > 0.4 else "underdog" if p > 0.15 else "likely loss"
 
 
 def matchup_value(p, O):
