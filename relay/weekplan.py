@@ -159,11 +159,14 @@ def dp_path(sps, gain, top, occ_id, swap_cost):
     """Best occupant per day for one streaming spot. A dropped player is not re-added."""
     if not sps:
         return []
-    states = {occ_id} if occ_id else set()
+    # the current occupant (None = the spot is open) is always a state, so "change nothing" is an option;
+    # before, an open spot had no "stay open" state and the plan forced an add even when every add hurt
+    others = set()
     for sp in sps:
         for _g, p in top[sp]:
-            states.add(p["id"])
-    states = sorted(states)
+            others.add(p["id"])
+    others.discard(occ_id)
+    states = [occ_id] + sorted(others)
     NEG = -1e9
     dp, back = [{} for _ in sps], [{} for _ in sps]
     for i, sp in enumerate(sps):
@@ -391,14 +394,23 @@ def plan(snap, today=None, D=None, with_trades=True):
             prev = pid
         return out
 
-    keep_exp = exact(base, [[occ_id] * len(sps)], obj1) if occ_id else base_exp
+    keep_path = [occ_id] * len(sps)
+    keep_exp = exact(base, [keep_path], obj1) if occ_id else base_exp
+
+    def checked_path(cost):
+        """dp_path ranks paths by summed per-day gain estimates; the exact outlook can disagree (a poor shooter
+        can cost more in FG% than his counting stats add). Never plan adds that the exact check says lose."""
+        path = dp_path(sps, gain1, top1, occ_id, cost)
+        e = exact(base, [path], obj1)
+        return (path, e) if e >= keep_exp - 1e-9 else (keep_path, keep_exp)
+
     plans = {}
     for name, cost in (("daily", SWAP_COST), ("low_effort", LOW_EFFORT_COST)):
-        path = dp_path(sps, gain1, top1, occ_id, cost)
+        path, e = checked_path(cost)
         dd = describe(path)
         plans[name] = {"swap_cost_assumed": cost, "adds": sum(1 for x in dd if x["swap"]),
-                       "expected_cats": round(exact(base, [path], obj1), 2), "days": dd}
-    path1 = dp_path(sps, gain1, top1, occ_id, SWAP_COST)
+                       "expected_cats": round(e, 2), "days": dd}
+    path1 = checked_path(SWAP_COST)[0]
 
     second = None
     droppable = [p for p in base if p["id"] not in X.keepers and p["rank"] >= SECOND_SPOT_MIN_RANK]
