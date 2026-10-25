@@ -10,7 +10,7 @@ notes) before writing the document to the page's database as brief/latest.
 import argparse
 import csv
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -179,6 +179,20 @@ def defer_idle_swap(days):
     return days
 
 
+def ir_why(p, row=None):
+    """IR moves depend on ESPN's live designation, which can change after the data run (Kyrie, Oct 25 2026: listed
+    Out after a rest night, day-to-day by morning). Say so, and flag short rest designations that usually clear."""
+    why = ("He is listed out; this frees a roster spot for a streamer. ESPN allows IR only while he shows Out. "
+           "If ESPN shows him day-to-day, skip this and the add that depends on it.")
+    row = row or {}
+    back = row.get("return_date") or ""
+    tomorrow = (datetime.now(CT).date() + timedelta(days=1)).isoformat()
+    if "rest" in (row.get("comment") or "").lower() or (back and back <= tomorrow):
+        why = (f"Short-term designation{f' (back about {back})' if back else ''}; these often switch to day-to-day "
+               f"before lock, so check ESPN first. ") + why
+    return why
+
+
 def carry_note(step, carry):
     """Why a streaming add also looks at next week. Only for adds the carry check put into the plan."""
     if not step.get("carry") or not carry.get("changed"):
@@ -248,11 +262,11 @@ def build(snap, kind="morning", teams=None, plan="daily"):
 
     actions = []
     for p in bd.get("ir_moves", []):
-        actions.append({"kind": "ir", "text": sentence(f"Move {p['name']} to IR"), "why": "He is out; this frees a roster spot for a streamer."})
+        actions.append({"kind": "ir", "text": sentence(f"Move {p['name']} to IR"), "why": ir_why(p, inj.get(p["id"]))})
     for f in bd.get("fills", []):
         a = f["add"]
-        where = (f"Then add {a['name']} ({a['team']}) to the spot that opens" if f.get("after_ir_move")
-                 else f"Add {a['name']} ({a['team']}) to your open roster spot")
+        where = (f"Then add {a['name']} ({a['team']}) to the spot that opens, only if the IR move went through"
+                 if f.get("after_ir_move") else f"Add {a['name']} ({a['team']}) to your open roster spot")
         today = "plays today, " if f["plays_today"] else ""
         helps = ", ".join(f["helps"]) or "several categories"
         actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"),

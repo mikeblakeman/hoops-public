@@ -19,7 +19,11 @@ Follow `playbook/common.md` first.
    "Next opponent" card. Rule (Mike, 2026-10-24): this week comes first. The only next-week move is the streaming
    spot, and the planner already wrote it into the stream plan (days marked `carry`), so the actions, Week ahead card
    and this card agree. Never suggest any other move for next week (drops, trades, lineup) in notes or the summary.
-   If news changes a carry add, edit the plan day as in step 2 and set `next_opponent.carry` to match. Do not mention
+   If news changes a carry add, edit the plan day as in step 2 and update `next_opponent.carry` to match: change
+   `end_holder`, `end_holder_id` and `monday_holder` to the new end-of-week streamer and keep `changed: false`.
+   Set `changed: true` only when you also fill `player`, `team`, `pos`, `from_date`, `this_week_cost`,
+   `next_week_gain` and `replaces` (the page reads them; on Oct 25 a bare `changed: true` printed "add () on
+   Invalid Date" and "NaN"). Do not mention
    the card on other days; `next_opponent` is null then.
 2. News check (about 5 searches): late injury, rest and lineup news for the user's players with games today, the
    top recommended pickups (today's planned add and the next day's), and the opponent's key players. If a planned
@@ -27,6 +31,9 @@ Follow `playbook/common.md` first.
    why. Edit BOTH the action and that day in `week.stream_plan.plans[<plan_used>].days` (`occupant`, `team`, `drop`,
    `swap`) so the Week ahead card shows the same players; never leave a note explaining a mismatch. If news changes
    any other recommendation (a starter ruled out), edit `actions` and `lineup` together and say why.
+   IR moves: an `ir` action is only valid while ESPN shows the player Out. Check his current status in the news
+   check (rest-night designations often flip to day-to-day by morning). If he is day-to-day, remove the IR action
+   and the open-spot add that depends on it, and fix `lineup` to match.
    The lineup card shows today's lineup AFTER the recommended moves (`lineup.after_moves` lists them). If you change
    or cancel a move, rebuild the card to match: `python -c "import json;from relay import matchup as M;
    print(json.dumps(M.lineup_after('snapshots', M.today_ct(), [ADD_IDS], [DROP_IDS])))"` and set `lineup`
