@@ -83,6 +83,10 @@ def yesterday(snap, day=None):
     opp = MU.opponent(D, mp) if mp else None
     if not opp:
         return None
+    if row and row["end"] == day:
+        # Last day of a matchup: the next day's scoreboard already belongs to the new period (all zeros),
+        # so "after minus before" would give negative stats. Skip the card rather than show wrong numbers.
+        return None
     # official results for the day
     after = H.load_scores(snap, (d0 + timedelta(days=1)).isoformat())
     before = H.load_scores(snap, day)

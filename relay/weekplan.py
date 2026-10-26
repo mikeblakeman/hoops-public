@@ -55,16 +55,8 @@ def mk(D, X, pid, slot=None):
 
 
 def avail_on(p, d):
-    """Availability on ISO date d, using the injury report's return date."""
-    st = (p.get("inj") or "").upper()
-    if not st:
-        return 1.0
-    rd = p.get("ret") or ""
-    if st in HARD_OUT:
-        return 0.85 if rd and d >= rd else 0.0
-    if rd and d > rd:
-        return 1.0
-    return MU.AVAIL.get(st, 1.0)
+    """Availability on ISO date d, using the injury report's return date (shared with the matchup engine)."""
+    return MU.avail_on(p, d)
 
 
 def team_players(D, X, tid):

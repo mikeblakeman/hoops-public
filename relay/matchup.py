@@ -80,6 +80,8 @@ class Data:
         self.cal = _rows(snap / "matchup_calendar.csv")
         self.sp_dates = {int(r["scoring_period"]): r["date_ct"] for r in _rows(snap / "scoring_period_dates.csv")}
         self.matchups = _rows(snap / "matchups.csv")
+        inj = snap / "injuries.csv"
+        self.ret = {r["player_id"]: r.get("return_date", "") for r in _rows(inj)} if inj.exists() else {}
         cs = snap / "current_scores.json"
         self.scores = json.loads(cs.read_text()) if cs.exists() else {}
         self.cats = [i["stat"] for i in self.settings["scoring_items"]]
@@ -119,6 +121,22 @@ def availability(status):
     return AVAIL.get((status or "").upper(), 1.0)
 
 
+HARD_OUT = {"OUT", "SUSPENSION", "INJURY_RESERVE"}
+
+
+def avail_on(p, d):
+    """Availability on ISO date d, using the injury report's return date when there is one."""
+    st = (p.get("inj") or "").upper()
+    if not st:
+        return 1.0
+    rd = p.get("ret") or ""
+    if st in HARD_OUT:
+        return 0.85 if rd and d >= rd else 0.0
+    if rd and d > rd:
+        return 1.0
+    return AVAIL.get(st, 1.0)
+
+
 def make_player(D, pid, slot=None):
     v = D.vals.get(str(pid))
     if not v:
@@ -129,7 +147,7 @@ def make_player(D, pid, slot=None):
             "eligible": v.get("eligible") or "", "line": calibrated(D, player_line(v)),
             "avail": availability(inj), "inj": inj if inj not in ("ACTIVE", "NORMAL") else "",
             "value": _num(v.get("value"), -99), "rank": int(_num(v.get("rank"), 999)),
-            "slot": slot, "status": v.get("status")}
+            "slot": slot, "status": v.get("status"), "ret": getattr(D, "ret", {}).get(str(pid), "")}
 
 
 def team_players(D, tid):
@@ -222,10 +240,11 @@ def simulate(D, players, sps, key, bench_negative=False):
     var = {c: 0.0 for c in COMPONENTS}
     games = 0.0
     for sp in sps:
-        today = [p for p in players if p["slot"] != "IR" and p["avail"] > 0 and plays(D, p, sp)]
+        d = D.sp_dates.get(sp, "")
+        today = [p for p in players if p["slot"] != "IR" and avail_on(p, d) > 0 and plays(D, p, sp)]
         starters, _, _ = assign(today, D.slots, key, bench_negative)
         for p, _slot in starters:
-            a = p["avail"]
+            a = avail_on(p, d)
             games += a
             for c in COMPONENTS:
                 mean[c] += a * p["line"][c]
