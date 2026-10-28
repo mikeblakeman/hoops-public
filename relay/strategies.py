@@ -77,9 +77,19 @@ def _ids(xs):
     return out
 
 
-def result(ir=(), adds=(), drops=(), bench=(), notes=(), **extra):
+def _id(x):
+    return None if x is None else str(x["id"] if isinstance(x, dict) else x)
+
+
+def result(ir=(), adds=(), drops=(), bench=(), notes=(), pairs=None, **extra):
+    """pairs: [(add, drop or None)] in the order the moves are made, so the brief can say "Add X, drop Y".
+    When pairs is given, adds and drops come from it."""
+    if pairs is not None:
+        pairs = [[_id(a), _id(d)] for a, d in pairs]
+        adds, drops = [a for a, _ in pairs], [d for _, d in pairs if d]
     return dict({"ir": _ids(ir), "adds": _ids(adds), "drops": _ids(drops), "bench": _ids(bench),
-                 "notes": list(notes)}, **extra)
+                 "notes": list(notes), "pairs": pairs if pairs is not None else [[a, None] for a in _ids(adds)]},
+                **extra)
 
 
 def caps(D):
@@ -112,7 +122,10 @@ def current(ctx, roster, protected, day):
     if bd.get("error"):
         return result(notes=[f"engine: {bd['error']}"])
     sel = MV.select_moves(bd, bd.get("week_plan") or {}, "daily")
-    return result(sel["ir_ids"], sel["add_ids"], sel["drop_ids"], notes=sel["text"])
+    pairs = [(f["add"]["id"], None) for f in sel["fills"]] + [(m["add"]["id"], m["drop"]["id"]) for m in sel["top"]]
+    if sel["step"] and sel["step"].get("id"):
+        pairs.append((sel["step"]["id"], sel["step"].get("drop_id")))
+    return result(sel["ir_ids"], notes=sel["text"], pairs=pairs)
 
 
 def hold(ctx, roster, protected, day):
@@ -121,7 +134,7 @@ def hold(ctx, roster, protected, day):
     if bd.get("error"):
         return result(notes=[f"engine: {bd['error']}"])
     fills = bd.get("fills") or []
-    return result([p["id"] for p in bd.get("ir_moves", [])], [f["add"]["id"] for f in fills],
+    return result([p["id"] for p in bd.get("ir_moves", [])], pairs=[(f["add"]["id"], None) for f in fills],
                   notes=[f"{p['name']} to IR" for p in bd.get("ir_moves", [])] +
                         [f"add {f['add']['name']}" for f in fills])
 
@@ -139,7 +152,7 @@ def _fill(ctx, protected, smart):
         p["slot"] = "IR"
     roster = list(mine)
     pool = sorted([p for p in free_agents(D) if p["avail"] > 0 and MU.plays(D, p, sp0)], key=key, reverse=True)
-    adds, drops, notes = [], [], [f"{p['name']} to IR" for p in ir]
+    adds, pairs, notes = [], [], [f"{p['name']} to IR" for p in ir]
 
     def playing(r):
         return [p for p in r if p["slot"] != "IR" and p["avail"] > 0 and MU.plays(D, p, sp0)]
@@ -184,15 +197,14 @@ def _fill(ctx, protected, smart):
             x = fits[0]
         roster = r0 + [x]
         adds.append(x)
-        if drop is not None:
-            drops.append(drop)
+        pairs.append((x, drop))
         notes.append(f"add {x['name']}" + (f" for {drop['name']}" if drop is not None else ""))
 
     bench = []
     if smart and len(sps) <= 2:
         bench, why = protect_percentages(D, c["O"], [p for p, _ in MU.assign(playing(roster), D.slots, key, True)[0]])
         notes += why
-    return result(ir, adds, drops, bench, notes)
+    return result(ir, bench=bench, notes=notes, pairs=pairs)
 
 
 def protect_percentages(D, O, starters):
@@ -265,6 +277,7 @@ def two_spots(ctx, roster, protected, day):
                                                          if d0.get("deferred_to") else []))
     drops = a["drops"] + ([d0["drop_id"]] if d0.get("drop_id") else [])
     return dict(a, adds=a["adds"] + [str(d0["id"])], drops=_ids(drops), spot_b=str(d0["id"]),
+                pairs=a["pairs"] + [[str(d0["id"]), _id(d0.get("drop_id"))]],
                 notes=a["notes"] + [f"spot B: add {d0['occupant']}" + (f" for {d0['drop']}" if d0.get("drop") else "")])
 
 
@@ -279,7 +292,7 @@ def schedule_stack(ctx, roster, protected, day):
     notes = [f"{p['name']} to IR" for p in bd.get("ir_moves", [])] + [f"add {f['name']}" for f in fills]
     mp = bd.get("matchup_period")
     if ctx.state.get("stacked") == mp:
-        return result(ir, fills, notes=notes, stacked=mp)
+        return result(ir, notes=notes, stacked=mp, pairs=[(f, None) for f in fills])
     D, c = ctx.data(), ctx.context()
     sps, key = c["sps"], c["key"]
     # games x value, with value = the engine's matchup value per game (what a game is worth this week)
@@ -292,7 +305,7 @@ def schedule_stack(ctx, roster, protected, day):
     pool.sort(key=lambda p: -score[p["id"]])
     holds = [p for p in churnable(c["mine"], protected) if p["id"] not in set(ir)]
     holds.sort(key=worth)
-    adds, drops, used = list(fills), [], set()
+    pairs, used = [(f, None) for f in fills], set()
     for h in holds:
         hs = worth(h)
         best = next((x for x in pool if x["id"] not in used), None)
@@ -301,11 +314,10 @@ def schedule_stack(ctx, roster, protected, day):
         bs = score[best["id"]]
         if bs > 0 and bs >= hs + STACK_EDGE * abs(hs) and bs > hs:
             used.add(best["id"])
-            adds.append(best)
-            drops.append(h)
+            pairs.append((best, h))
             notes.append(f"add {best['name']} for {h['name']} ({games_left(D, best, sps)} games vs "
                          f"{games_left(D, h, sps)})")
-    return result(ir, adds, drops, notes=notes, stacked=mp)
+    return result(ir, notes=notes, stacked=mp, pairs=pairs)
 
 
 DECIDE = {"current": current, "fill_all": fill_all, "smart_fill": smart_fill, "two_spots": two_spots,
@@ -313,11 +325,70 @@ DECIDE = {"current": current, "fill_all": fill_all, "smart_fill": smart_fill, "t
 
 
 def decide(sid, ctx, roster, protected, day):
-    """Run one strategy and enforce the protected rule on its output."""
+    """Run one strategy and enforce the protected rule on its output (a refused drop also cancels its add, which
+    would have no roster room)."""
     out = DECIDE[sid](ctx, roster, protected, day)
     bad = [i for i in out["drops"] if i in protected]
     if bad:
         out["drops"] = [i for i in out["drops"] if i not in protected]
+        cancelled = [a for a, d in out.get("pairs", []) if d in bad]
+        out["pairs"] = [[a, d] for a, d in out.get("pairs", []) if d not in bad]
+        out["adds"] = [a for a in out["adds"] if a not in cancelled]
         out["notes"] = out["notes"] + [f"refused: would drop protected player {i}" for i in bad]
         out["refused"] = bad
+    return out
+
+
+# ------------------------------------------------------------------ the real team (Phase 3)
+def protected_set(snap, D, rows):
+    """Keepers (draft_picks.csv keeper flags, my team) plus the 10 highest vorp_season players on the roster."""
+    keepers = {r["player_id"] for r in MU._rows(Path(snap) / "draft_picks.csv")
+               if r.get("keeper") == "True" and str(r.get("team_id")) == D.my_tid}
+    ids = [str(r["player_id"]) for r in rows]
+    top = sorted(ids, key=lambda i: -MU._num((D.vals.get(i) or {}).get("vorp_season"), -999))[:10]
+    return sorted((keepers & set(ids)) | set(top))
+
+
+def real_rows(D):
+    keep = ("player_id", "name", "slot", "acquisition_type", "acquired_ct")
+    return [{k: r.get(k, "") for k in keep} for r in D.roster if r["team_id"] == D.my_tid]
+
+
+def spot_b_of(D, protected):
+    """Spot B for the real team: the lowest-value churnable active player who is not the current streamer."""
+    players = [p for p in MU.team_players(D, D.my_tid) if p["slot"] != "IR"]
+    occ_a = WP.occupant_of(D, players)
+    cand = [p for p in players if str(p["id"]) not in protected and (not occ_a or p["id"] != occ_a["id"])]
+    return min(cand, key=lambda p: p["value"])["id"] if cand else None
+
+
+def real_decision(snap, day, sid):
+    """Today's moves for Mike's REAL roster under strategy `sid` (the brief uses this when relay/strategy.json makes
+    `sid` active). The paper lab keeps state across a week; the real team uses stateless versions of it:
+    two_spots' spot B is recomputed each day and schedule_stack stacks only on the matchup's first day.
+    Returns the decision plus readable `moves` ({add, drop}), `ir_players` and `bench_players`."""
+    D = MU.Data(snap)
+    rows = real_rows(D)
+    protected = set(protected_set(snap, D, rows))
+    mp, sps, prow = MU.current_period(D, day)
+    state = {}
+    if sid == "two_spots":
+        state["spot_b"] = spot_b_of(D, protected)
+    if sid == "schedule_stack" and prow and day.isoformat() != prow["start"]:
+        state["stacked"] = mp
+    ctx = Ctx(snap, day, rows, state=state)
+    out = decide(sid, ctx, rows, protected, day)
+    Dx = ctx.data()
+
+    def info(pid):
+        if not pid:
+            return None
+        p = MU.make_player(Dx, pid)
+        return {"id": str(pid), "name": p["name"], "team": p["team"], "pos": p["eligible"]} if p else \
+            {"id": str(pid), "name": str(pid), "team": "", "pos": ""}
+
+    out["moves"] = [{"add": info(a), "drop": info(d)} for a, d in out.get("pairs", [])]
+    out["ir_players"] = [info(i) for i in out["ir"]]
+    out["bench_players"] = [info(i) for i in out["bench"]]
+    out["strategy"] = sid
     return out

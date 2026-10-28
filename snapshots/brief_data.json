@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-10-28T09:43-05:00",
- "data_run_ct": "2026-10-28T09:42-05:00",
+ "generated_ct": "2026-10-28T09:59-05:00",
+ "data_run_ct": "2026-10-28T09:59-05:00",
  "date": "2026-10-28",
  "matchup_period": 2,
  "period": {
@@ -2359,14 +2359,14 @@
   "next_opponent": null,
   "trades": {
    "baseline_cats_per_week": {
-    "1": 6.38,
-    "2": 5.49,
-    "3": 7.04,
-    "4": 8.92,
-    "5": 4.62,
-    "6": 5.14,
-    "7": 6.01,
-    "8": 4.41
+    "1": 6.34,
+    "2": 5.46,
+    "3": 7.01,
+    "4": 8.91,
+    "5": 4.57,
+    "6": 5.11,
+    "7": 6.23,
+    "8": 4.38
    },
    "protected_keepers": [
     "Donovan Mitchell",
@@ -2374,42 +2374,8 @@
     "Kawhi Leonard",
     "Victor Wembanyama"
    ],
-   "n_candidates": 696,
+   "n_candidates": 690,
    "top": [
-    {
-     "partner_team_id": "7",
-     "give": [
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 28,
-       "age": "29"
-      },
-      {
-       "id": "3064440",
-       "name": "Zach LaVine",
-       "pos": "SG/SF",
-       "team": "SAC",
-       "rank": 58,
-       "age": "31"
-      }
-     ],
-     "get": {
-      "id": "4432158",
-      "name": "Evan Mobley",
-      "pos": "PF/C",
-      "team": "CLE",
-      "rank": 37,
-      "age": "25"
-     },
-     "my_cats_per_week": 0.669,
-     "their_cats_per_week": 0.018,
-     "value_given": 2.0,
-     "value_got": 1.4,
-     "gets_extra_spot": true
-    },
     {
      "partner_team_id": "8",
      "give": [
@@ -2439,77 +2405,9 @@
       "age": "25"
      },
      "my_cats_per_week": 0.523,
-     "their_cats_per_week": 0.378,
+     "their_cats_per_week": 0.371,
      "value_given": 2.0,
      "value_got": 0.8,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "7",
-     "give": [
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 28,
-       "age": "29"
-      },
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 35,
-       "age": "36"
-      }
-     ],
-     "get": {
-      "id": "4432158",
-      "name": "Evan Mobley",
-      "pos": "PF/C",
-      "team": "CLE",
-      "rank": 37,
-      "age": "25"
-     },
-     "my_cats_per_week": 0.619,
-     "their_cats_per_week": 0.107,
-     "value_given": 4.4,
-     "value_got": 1.4,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "7",
-     "give": [
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 35,
-       "age": "36"
-      },
-      {
-       "id": "3907497",
-       "name": "Dejounte Murray",
-       "pos": "PG/SG",
-       "team": "NOP",
-       "rank": 53,
-       "age": "30"
-      }
-     ],
-     "get": {
-      "id": "4432158",
-      "name": "Evan Mobley",
-      "pos": "PF/C",
-      "team": "CLE",
-      "rank": 37,
-      "age": "25"
-     },
-     "my_cats_per_week": 0.519,
-     "their_cats_per_week": 0.257,
-     "value_given": 1.2,
-     "value_got": 1.4,
      "gets_extra_spot": true
     },
     {
@@ -2540,8 +2438,8 @@
       "rank": 42,
       "age": "25"
      },
-     "my_cats_per_week": 0.494,
-     "their_cats_per_week": 0.355,
+     "my_cats_per_week": 0.495,
+     "their_cats_per_week": 0.35,
      "value_given": 0.7,
      "value_got": 0.8,
      "gets_extra_spot": true
@@ -2575,9 +2473,43 @@
       "age": "23"
      },
      "my_cats_per_week": 0.491,
-     "their_cats_per_week": 0.403,
+     "their_cats_per_week": 0.396,
      "value_given": 2.0,
      "value_got": 0.4,
+     "gets_extra_spot": true
+    },
+    {
+     "partner_team_id": "7",
+     "give": [
+      {
+       "id": "4065733",
+       "name": "Ty Jerome",
+       "pos": "PG/SG",
+       "team": "MEM",
+       "rank": 28,
+       "age": "29"
+      },
+      {
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 35,
+       "age": "36"
+      }
+     ],
+     "get": {
+      "id": "4432158",
+      "name": "Evan Mobley",
+      "pos": "PF/C",
+      "team": "CLE",
+      "rank": 37,
+      "age": "25"
+     },
+     "my_cats_per_week": 0.618,
+     "their_cats_per_week": 0.024,
+     "value_given": 4.4,
+     "value_got": 1.4,
      "gets_extra_spot": true
     },
     {
@@ -2609,9 +2541,43 @@
       "age": "29"
      },
      "my_cats_per_week": 0.463,
-     "their_cats_per_week": 0.402,
+     "their_cats_per_week": 0.415,
      "value_given": 0.7,
      "value_got": -1.6,
+     "gets_extra_spot": true
+    },
+    {
+     "partner_team_id": "7",
+     "give": [
+      {
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 35,
+       "age": "36"
+      },
+      {
+       "id": "3907497",
+       "name": "Dejounte Murray",
+       "pos": "PG/SG",
+       "team": "NOP",
+       "rank": 53,
+       "age": "30"
+      }
+     ],
+     "get": {
+      "id": "4432158",
+      "name": "Evan Mobley",
+      "pos": "PF/C",
+      "team": "CLE",
+      "rank": 37,
+      "age": "25"
+     },
+     "my_cats_per_week": 0.518,
+     "their_cats_per_week": 0.171,
+     "value_given": 1.2,
+     "value_got": 1.4,
      "gets_extra_spot": true
     },
     {
@@ -2643,9 +2609,43 @@
       "age": "29"
      },
      "my_cats_per_week": 0.447,
-     "their_cats_per_week": 0.445,
+     "their_cats_per_week": 0.458,
      "value_given": 2.0,
      "value_got": -1.6,
+     "gets_extra_spot": true
+    },
+    {
+     "partner_team_id": "7",
+     "give": [
+      {
+       "id": "4065733",
+       "name": "Ty Jerome",
+       "pos": "PG/SG",
+       "team": "MEM",
+       "rank": 28,
+       "age": "29"
+      },
+      {
+       "id": "4683021",
+       "name": "Deni Avdija",
+       "pos": "SF/PF",
+       "team": "POR",
+       "rank": 34,
+       "age": "25"
+      }
+     ],
+     "get": {
+      "id": "4432158",
+      "name": "Evan Mobley",
+      "pos": "PF/C",
+      "team": "CLE",
+      "rank": 37,
+      "age": "25"
+     },
+     "my_cats_per_week": 0.52,
+     "their_cats_per_week": 0.139,
+     "value_given": 4.5,
+     "value_got": 1.4,
      "gets_extra_spot": true
     },
     {
@@ -2676,8 +2676,8 @@
       "rank": 69,
       "age": "29"
      },
-     "my_cats_per_week": 0.405,
-     "their_cats_per_week": 0.333,
+     "my_cats_per_week": 0.404,
+     "their_cats_per_week": 0.345,
      "value_given": 0.6,
      "value_got": -1.6,
      "gets_extra_spot": true
@@ -2710,8 +2710,8 @@
       "rank": 20,
       "age": "38"
      },
-     "my_cats_per_week": 0.383,
-     "their_cats_per_week": 0.327,
+     "my_cats_per_week": 0.382,
+     "their_cats_per_week": 0.326,
      "value_given": 4.4,
      "value_got": 4.9,
      "gets_extra_spot": true
@@ -2744,8 +2744,8 @@
       "rank": 11,
       "age": "30"
      },
-     "my_cats_per_week": 0.381,
-     "their_cats_per_week": 0.548,
+     "my_cats_per_week": 0.377,
+     "their_cats_per_week": 0.547,
      "value_given": 4.9,
      "value_got": 6.1,
      "gets_extra_spot": true
@@ -2778,8 +2778,8 @@
       "rank": 16,
       "age": "19"
      },
-     "my_cats_per_week": 0.38,
-     "their_cats_per_week": 0.265,
+     "my_cats_per_week": 0.381,
+     "their_cats_per_week": 0.268,
      "value_given": 4.9,
      "value_got": 5.6,
      "gets_extra_spot": true

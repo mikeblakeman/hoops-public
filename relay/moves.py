@@ -5,7 +5,27 @@ paper team), so the lab's control makes exactly the moves Mike is told to make. 
 the brief must never fail because of the lab.
 """
 
+import json
+from pathlib import Path
+
 IDLE_GAIN = 0.02
+STRATEGY_FILE = Path(__file__).with_name("strategy.json")
+DEFAULT_STRATEGY = "current"
+
+
+def load_strategy(path=None):
+    """relay/strategy.json: which strategy the brief's actions follow (Mike approves every switch; see
+    claude/engine/strategy-lab-spec.md section 6). Returns {active, since, approved_by, previous, control}.
+    `control` is what the lab measures against: the previous strategy after a switch, else the active one.
+    A missing or broken file means `current`, the week planner's one streaming spot."""
+    try:
+        d = json.loads(Path(path or STRATEGY_FILE).read_text())
+    except (OSError, ValueError):
+        d = {}
+    active = d.get("active") or DEFAULT_STRATEGY
+    prev = d.get("previous") or None
+    return {"active": active, "since": d.get("since"), "approved_by": d.get("approved_by"), "previous": prev,
+            "control": prev if prev and prev != active else active}
 
 
 def defer_idle_swap(days):

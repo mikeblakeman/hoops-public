@@ -412,15 +412,18 @@ def _context(D, today):
                 opp_sim=opp_sim, O=O, gm=gm, go=go, key=key)
 
 
-def _lineup(D, roster, sp0, key, O):
-    """Best lineup for one day from `roster` (IR players stay on IR)."""
+def _lineup(D, roster, sp0, key, O, bench_ids=()):
+    """Best lineup for one day from `roster` (IR players stay on IR). bench_ids: players a strategy sits today
+    (shown on the bench as hurting close categories)."""
     lineup = {"scoring_period": sp0, "date": D.sp_dates.get(sp0) if sp0 else None,
               "starters": [], "bench": [], "no_game": [], "ir": [], "open_slots": 0}
     if not sp0:
         return lineup
     active = [p for p in roster if p["slot"] != "IR"]
+    sit = {str(i) for i in bench_ids}
     playing = [p for p in active if plays(D, p, sp0) and p["avail"] > 0]
-    st, be, free = assign(playing, D.slots, key, True)
+    st, be, free = assign([p for p in playing if str(p["id"]) not in sit], D.slots, key, True)
+    be = be + [(p, "negative") for p in playing if str(p["id"]) in sit]
     lineup["open_slots"] = len(free)
     for p, slot in st:
         g = D.games[(sp0, p["team"])]
@@ -454,7 +457,7 @@ def _roster_after(D, mine, add_ids=(), drop_ids=(), ir_ids=()):
     return roster
 
 
-def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=()):
+def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), bench_ids=()):
     """Today's lineup after the moves the brief recommends (players added, dropped or moved to IR), so the
     page's lineup card shows the same players as its actions. None if it cannot be built."""
     D = Data(snap)
@@ -462,7 +465,7 @@ def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=()):
     if not ctx or not ctx["sps"]:
         return None
     roster = _roster_after(D, ctx["mine"], add_ids, drop_ids, ir_ids)
-    return _lineup(D, roster, ctx["sps"][0], ctx["key"], ctx["O"])
+    return _lineup(D, roster, ctx["sps"][0], ctx["key"], ctx["O"], bench_ids)
 
 
 def coverage_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), current_streamer=None, streamer_by_date=None):

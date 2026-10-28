@@ -52,6 +52,13 @@ Follow `playbook/common.md` first.
      cats per week for each side, ages). Trades are Mike's call; never imply they are urgent.
    - `news`: `[{player, text, source, url}]`, only items that affect a decision.
    - `notes`: keep any line that starts with "Data warning" (the data run behind the brief is old); say so in the summary too.
+4b. Strategy lab: `out/brief.json` already has `lab` from the data job, and `strategy` says which strategy the actions
+   follow (`relay/strategy.json`, Mike approves every switch). If `lab.ready` is set, brief.py already put the "Ready
+   to switch" action at the top; mention it in the summary. If `lab.switch_back` is set, the "Switch back?" action is
+   at the top; mention that too. Never switch strategies on your own. Mondays: add one line to the weekly review with
+   each strategy's edge and status. When the active strategy is not `current`, the actions come from that strategy
+   and the Week ahead card shows no streaming plan; if news changes one of its moves, edit `actions` and `lineup`
+   together as in step 2.
 5. Mondays (or the first day of a new matchup): weekly review. Skip it, and leave `weekly` null, until a matchup
    has finished (the brief's `matchup_period` is 2 or later and `ledger/summary.json` exists).
    - Decisions: read `ledger/summary.json` (graded by the data job): `add_win_rate`, `adds_graded`, `misses`.

@@ -14,3 +14,11 @@ Follow `playbook/common.md` first.
   `vorp_pg`, `team_games_this_matchup`). Explain in categories.
 - Trades: start from `week_plan.trades.top` (cats per week for both sides), then check rest-of-season value (`vorp_season`), category fit, games during fantasy playoff weeks
   (`schedule_grid.csv`), next-season keeper value (age in `player_bio.csv`).
+- Strategy questions ("how is fill every slot doing?"): read `ledger/lab/summary.json` (and `ledger/lab/weeks.csv` in
+  hoops-relay); explain edge, weeks, live weeks and confidence in plain words. The paper teams are simulated; say so.
+- "Switch to <id>" from Mike: if `lab.ready.id` is not that id, say what is missing (weeks, live weeks, edge,
+  confidence) and ask once more; if he confirms, switch anyway, since it is his call. To switch (session with push access to
+  hoops-relay): set `relay/strategy.json` to `{"active": "<id>", "since": "<today>", "approved_by": "Mike",
+  "previous": "<old active>"}`, run `python -m unittest discover -s tests -t .`, push, confirm the next data run is
+  green and that `python tools/brief.py snapshots out/brief.json --no-log` shows `strategy.followed == "<id>"`, then
+  log the switch in `claude/log/decisions.md` with the evidence. "Switch back" is the same edit with the ids swapped.

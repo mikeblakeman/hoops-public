@@ -52,6 +52,7 @@ LIMITS = ("Limits: other managers do not react to paper moves, paper teams canno
           "5:03 PM check can, and paper totals will differ from your real results. These apply to every paper team "
           "equally, so the comparison stays fair.")
 MIN_WEEKS, MIN_LIVE, MAX_BACKTEST, MIN_EDGE, MAX_P, DISASTER = 4, 2, 2, 0.5, 0.10, 2.0
+SWITCH_BACK_WEEKS = 3
 FREE = MU.FREE
 
 
@@ -100,9 +101,19 @@ def first_tip(snap, day):
     return tips[0] if tips else None
 
 
+def strategy_cfg():
+    """relay/strategy.json via relay.moves.load_strategy: active (what the brief follows) and control (what tests
+    are measured against: the previous strategy after a switch, else the active one)."""
+    from . import moves as MV
+    return MV.load_strategy()
+
+
 def active_strategy():
-    d = load_json(ROOT / "relay" / "strategy.json", {}) or {}
-    return d.get("active") or S.CONTROL
+    return strategy_cfg()["active"]
+
+
+def control_strategy():
+    return strategy_cfg()["control"]
 
 
 # ------------------------------------------------------------------ decision view (no hindsight)
@@ -129,18 +140,8 @@ def make_view(snap, day, dest=None):
 
 
 # ------------------------------------------------------------------ paper rosters
-def real_rows(D):
-    keep = ("player_id", "name", "slot", "acquisition_type", "acquired_ct")
-    return [{k: r.get(k, "") for k in keep} for r in D.roster if r["team_id"] == D.my_tid]
-
-
-def protected_set(snap, D, rows_):
-    """Keepers (draft_picks.csv keeper flags, my team) plus the 10 highest vorp_season players on the roster."""
-    keepers = {r["player_id"] for r in rows(Path(snap) / "draft_picks.csv")
-               if r.get("keeper") == "True" and str(r.get("team_id")) == D.my_tid}
-    ids = [r["player_id"] for r in rows_]
-    top = sorted(ids, key=lambda i: -MU._num((D.vals.get(i) or {}).get("vorp_season"), -999))[:10]
-    return sorted((keepers & set(ids)) | set(top))
+real_rows = S.real_rows
+protected_set = S.protected_set
 
 
 def reset_state(sid, snap, D, mp, prow, day):
@@ -530,7 +531,7 @@ def rollup(hist, lab=None):
     finished = [(mp, ds) for mp, ds in sorted(pdates.items())
                 if ds and ds[-1] <= last_scored and any(int(r["matchup_period"]) == mp for r in days)]
     scale = league_scale(hist, finished, lines)
-    control = active_strategy()
+    control = control_strategy()
     out = []
     for mp, ds in finished:
         opp = opponent_of(hist, mp, me)
@@ -662,7 +663,8 @@ def summary(hist, lab=None, now=None):
     now = now or datetime.now(CT)
     weeks = rows(lab / "weeks.csv")
     days = rows(lab / "days.csv")
-    control = active_strategy()
+    cfg = strategy_cfg()
+    control, active = cfg["control"], cfg["active"]
     decs = sorted((lab / "decisions").glob("*.json")) if (lab / "decisions").exists() else []
     last = load_json(decs[-1], {}) if decs else {}
     me = str((load_json(hist / "status.json", {}) or {}).get("my_team_id"))
@@ -672,14 +674,14 @@ def summary(hist, lab=None, now=None):
     opp_tot = {c: sum(float(r[c] or 0) for r in days if r["strategy"] == "opponent" and r["date"] in scored)
                for c in COMP}
     opp = opponent_of(hist, mp, me) if mp else None
-    out_s, best = [], None
+    out_s, best, switch_back = [], None, None
     for sid in S.ORDER:
         name, summ, effort = S.INFO[sid]
         st = load_json(lab / "state" / f"{sid}.json", {}) or {}
         mine = [w for w in weeks if w["strategy"] == sid]
         ctl = {w["matchup_period"]: w for w in weeks if w["strategy"] == control}
         paired_w = [{"matchup_period": int(w["matchup_period"]), "mode": w["mode"], "cats_won": float(w["cats_won"]),
-                     "edge": float(w["edge"] or 0), "smooth_edge": float(w["smooth_edge"] or 0)}
+                     "edge": float(w["edge"] or 0), "smooth_edge": float(w["smooth_edge"] or 0), "start": w["start"]}
                     for w in mine if w["matchup_period"] in ctl]
         season, status = evaluate(paired_w, int(st.get("violations") or 0))
         if sid == control:
@@ -687,6 +689,20 @@ def summary(hist, lab=None, now=None):
             season.update(edge=0.0, confidence=None)
         elif sid in S.REFERENCE:
             status = "reference"
+        elif sid == active:
+            # in use after a switch: never flagged or retired; "Switch back?" when it trails the previous strategy
+            # by 0.5+ categories a week over 3+ live weeks since the switch with 90% confidence (spec section 6)
+            status = "ahead" if (season.get("edge") or 0) > 0 else "behind" if (season.get("edge") or 0) < 0 \
+                else "testing"
+            since = [w for w in paired_w if w["mode"] == "live" and (not cfg["since"] or w["start"] >= cfg["since"])]
+            m, _p_up, p_down = paired([w["smooth_edge"] for w in since])
+            edge_live = sum(w["edge"] for w in since) / len(since) if since else 0.0
+            if len(since) >= SWITCH_BACK_WEEKS and edge_live <= -MIN_EDGE and p_down is not None and p_down <= MAX_P:
+                switch_back = {"id": control, "from": sid, "edge": round(edge_live, 2), "weeks": len(since),
+                               "confidence": round(1 - p_down, 3),
+                               "summary": f"{S.INFO[sid][0]} trails {S.INFO[control][0]} by {-edge_live:.1f} "
+                                          f"categories a week over {len(since)} live weeks, "
+                                          f"{round((1 - p_down) * 100)}% sure."}
         elif st.get("status") == "retired":
             status = "retired"
         elif status == "retired" and st:
@@ -704,14 +720,16 @@ def summary(hist, lab=None, now=None):
                       "week": week, "season": season,
                       "adds_per_day": round(sum(adds) / len(adds), 2) if adds else None,
                       "status": status, "today": today})
-        if status == "ready" and (best is None or season["edge"] > best[1]["edge"]):
+        if status == "ready" and sid != active and (best is None or season["edge"] > best[1]["edge"]):
             best = (sid, season)
     ready = None
     if best:
         sid, se = best
-        ready = {"id": sid, "summary": f"{S.INFO[sid][0]} wins {se['edge']:+.1f} categories a week over the current "
-                                      f"plan across {se['weeks']} weeks ({se['live_weeks']} live), "
-                                      f"{round(se['confidence'] * 100)}% sure."}
+        ready = {"id": sid, "name": S.INFO[sid][0], "edge": se["edge"], "weeks": se["weeks"],
+                 "live_weeks": se["live_weeks"], "confidence": se["confidence"],
+                 "summary": f"{S.INFO[sid][0]} wins {se['edge']:+.1f} categories a week over "
+                            f"{'the current plan' if control == active else S.INFO[control][0]} across "
+                            f"{se['weeks']} weeks ({se['live_weeks']} live), {round(se['confidence'] * 100)}% sure."}
     back = sorted({int(w["matchup_period"]) for w in weeks if w["strategy"] in S.ORDER and w["mode"] != "live"})
     notes = []
     if back:
@@ -725,11 +743,11 @@ def summary(hist, lab=None, now=None):
     if last.get("mode") == "missed" and last.get("date") == now.date().isoformat():
         notes.append("No data run landed before today's first tip, so the paper teams made no moves today.")
     notes.append(LIMITS)
-    doc = {"control": control, "active": control, "rule": RULE,
+    doc = {"control": control, "active": active, "since": cfg["since"], "rule": RULE,
            "week": {"matchup_period": mp, "days_scored": len(scored), "opponent_team_id": opp,
                     "opponent": f"Team {opp}" if opp else None},
            "decided": last.get("date"), "decision_mode": last.get("mode"),
-           "strategies": out_s, "ready": ready, "notes": notes}
+           "strategies": out_s, "ready": ready, "switch_back": switch_back, "notes": notes}
     fp = lab / "summary.json"
     old = load_json(fp, {}) or {}
     if {k: v for k, v in old.items() if k != "updated_ct"} == doc:

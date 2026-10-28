@@ -1,7 +1,8 @@
 {
- "updated_ct": "2026-10-28T08:50-05:00",
+ "updated_ct": "2026-10-28T10:00-05:00",
  "control": "current",
  "active": "current",
+ "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 2,
@@ -163,6 +164,7 @@
   }
  ],
  "ready": null,
+ "switch_back": null,
  "notes": [
   "Week 1 was replayed from saved data (backtest). At most 2 backtest weeks count as evidence.",
   "Week 2 is partly replayed or had a missed morning, so it will count as backtest.",
