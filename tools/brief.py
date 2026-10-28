@@ -136,6 +136,28 @@ def lineup_after(snap, day, add_ids, drop_ids, ir_ids):
         return None
 
 
+def coverage_after(snap, day, add_ids, drop_ids, ir_ids, current_streamer, streamer_by_date):
+    """relay.matchup.coverage_after for the brief's date; None if it fails (the planner's rows stay)."""
+    try:
+        from datetime import date as _date
+        from relay import matchup
+        return matchup.coverage_after(snap, _date.fromisoformat(day), add_ids, drop_ids, ir_ids,
+                                      current_streamer, streamer_by_date)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def apply_coverage(wp, cov):
+    """Overwrite my side of the week plan's coverage rows with `cov` (matched by date)."""
+    by = {c["date"]: c for c in cov or []}
+    for d in wp.get("days", []):
+        c = by.get(d.get("date"))
+        if c:
+            d.update(my_starters=c["my_starters"], my_open_slots=c["my_open_slots"],
+                     my_no_slot=c["my_no_slot"], starters=c["starters"], plan_roster=True)
+    wp["light_days"] = [d["date"] for d in wp.get("days", []) if len(d.get("my_open_slots", [])) >= 4]
+
+
 def _drop_past_days(wp, today):
     wp = dict(wp, days=[d for d in wp.get("days", []) if d.get("date", "") >= today])
     sp = dict(wp["stream_plan"])
@@ -293,6 +315,17 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         actions.append({"kind": "add", "text": sentence(where),
                         "why": f"Week plan: tips {step['tip_ct']} CT vs {step['plays_vs']}; helps {helps}. "
                                f"+{step['day_gain']:.2f} expected categories today." + carry_note(step, carry)})
+    if wp_ok and plan_days:
+        # Week ahead coverage on the roster the brief recommends (today's IR moves and fills, the streaming
+        # spot's planned player each day), so its "You start" column agrees with the lineup card and the plan.
+        d0 = plan_days[0]
+        cur_id = d0.get("drop_id") if d0.get("swap") else d0.get("id")
+        by_date = {d["date"]: d.get("id") for d in plan_days}
+        if d0.get("swap") and not step:          # today's plan swap is not one of today's actions
+            by_date[d0["date"]] = cur_id
+        cov = coverage_after(snap, bd["date"], [f["add"]["id"] for f in bd.get("fills", [])], [],
+                             [p["id"] for p in bd.get("ir_moves", [])], cur_id, by_date)
+        apply_coverage(wp, cov)
     later = [d for d in plan_days[1:] if d["swap"]]
     light = [d for d in wp.get("days", [])[1:] if len(d["my_open_slots"]) >= 4] if wp_ok else []
     if later or light:
@@ -428,9 +461,9 @@ def log_decisions(bd, kind, plan="daily"):
             new.append({"rec": rec, "player_id": f["add"]["id"], "name": f["add"]["name"], "team": f["add"]["team"],
                         "related_id": "", "related_name": "open spot", "gain": f["gain"]})
     wp = bd.get("week_plan") or {}
-    if wp.get("stream_plan") and not wp.get("error") and not bd.get("fills"):
+    if wp.get("stream_plan") and not wp.get("error") and wp["stream_plan"]["plans"][plan].get("days"):
         d0 = wp["stream_plan"]["plans"][plan]["days"][0]
-        if d0["swap"]:
+        if d0["swap"] and d0.get("id") not in {f["add"]["id"] for f in bd.get("fills", [])}:   # same rule as build()
             new.append({"rec": "add", "player_id": d0["id"], "name": d0["occupant"], "team": d0["team"],
                         "related_id": d0.get("drop_id") or "", "related_name": d0.get("drop") or "open spot",
                         "gain": d0["day_gain"], "note": "week_plan"})

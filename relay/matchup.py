@@ -436,16 +436,10 @@ def _lineup(D, roster, sp0, key, O):
     return lineup
 
 
-def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=()):
-    """Today's lineup after the moves the brief recommends (players added, dropped or moved to IR), so the
-    page's lineup card shows the same players as its actions. None if it cannot be built."""
-    D = Data(snap)
-    ctx = _context(D, today)
-    if not ctx or not ctx["sps"]:
-        return None
+def _roster_after(D, mine, add_ids=(), drop_ids=(), ir_ids=()):
     drop_ids, ir_ids = {str(i) for i in drop_ids}, {str(i) for i in ir_ids}
     roster = []
-    for p in ctx["mine"]:
+    for p in mine:
         if str(p["id"]) in drop_ids:
             continue
         if str(p["id"]) in ir_ids:
@@ -456,7 +450,55 @@ def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=()):
         x = make_player(D, str(pid))
         if x and str(x["id"]) not in have:
             roster.append(x)
+            have.add(str(x["id"]))
+    return roster
+
+
+def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=()):
+    """Today's lineup after the moves the brief recommends (players added, dropped or moved to IR), so the
+    page's lineup card shows the same players as its actions. None if it cannot be built."""
+    D = Data(snap)
+    ctx = _context(D, today)
+    if not ctx or not ctx["sps"]:
+        return None
+    roster = _roster_after(D, ctx["mine"], add_ids, drop_ids, ir_ids)
     return _lineup(D, roster, ctx["sps"][0], ctx["key"], ctx["O"])
+
+
+def coverage_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), current_streamer=None, streamer_by_date=None):
+    """Day-by-day slot coverage for the rest of the matchup on the roster the brief recommends: today's IR
+    moves and open-spot adds kept all week, and the streaming spot held by the plan's player for each date
+    (`streamer_by_date`: date -> player id or None, replacing `current_streamer`). Today's row uses the same
+    availability rule as the lineup card, so the two always agree. Returns [{date, my_starters, my_open_slots,
+    my_no_slot, starters}] or None."""
+    D = Data(snap)
+    ctx = _context(D, today)
+    if not ctx or not ctx["sps"]:
+        return None
+    base = _roster_after(D, ctx["mine"], add_ids, drop_ids, ir_ids)
+    cur = str(current_streamer) if current_streamer else None
+    by_date = {k: (str(v) if v else None) for k, v in (streamer_by_date or {}).items()}
+    key, out = ctx["key"], []
+    for i, sp in enumerate(ctx["sps"]):
+        d = D.sp_dates[sp]
+        roster = base
+        if d in by_date:
+            occ = by_date[d]
+            roster = [p for p in base if str(p["id"]) != cur]
+            if occ and occ not in {str(p["id"]) for p in roster}:
+                x = make_player(D, occ)
+                if x:
+                    roster.append(x)
+        active = [p for p in roster if p["slot"] != "IR"]
+        if i == 0:
+            playing = [p for p in active if plays(D, p, sp) and p["avail"] > 0]
+        else:
+            playing = [p for p in active if plays(D, p, sp) and avail_on(p, d) > 0]
+        st, be, free = assign(playing, D.slots, key, True)
+        out.append({"date": d, "my_starters": len(st), "my_open_slots": free,
+                    "my_no_slot": [p["name"] for p, w in be if w == "no_slot"],
+                    "starters": [{"name": p["name"], "slot": s} for p, s in st]})
+    return out
 
 
 def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades=True):

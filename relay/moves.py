@@ -25,7 +25,7 @@ def select_moves(bd, wp, plan="daily"):
     """Today's moves, in the order the brief lists them:
     - ir: players to move to IR (engine `ir_moves`, ESPN shows them out)
     - fills: free agents for open roster spots, no drop (engine `fills`)
-    - step: today's streaming swap from the week plan (only when there are no fills)
+    - step: today's streaming swap from the week plan (unless a fill already adds the same player)
     - top: engine add/drop swaps, used only when the week plan failed
     Applies defer_idle_swap to every stream plan in `wp` IN PLACE (the week card and ledger read the same days)."""
     wp = wp or {}
@@ -37,8 +37,12 @@ def select_moves(bd, wp, plan="daily"):
     carry = (wp["stream_plan"]["plans"][plan].get("carry") or {}) if wp_ok else {}
     fills = list(bd.get("fills") or [])
     # the week plan owns the streaming spot (it sees every remaining day); engine swap moves only
-    # show when there is no plan. Open-spot fills stay, they cost no drop.
-    step = plan_days[0] if plan_days and plan_days[0]["swap"] and not fills else None
+    # show when there is no plan. Open-spot fills stay, they cost no drop. The plan's swap for today stands next
+    # to any open-spot fill (the fill uses the spot an IR move opens, the swap uses the streaming spot), unless
+    # the fill already brings in the same player.
+    fill_ids = {f["add"]["id"] for f in fills}
+    step = (plan_days[0] if plan_days and plan_days[0]["swap"] and plan_days[0].get("id") not in fill_ids
+            else None)
     top = [] if wp_ok else [m for m in bd.get("moves", []) if m["gain"] >= 0.05][:2]
     ir = list(bd.get("ir_moves") or [])
 
