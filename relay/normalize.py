@@ -433,6 +433,28 @@ def current_scores(league, matchup_period):
     return out
 
 
+def final_scores(league):
+    """ESPN's final per-stat totals for every DECIDED matchup period: {mp: {team_id: {stat_id: score}}}.
+    A period counts once every one of its matchups has a winner (HOME, AWAY or TIE) and stat totals."""
+    by_mp = {}
+    for m in league.get("schedule", []) or []:
+        by_mp.setdefault(m.get("matchupPeriodId"), []).append(m)
+    out = {}
+    for mp, ms in by_mp.items():
+        if mp is None or not ms or any(m.get("winner") in (None, "", "UNDECIDED") for m in ms):
+            continue
+        teams = {}
+        for m in ms:
+            for side in ("home", "away"):
+                x = m.get(side) or {}
+                sbs = (x.get("cumulativeScore") or {}).get("scoreByStat") or {}
+                if x.get("teamId") is not None and sbs:
+                    teams[str(x["teamId"])] = {str(k): (v or {}).get("score") for k, v in sbs.items()}
+        if teams:
+            out[int(mp)] = teams
+    return out
+
+
 def season_totals(pool, season):
     """Cumulative season counting stats per player (for daily diffs / grading)."""
     keep = [0, 1, 2, 3, 6, 11, 13, 14, 15, 16, 17, 18, 37, 40, 42]

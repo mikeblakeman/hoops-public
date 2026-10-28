@@ -95,6 +95,8 @@ def run(out_dir, client, my_swid):
     mp_rows = step("matchup_periods", lambda: N.matchup_periods(league)) or []
     n_periods = len({r["matchup_period"] for r in mp_rows})
     write_csv(out / "matchups.csv", step("matchups", lambda: N.matchups(league)) or [])
+    # final per-stat totals of finished matchups (strategy lab scoring; ESPN keeps them on the schedule)
+    step("final_history", lambda: H.save_final(out, N.final_scores(league)))
     picks = step("draft", lambda: N.draft_picks(league))
     if picks:
         write_csv(out / "draft_picks.csv", picks[0])
@@ -177,8 +179,9 @@ def run(out_dir, client, my_swid):
     if pool:
         tot = step("history", lambda: N.season_totals(pool, client.season))
         now_h = datetime.now(timezone.utc).astimezone(N.CT)
-        # history files mean "state before the day's games": runs after 5 PM CT never overwrite them
-        if tot and now_h.hour < 17:
+        # history files mean "state before the day's games": runs after the day's first tip (and after 5 PM CT)
+        # never overwrite them, or a weekend run at 4:15 PM would move live stats from day D into day D-1
+        if tot and now_h.hour < 17 and before_first_tip(sched_rows, now_h):
             write_csv(out / "history" / "totals" / f"{now_h.date().isoformat()}.csv", tot)
 
     if roster_rows and status.get("my_team_id") is not None and datetime.now(timezone.utc).astimezone(N.CT).hour < 17:
@@ -226,6 +229,13 @@ def run(out_dir, client, my_swid):
     status["ok"] = not status["errors"]
     write_json(out / "status.json", status)
     return status
+
+
+def before_first_tip(sched_rows, now_ct):
+    """True if no game of today (Central) has tipped yet, or the schedule is unknown."""
+    day = now_ct.date().isoformat()
+    tips = sorted(r["tip_ct"] for r in sched_rows or [] if r.get("date_ct") == day and r.get("tip_ct"))
+    return not tips or now_ct.strftime("%H:%M") < tips[0]
 
 
 def _games_left(sched_rows, mp_rows, sp, settings):

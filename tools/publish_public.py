@@ -89,6 +89,10 @@ def main(snap, out):
     for name in ("summary.json", "graded_decisions.csv"):
         if (led / name).exists():
             (out / "ledger" / name).write_text(scrub((led / name).read_text(), secrets))
+    # strategy lab summary (team ids only), read by the brief's Strategy lab card
+    if (led / "lab" / "summary.json").exists():
+        (out / "ledger" / "lab").mkdir()
+        (out / "ledger" / "lab" / "summary.json").write_text(scrub((led / "lab" / "summary.json").read_text(), secrets))
     # daily category odds (no names), used for the brief page's week trend
     if (led / "context").exists():
         (out / "ledger" / "context").mkdir()

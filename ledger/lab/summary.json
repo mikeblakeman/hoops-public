@@ -1,0 +1,171 @@
+{
+ "updated_ct": "2026-10-28T08:50-05:00",
+ "control": "current",
+ "active": "current",
+ "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
+ "week": {
+  "matchup_period": 2,
+  "days_scored": 2,
+  "opponent_team_id": "6",
+  "opponent": "Team 6"
+ },
+ "decided": "2026-10-28",
+ "decision_mode": "live",
+ "strategies": [
+  {
+   "id": "current",
+   "name": "Current: one streaming spot",
+   "summary": "Week planner streams one spot almost daily (what the brief recommends)",
+   "effort": "About 1 add a day",
+   "is_control": true,
+   "week": {
+    "cats_won": 5.0,
+    "days": 2
+   },
+   "season": {
+    "weeks": 1,
+    "live_weeks": 0,
+    "avg_cats_won": 9.0,
+    "edge": 0.0,
+    "confidence": null,
+    "smooth_edge": 0.0,
+    "worst_week": 0.0
+   },
+   "adds_per_day": 0.38,
+   "status": "control",
+   "today": [
+    "Add Ausar Thompson for Sandro Mamukelashvili"
+   ]
+  },
+  {
+   "id": "fill_all",
+   "name": "Fill every slot",
+   "summary": "Fill every open lineup slot daily with the best free agent who plays",
+   "effort": "2 to 5 adds a day",
+   "is_control": false,
+   "week": {
+    "cats_won": 9.5,
+    "days": 2
+   },
+   "season": {
+    "weeks": 1,
+    "live_weeks": 0,
+    "avg_cats_won": 9.0,
+    "edge": 0.0,
+    "confidence": null,
+    "smooth_edge": 0.429,
+    "worst_week": 0.0
+   },
+   "adds_per_day": 2.62,
+   "status": "testing",
+   "today": [
+    "Add Zion Williamson for Mitchell Robinson",
+    "Add Ausar Thompson for Day'Ron Sharpe",
+    "Add Kyshawn George for Neemias Queta"
+   ]
+  },
+  {
+   "id": "smart_fill",
+   "name": "Smart fill",
+   "summary": "Fill open slots only when an add gains 0.02+ expected categories; protect close percentages late in the week",
+   "effort": "1 to 3 adds a day",
+   "is_control": false,
+   "week": {
+    "cats_won": 7.5,
+    "days": 2
+   },
+   "season": {
+    "weeks": 1,
+    "live_weeks": 0,
+    "avg_cats_won": 9.0,
+    "edge": 0.0,
+    "confidence": null,
+    "smooth_edge": 0.334,
+    "worst_week": 0.0
+   },
+   "adds_per_day": 1.38,
+   "status": "testing",
+   "today": [
+    "Add Draymond Green for Mitchell Robinson"
+   ]
+  },
+  {
+   "id": "two_spots",
+   "name": "Two streaming spots",
+   "summary": "Current plan plus a second streaming spot planned the same way",
+   "effort": "About 2 adds a day",
+   "is_control": false,
+   "week": {
+    "cats_won": 5.0,
+    "days": 2
+   },
+   "season": {
+    "weeks": 1,
+    "live_weeks": 0,
+    "avg_cats_won": 9.0,
+    "edge": 0.0,
+    "confidence": null,
+    "smooth_edge": 0.356,
+    "worst_week": 0.0
+   },
+   "adds_per_day": 1.38,
+   "status": "testing",
+   "today": [
+    "Add Mo Bamba for Dejounte Murray",
+    "Spot B: add Onyeka Okongwu for Neemias Queta"
+   ]
+  },
+  {
+   "id": "schedule_stack",
+   "name": "Monday schedule stack",
+   "summary": "Monday: swap holds for free agents with the most games, then hold",
+   "effort": "1 to 3 adds a week",
+   "is_control": false,
+   "week": {
+    "cats_won": 7.5,
+    "days": 2
+   },
+   "season": {
+    "weeks": 1,
+    "live_weeks": 0,
+    "avg_cats_won": 9.0,
+    "edge": 0.0,
+    "confidence": null,
+    "smooth_edge": -0.177,
+    "worst_week": 0.0
+   },
+   "adds_per_day": 0.38,
+   "status": "testing",
+   "today": []
+  },
+  {
+   "id": "hold",
+   "name": "Hold (reference)",
+   "summary": "IR moves and open-spot fills only, no swaps",
+   "effort": "Under 1 add a week",
+   "is_control": false,
+   "week": {
+    "cats_won": 5.0,
+    "days": 2
+   },
+   "season": {
+    "weeks": 1,
+    "live_weeks": 0,
+    "avg_cats_won": 9.0,
+    "edge": 0.0,
+    "confidence": null,
+    "smooth_edge": -0.177,
+    "worst_week": 0.0
+   },
+   "adds_per_day": 0.12,
+   "status": "reference",
+   "today": []
+  }
+ ],
+ "ready": null,
+ "notes": [
+  "Week 1 was replayed from saved data (backtest). At most 2 backtest weeks count as evidence.",
+  "Week 2 is partly replayed or had a missed morning, so it will count as backtest.",
+  "Limits: other managers do not react to paper moves, paper teams cannot react to late news the way the 5:03 PM check can, and paper totals will differ from your real results. These apply to every paper team equally, so the comparison stays fair."
+ ]
+}

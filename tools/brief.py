@@ -10,12 +10,17 @@ notes) before writing the document to the page's database as brief/latest.
 import argparse
 import csv
 import json
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 CT = ZoneInfo("America/Chicago")
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from relay.moves import IDLE_GAIN, defer_idle_swap, select_moves  # noqa: E402,F401  (shared with the strategy lab)
+
 LEDGER = ROOT / "ledger"
 DEC_FIELDS = ["date", "kind", "matchup_period", "rec", "player_id", "name", "team",
               "related_id", "related_name", "gain", "note"]
@@ -163,22 +168,6 @@ def fresh_brief_data(snap, bd):
     return bd, None
 
 
-IDLE_GAIN = 0.02
-
-
-def defer_idle_swap(days):
-    """The planner may schedule a swap on a day the new player adds nothing (no open slot or no game) just so he
-    is rostered for the next day. Tell Mike to make that add on the day it starts paying off instead: same
-    result, and the current player stays in case news changes the plan. Returns a new list of day dicts."""
-    days = [dict(d) for d in days]
-    if (len(days) > 1 and days[0].get("swap") and (days[0].get("day_gain") or 0) < IDLE_GAIN
-            and not days[1].get("swap") and days[1].get("occupant") == days[0].get("occupant")):
-        days[1].update(swap=True, drop=days[0].get("drop"), drop_id=days[0].get("drop_id"))
-        days[0].update(swap=False, occupant=days[0].get("drop"), id=days[0].get("drop_id"), team=None,
-                       drop=None, drop_id=None, day_gain=0.0, deferred_to=days[1]["date"])
-    return days
-
-
 def ir_why(p, row=None):
     """IR moves depend on ESPN's live designation, which can change after the data run (Kyrie, Oct 25 2026: listed
     Out after a rest night, day-to-day by morning). Say so, and flag short rest designations that usually clear."""
@@ -216,6 +205,25 @@ def next_opp_doc(wp, teams=None, plan="daily"):
         n = dict(n, form=dict(n["form"], this_week=dict(n["form"]["this_week"], record=rec)))
     carry = (wp["stream_plan"]["plans"].get(plan) or {}).get("carry")
     return dict(n, name=t.get("name") or f"Team {tid}", owners=t.get("owners"), carry=carry, plan_used=plan)
+
+
+def lab_doc(day, teams=None, ledger=None):
+    """The Strategy lab card (ledger/lab/summary.json, written by relay/lab.py in the data job). Team names are
+    restored from --teams; paper moves show only when they were decided for this brief's day. None if missing."""
+    try:
+        lab = json.loads(((ledger or LEDGER) / "lab" / "summary.json").read_text())
+    except (OSError, ValueError):
+        return None
+    if not lab.get("strategies"):
+        return None
+    wk = dict(lab.get("week") or {})
+    t = (teams or {}).get(str(wk.get("opponent_team_id")))
+    if t:
+        wk["opponent"] = t.get("name")
+    lab["week"] = wk
+    if lab.get("decided") != day:
+        lab["strategies"] = [dict(s, today=[]) for s in lab["strategies"]]
+    return lab
 
 
 def stale_note(status, hours=10, rebuilt_from=None, lineup_date=None):
@@ -273,16 +281,11 @@ def build(snap, kind="morning", teams=None, plan="daily"):
                         "why": f"{today}{f['games_left']} games left this matchup; helps {helps}. "
                                f"+{f['gain']:.2f} expected categories."})
     wp, replanned = fresh_week_plan(snap, bd)
-    if wp.get("stream_plan") and not wp.get("error"):   # actions, week card and ledger all read these days
-        for p in wp["stream_plan"].get("plans", {}).values():
-            p["days"] = defer_idle_swap(p.get("days", []))
+    # which moves to make today: shared with the strategy lab's control (relay/moves.py), so the lab's `current`
+    # paper team makes exactly these moves. It also applies defer_idle_swap to every stream plan in wp.
+    sel = select_moves(bd, wp, plan)
     bd["week_plan"] = wp   # the ledger logs the same plan the actions follow
-    wp_ok = bool(wp.get("stream_plan")) and not wp.get("error")
-    plan_days = wp["stream_plan"]["plans"][plan]["days"] if wp_ok else []
-    carry = (wp["stream_plan"]["plans"][plan].get("carry") or {}) if wp_ok else {}
-    # the week plan owns the streaming spot (it sees every remaining day); engine swap moves only
-    # show when there is no plan. Open-spot fills stay, they cost no drop.
-    step = plan_days[0] if plan_days and plan_days[0]["swap"] and not bd.get("fills") else None
+    wp_ok, plan_days, carry, step, top = sel["wp_ok"], sel["plan_days"], sel["carry"], sel["step"], sel["top"]
     if step:
         where = (f"Add {step['occupant']} ({step['team']}), drop {step['drop']}" if step.get("drop")
                  else f"Add {step['occupant']} ({step['team']}) to your open roster spot")
@@ -300,7 +303,6 @@ def build(snap, kind="morning", teams=None, plan="daily"):
                         "text": "Plan ahead: " + ("; ".join(parts) if parts else "no more streaming moves") + ".",
                         "why": ("Light days: " + ", ".join(thin) + ". " if thin else "") +
                                "Make each add in the morning, before the day's first tip."})
-    top = [] if wp_ok else [m for m in bd["moves"] if m["gain"] >= 0.05][:2]
     for m in top:
         a, d = m["add"], m["drop"]
         today = "plays today, " if m["plays_today"] else ""
@@ -309,17 +311,7 @@ def build(snap, kind="morning", teams=None, plan="daily"):
                         "why": f"{today}{m['games_left']} games left this matchup; helps {helps}. "
                                f"+{m['gain']:.2f} expected categories."})
     # The lineup card shows today's lineup AFTER the moves above, so it names the same players as the actions.
-    ir_ids = [p["id"] for p in bd.get("ir_moves", [])]
-    add_ids = [f["add"]["id"] for f in bd.get("fills", [])] + [m["add"]["id"] for m in top]
-    drop_ids = [m["drop"]["id"] for m in top]
-    moves_txt = [f"{p['name']} to IR" for p in bd.get("ir_moves", [])] + \
-                [f"add {f['add']['name']}" for f in bd.get("fills", [])] + \
-                [f"add {m['add']['name']} for {m['drop']['name']}" for m in top]
-    if step and step.get("id"):
-        add_ids.append(step["id"])
-        if step.get("drop_id"):
-            drop_ids.append(step["drop_id"])
-        moves_txt.append(f"add {step['occupant']}" + (f" for {step['drop']}" if step.get("drop") else ""))
+    ir_ids, add_ids, drop_ids, moves_txt = sel["ir_ids"], sel["add_ids"], sel["drop_ids"], sel["text"]
     if add_ids or drop_ids or ir_ids:
         after = lineup_after(snap, bd["date"], add_ids, drop_ids, ir_ids)
         if after:
@@ -388,6 +380,7 @@ def build(snap, kind="morning", teams=None, plan="daily"):
         "data_status": {"ok": status.get("ok"), "warnings": status.get("warnings", [])[:5]},
     }
     doc["matchup"]["trend"] = trend_doc(bd)
+    doc["lab"] = lab_doc(doc["date"], teams)
     return doc, bd
 
 

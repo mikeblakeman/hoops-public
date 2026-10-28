@@ -332,17 +332,14 @@ def next_opponent(D, X, snap, today, mp, prow, sps, base, occ_id, names, fa_pool
     return out
 
 
-def plan(snap, today=None, D=None, with_trades=True, with_next=True):
-    D = D or MU.Data(snap)
-    X = Extra(snap)
-    if today is None:
-        today = MU.today_ct()
-    if isinstance(today, str):
-        today = date.fromisoformat(today)
-    t = today.isoformat()
+def setup(D, X, today):
+    """Shared start of every plan: both rosters, scores so far (with banking), the opponent's simulated week, the
+    matchup-weighted key and today's outlook. None when no matchup day is left. Used by plan() and by the strategy
+    lab's second streaming spot (relay/strategies.py), so both read the same numbers."""
     mp, sps, prow = MU.current_period(D, today)
     if mp is None or not sps:
-        return {"error": "no remaining days in the matchup", "date": t}
+        return None
+    t = today.isoformat()
     period_sps = range(int(prow["first_sp"]), int(prow["last_sp"]) + 1)
     past = [sp for sp in period_sps if D.sp_dates.get(sp, "9999") < t]
     opp = MU.opponent(D, mp)
@@ -376,6 +373,35 @@ def plan(snap, today=None, D=None, with_trades=True, with_next=True):
     O, _ = outlook(solo, key_fn, True)
     key_fn = lambda p, d: mv0(p, O) * avail_on(p, d)  # noqa: E731
     O, _ = outlook(solo, key_fn, True)
+    return dict(mp=mp, sps=sps, prow=prow, opp=opp, mine=mine, theirs=theirs, cur_m=cur_m, cur_o=cur_o,
+                banked=banked, active=active, ro=ro, vo=vo, outlook=outlook, O=O, key_fn=key_fn, gen=gen)
+
+
+def occupant_of(D, active):
+    """The streaming spot's current holder: the most recent non-draft acquisition on the active roster."""
+    occupant, latest = None, ""
+    for r in D.roster:
+        if r["team_id"] == D.my_tid and r.get("acquisition_type") not in ("DRAFT", "", None) \
+                and r.get("slot") != "IR" and r.get("acquired_ct", "") >= latest:
+            latest, occupant = r.get("acquired_ct", ""), next((p for p in active if p["id"] == r["player_id"]), None)
+    return occupant
+
+
+def plan(snap, today=None, D=None, with_trades=True, with_next=True, my_roster=None):
+    """my_roster: optional paper roster for my team (strategy lab); see relay.matchup.Data."""
+    D = D or MU.Data(snap, my_roster=my_roster)
+    X = Extra(snap)
+    if today is None:
+        today = MU.today_ct()
+    if isinstance(today, str):
+        today = date.fromisoformat(today)
+    t = today.isoformat()
+    S = setup(D, X, today)
+    if S is None:
+        return {"error": "no remaining days in the matchup", "date": t}
+    mp, sps, prow, opp = S["mp"], S["sps"], S["prow"], S["opp"]
+    theirs, banked, active = S["theirs"], S["banked"], S["active"]
+    outlook, O, key_fn, gen = S["outlook"], S["O"], S["key_fn"], S["gen"]
     base_exp = exp_cats(O)
 
     # ---- per-day coverage
@@ -397,12 +423,7 @@ def plan(snap, today=None, D=None, with_trades=True, with_next=True):
     light = [x["date"] for x in days if len(x["my_open_slots"]) >= 4]
 
     # ---- streaming spot
-    occupant = None
-    latest = ""
-    for r in D.roster:
-        if r["team_id"] == D.my_tid and r.get("acquisition_type") not in ("DRAFT", "", None) \
-                and r.get("slot") != "IR" and r.get("acquired_ct", "") >= latest:
-            latest, occupant = r.get("acquired_ct", ""), next((p for p in active if p["id"] == r["player_id"]), None)
+    occupant = occupant_of(D, active)
     occ_id = occupant["id"] if occupant else None
     base = [p for p in active if p["id"] != occ_id]
     fa_pool = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")

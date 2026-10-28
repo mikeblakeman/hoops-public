@@ -68,8 +68,24 @@ def Phi(x):
 
 
 # ---------------------------------------------------------------- inputs
+FREE = ("FREEAGENT", "WAIVERS")
+
+
+def scores_by_stat(comp):
+    """Component totals ({PTS, REB, ..., FGA, FTA, 3PA}) as ESPN's scoreByStat dict ({stat_id: score})."""
+    out = {str(STAT_ID[k]): float(comp.get(k, 0.0)) for k in COMPONENTS if k in STAT_ID and k != "TO"}
+    for r, (m, att) in RATIO.items():
+        out[str(STAT_ID[r])] = (comp.get(m, 0.0) / comp[att]) if comp.get(att) else None
+    return out
+
+
 class Data:
-    def __init__(self, snap):
+    """Snapshot inputs. Strategy-lab hook (relay/lab.py): `my_roster` replaces my team's roster rows with a paper
+    roster (list of {player_id, slot, ...}), `my_scores` replaces my team's matchup totals so far (component dict),
+    and `free_ids` returns players the paper team dropped to its own free-agent pool. The engine itself is unchanged:
+    a paper team runs through exactly the code the brief uses."""
+
+    def __init__(self, snap, my_roster=None, my_scores=None, free_ids=()):
         snap = Path(snap)
         self.settings = json.loads((snap / "league_settings.json").read_text())
         self.status = json.loads((snap / "status.json").read_text())
@@ -97,6 +113,31 @@ class Data:
             self.calib = calibrate.load(snap)  # league-wide actual/projected correction, {} until earned
         except Exception:  # noqa: BLE001
             self.calib = {}
+        if my_roster is not None:
+            self._override_roster(my_roster, free_ids)
+        if my_scores is not None:
+            self.scores = dict(self.scores)
+            self.scores[self.my_tid] = scores_by_stat(my_scores)
+
+    def _override_roster(self, rows, free_ids=()):
+        me = self.my_tid
+        others = {r["player_id"] for r in self.roster if r["team_id"] != me}
+        new = []
+        for r in rows:
+            pid = str(r["player_id"])
+            v = self.vals.get(pid) or {}
+            new.append({"team_id": me, "player_id": pid, "name": r.get("name") or v.get("name", ""),
+                        "slot": r.get("slot") or "BE", "acquisition_type": r.get("acquisition_type") or "ADD",
+                        "acquired_ct": r.get("acquired_ct") or "", "injury_status": v.get("injury_status", "")})
+        self.roster = [r for r in self.roster if r["team_id"] != me] + new
+        paper = {r["player_id"] for r in new}
+        # a player the paper team dropped is back in ITS pool unless a real rival has rostered him since
+        free = {str(i) for i in free_ids} - others - paper
+        vals = {}
+        for pid, v in self.vals.items():
+            st = "ONTEAM" if pid in paper else "FREEAGENT" if pid in free else v.get("status")
+            vals[pid] = v if st == v.get("status") else dict(v, status=st)
+        self.vals = vals
 
 
 def player_line(v):
@@ -418,8 +459,10 @@ def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=()):
     return _lineup(D, roster, ctx["sps"][0], ctx["key"], ctx["O"])
 
 
-def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
-    D = Data(snap)
+def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades=True):
+    """D: a prebuilt Data (the strategy lab passes one with a paper roster). with_trades=False skips the
+    league-wide trade search, which changes nothing in the lineup, moves or stream plan."""
+    D = D or Data(snap)
     today = today or today_ct()
     ctx = _context(D, today)
     if ctx is None:
@@ -537,7 +580,7 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4):
     # so a failure here must never cost the daily brief
     try:
         from . import weekplan
-        result["week_plan"] = weekplan.plan(snap, today, D)
+        result["week_plan"] = weekplan.plan(snap, today, D, with_trades=with_trades)
     except Exception as e:  # noqa: BLE001
         result["week_plan"] = {"error": f"{type(e).__name__}: {e}"}
     return result

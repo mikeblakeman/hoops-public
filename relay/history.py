@@ -105,3 +105,30 @@ def load_scores(snap, day):
         return json.loads(fp.read_text())
     except (OSError, ValueError):
         return None
+
+
+def save_final(snap, finals):
+    """history/final/<matchup_period>.json: ESPN's final per-stat matchup totals for every team (from
+    relay.normalize.final_scores). Rewritten while ESPN still changes them (stat corrections); returns the
+    periods written."""
+    import json
+    out = []
+    for mp, teams in sorted((finals or {}).items()):
+        dest = Path(snap) / "history" / "final" / f"{mp}.json"
+        txt = json.dumps({"matchup_period": mp, "teams": teams}, indent=1, sort_keys=True)
+        if dest.exists() and dest.read_text() == txt:
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(txt)
+        out.append(mp)
+    return out
+
+
+def load_final(snap, mp):
+    """{team_id: {stat_id: score}} for a finished matchup period, or None."""
+    import json
+    fp = Path(snap) / "history" / "final" / f"{mp}.json"
+    try:
+        return json.loads(fp.read_text()).get("teams")
+    except (OSError, ValueError):
+        return None
