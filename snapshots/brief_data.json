@@ -1,13 +1,13 @@
 {
- "generated_ct": "2026-10-28T20:18-05:00",
- "data_run_ct": "2026-10-28T20:18-05:00",
- "date": "2026-10-28",
+ "generated_ct": "2026-10-29T06:47-05:00",
+ "data_run_ct": "2026-10-29T06:47-05:00",
+ "date": "2026-10-29",
  "matchup_period": 2,
  "period": {
   "start": "2026-10-26",
   "end": "2026-11-01",
   "source": "espn/inferred:allstar",
-  "days_left": 5,
+  "days_left": 4,
   "playoffs": false
  },
  "in_progress": true,
@@ -20,176 +20,149 @@
   "name": "Team 6",
   "owners": ""
  },
- "expected_cats": 7.35,
+ "expected_cats": 7.32,
  "player_games_left": {
-  "mine": 33.0,
-  "theirs": 33.0
+  "mine": 23.0,
+  "theirs": 23.0
  },
  "categories": [
   {
    "cat": "FT%",
-   "mine": 0.776,
-   "theirs": 0.839,
-   "now_mine": 0.695,
-   "now_theirs": 0.86,
-   "p": 0.074,
+   "mine": 0.798,
+   "theirs": 0.84,
+   "now_mine": 0.782,
+   "now_theirs": 0.845,
+   "p": 0.126,
    "label": "likely loss",
-   "weight": 3.22942,
-   "att_mine": 225.3
+   "weight": 5.73967,
+   "att_mine": 218.3
   },
   {
    "cat": "3PT%",
-   "mine": 0.355,
-   "theirs": 0.34,
-   "now_mine": 0.351,
-   "now_theirs": 0.325,
-   "p": 0.626,
-   "label": "favored",
-   "weight": 7.99214,
-   "att_mine": 244.5
+   "mine": 0.36,
+   "theirs": 0.318,
+   "now_mine": 0.36,
+   "now_theirs": 0.298,
+   "p": 0.856,
+   "label": "safe",
+   "weight": 5.84781,
+   "att_mine": 247.6
   },
   {
    "cat": "DD",
-   "mine": 7.5,
-   "theirs": 5.1,
-   "now_mine": 2.0,
-   "now_theirs": 1.0,
-   "p": 0.811,
-   "label": "favored",
-   "weight": 0.10216,
+   "mine": 6.5,
+   "theirs": 7.0,
+   "now_mine": 3.0,
+   "now_theirs": 4.0,
+   "p": 0.401,
+   "label": "toss-up",
+   "weight": 0.17691,
    "att_mine": null
   },
   {
    "cat": "REB",
-   "mine": 208.8,
-   "theirs": 231.0,
-   "now_mine": 53.0,
-   "now_theirs": 69.0,
-   "p": 0.118,
+   "mine": 216.9,
+   "theirs": 243.0,
+   "now_mine": 109.0,
+   "now_theirs": 129.0,
+   "p": 0.048,
    "label": "likely loss",
-   "weight": 0.01057,
+   "weight": 0.00635,
    "att_mine": null
   },
   {
    "cat": "FGM",
-   "mine": 306.8,
-   "theirs": 289.3,
-   "now_mine": 76.0,
-   "now_theirs": 95.0,
-   "p": 0.764,
+   "mine": 312.6,
+   "theirs": 299.8,
+   "now_mine": 152.0,
+   "now_theirs": 163.0,
+   "p": 0.736,
    "label": "favored",
-   "weight": 0.0127,
+   "weight": 0.01614,
    "att_mine": null
   },
   {
    "cat": "FTM",
-   "mine": 174.8,
-   "theirs": 143.3,
-   "now_mine": 41.0,
-   "now_theirs": 37.0,
-   "p": 0.916,
+   "mine": 174.3,
+   "theirs": 146.6,
+   "now_mine": 79.0,
+   "now_theirs": 71.0,
+   "p": 0.924,
    "label": "safe",
-   "weight": 0.00674,
+   "weight": 0.00742,
    "att_mine": null
   },
   {
    "cat": "PTS",
-   "mine": 875.1,
-   "theirs": 803.7,
-   "now_mine": 213.0,
-   "now_theirs": 254.0,
-   "p": 0.848,
-   "label": "favored",
-   "weight": 0.00339,
+   "mine": 888.3,
+   "theirs": 827.5,
+   "now_mine": 424.0,
+   "now_theirs": 439.0,
+   "p": 0.852,
+   "label": "safe",
+   "weight": 0.00397,
    "att_mine": null
   },
   {
    "cat": "BLK",
-   "mine": 26.7,
-   "theirs": 26.7,
-   "now_mine": 6.0,
-   "now_theirs": 10.0,
-   "p": 0.5,
+   "mine": 25.0,
+   "theirs": 25.9,
+   "now_mine": 12.0,
+   "now_theirs": 14.0,
+   "p": 0.433,
    "label": "toss-up",
-   "weight": 0.05912,
+   "weight": 0.07435,
    "att_mine": null
   },
   {
    "cat": "3PM",
-   "mine": 86.8,
-   "theirs": 82.4,
-   "now_mine": 20.0,
-   "now_theirs": 27.0,
-   "p": 0.642,
+   "mine": 89.0,
+   "theirs": 81.5,
+   "now_mine": 41.0,
+   "now_theirs": 42.0,
+   "p": 0.762,
    "label": "favored",
-   "weight": 0.03033,
+   "weight": 0.02949,
    "att_mine": null
   },
   {
    "cat": "STL",
-   "mine": 45.9,
-   "theirs": 45.3,
-   "now_mine": 9.0,
-   "now_theirs": 13.0,
-   "p": 0.527,
+   "mine": 48.0,
+   "theirs": 47.2,
+   "now_mine": 22.0,
+   "now_theirs": 24.0,
+   "p": 0.548,
    "label": "toss-up",
-   "weight": 0.04983,
+   "weight": 0.05816,
    "att_mine": null
   },
   {
    "cat": "AST",
-   "mine": 215.6,
-   "theirs": 191.8,
-   "now_mine": 56.0,
-   "now_theirs": 61.0,
-   "p": 0.868,
-   "label": "safe",
-   "weight": 0.01005,
+   "mine": 213.0,
+   "theirs": 195.3,
+   "now_mine": 101.0,
+   "now_theirs": 102.0,
+   "p": 0.839,
+   "label": "favored",
+   "weight": 0.01368,
    "att_mine": null
   },
   {
    "cat": "FG%",
-   "mine": 0.476,
-   "theirs": 0.464,
-   "now_mine": 0.487,
-   "now_theirs": 0.473,
-   "p": 0.651,
+   "mine": 0.477,
+   "theirs": 0.456,
+   "now_mine": 0.483,
+   "now_theirs": 0.457,
+   "p": 0.797,
    "label": "favored",
-   "weight": 12.02504,
-   "att_mine": 644.7
+   "weight": 11.33238,
+   "att_mine": 655.6
   }
  ],
  "lineup": {
-  "scoring_period": 9,
-  "date": "2026-10-28",
+  "scoring_period": 10,
+  "date": "2026-10-29",
   "starters": [
-   {
-    "id": "5104157",
-    "name": "Victor Wembanyama",
-    "team": "SAS",
-    "pos": "C",
-    "inj": "",
-    "rank": 3,
-    "slot": "C",
-    "opp": "UTA",
-    "tip": "20:00",
-    "home_away": "away",
-    "matchup_value": 0.7256,
-    "line": {
-     "PTS": 23.23,
-     "REB": 11.01,
-     "AST": 2.9,
-     "STL": 1.06,
-     "BLK": 3.26,
-     "3PM": 1.79,
-     "DD": 0.61
-    },
-    "helps": [
-     "BLK",
-     "REB",
-     "FGM"
-    ]
-   },
    {
     "id": "3908809",
     "name": "Donovan Mitchell",
@@ -197,132 +170,132 @@
     "pos": "PG/SG",
     "inj": "",
     "rank": 9,
-    "slot": "SG",
-    "opp": "WAS",
-    "tip": "18:00",
-    "home_away": "home",
-    "matchup_value": 0.5308,
+    "slot": "PG",
+    "opp": "ATL",
+    "tip": "19:00",
+    "home_away": "away",
+    "matchup_value": 0.6032,
     "line": {
-     "PTS": 24.54,
-     "REB": 4.65,
+     "PTS": 24.58,
+     "REB": 4.85,
      "AST": 5.23,
-     "STL": 1.55,
+     "STL": 1.56,
      "BLK": 0.37,
      "3PM": 3.01,
      "DD": 0.11
     },
     "helps": [
      "FGM",
-     "3PM",
-     "PTS"
+     "PTS",
+     "STL"
     ]
    },
    {
-    "id": "4277905",
-    "name": "Trae Young",
-    "team": "WAS",
-    "pos": "PG",
+    "id": "4683021",
+    "name": "Deni Avdija",
+    "team": "POR",
+    "pos": "SF/PF",
     "inj": "",
-    "rank": 22,
-    "slot": "UT",
-    "opp": "CLE",
-    "tip": "18:00",
-    "home_away": "away",
-    "matchup_value": 0.4963,
-    "line": {
-     "PTS": 21.46,
-     "REB": 2.75,
-     "AST": 9.99,
-     "STL": 0.97,
-     "BLK": 0.09,
-     "3PM": 2.54,
-     "DD": 0.55
-    },
-    "helps": [
-     "AST",
-     "FGM",
-     "3PM"
-    ]
-   },
-   {
-    "id": "6442",
-    "name": "Kyrie Irving",
-    "team": "DAL",
-    "pos": "PG",
-    "inj": "",
-    "rank": 23,
-    "slot": "UT",
-    "opp": "OKC",
-    "tip": "20:30",
+    "rank": 35,
+    "slot": "PF",
+    "opp": "MEM",
+    "tip": "21:00",
     "home_away": "home",
-    "matchup_value": 0.4786,
+    "matchup_value": 0.5373,
     "line": {
-     "PTS": 22.11,
-     "REB": 4.37,
-     "AST": 4.3,
-     "STL": 1.26,
-     "BLK": 0.47,
-     "3PM": 2.63,
-     "DD": 0.04
-    },
-    "helps": [
-     "FGM",
-     "3PM",
-     "PTS"
-    ]
-   },
-   {
-    "id": "4396907",
-    "name": "Darius Garland",
-    "team": "LAC",
-    "pos": "PG",
-    "inj": "",
-    "rank": 33,
-    "slot": "UT",
-    "opp": "LAL",
-    "tip": "21:30",
-    "home_away": "home",
-    "matchup_value": 0.4537,
-    "line": {
-     "PTS": 20.52,
-     "REB": 2.66,
-     "AST": 6.82,
-     "STL": 1.16,
-     "BLK": 0.19,
-     "3PM": 2.73,
-     "DD": 0.2
-    },
-    "helps": [
-     "FGM",
-     "3PM",
-     "PTS"
-    ]
-   },
-   {
-    "id": "3934672",
-    "name": "Jalen Brunson",
-    "team": "NYK",
-    "pos": "PG",
-    "inj": "",
-    "rank": 43,
-    "slot": "G",
-    "opp": "CHI",
-    "tip": "19:00",
-    "home_away": "away",
-    "matchup_value": 0.4294,
-    "line": {
-     "PTS": 23.79,
-     "REB": 2.85,
-     "AST": 5.79,
-     "STL": 0.77,
-     "BLK": 0.19,
-     "3PM": 2.16,
-     "DD": 0.12
+     "PTS": 21.32,
+     "REB": 6.84,
+     "AST": 5.89,
+     "STL": 0.87,
+     "BLK": 0.46,
+     "3PM": 1.79,
+     "DD": 0.29
     },
     "helps": [
      "FGM",
      "PTS",
-     "3PM"
+     "AST"
+    ]
+   },
+   {
+    "id": "4065733",
+    "name": "Ty Jerome",
+    "team": "MEM",
+    "pos": "PG/SG",
+    "inj": "",
+    "rank": 26,
+    "slot": "UT",
+    "opp": "POR",
+    "tip": "21:00",
+    "home_away": "away",
+    "matchup_value": 0.5123,
+    "line": {
+     "PTS": 20.76,
+     "REB": 3.14,
+     "AST": 5.51,
+     "STL": 1.26,
+     "BLK": 0.19,
+     "3PM": 2.54,
+     "DD": 0.06
+    },
+    "helps": [
+     "FGM",
+     "PTS",
+     "AST"
+    ]
+   },
+   {
+    "id": "6606",
+    "name": "Damian Lillard",
+    "team": "POR",
+    "pos": "PG",
+    "inj": "",
+    "rank": 33,
+    "slot": "UT",
+    "opp": "MEM",
+    "tip": "21:00",
+    "home_away": "home",
+    "matchup_value": 0.4942,
+    "line": {
+     "PTS": 20.2,
+     "REB": 3.8,
+     "AST": 5.51,
+     "STL": 0.97,
+     "BLK": 0.19,
+     "3PM": 2.82,
+     "DD": 0.1
+    },
+    "helps": [
+     "FGM",
+     "3PM",
+     "PTS"
+    ]
+   },
+   {
+    "id": "3907497",
+    "name": "Dejounte Murray",
+    "team": "NOP",
+    "pos": "PG/SG",
+    "inj": "",
+    "rank": 61,
+    "slot": "G",
+    "opp": "SAC",
+    "tip": "19:00",
+    "home_away": "home",
+    "matchup_value": 0.4922,
+    "line": {
+     "PTS": 17.87,
+     "REB": 5.23,
+     "AST": 5.89,
+     "STL": 1.56,
+     "BLK": 0.37,
+     "3PM": 1.69,
+     "DD": 0.13
+    },
+    "helps": [
+     "FGM",
+     "STL",
+     "AST"
     ]
    },
    {
@@ -331,19 +304,19 @@
     "team": "NOP",
     "pos": "PF/C",
     "inj": "",
-    "rank": 50,
-    "slot": "F",
-    "opp": "DEN",
+    "rank": 43,
+    "slot": "C",
+    "opp": "SAC",
     "tip": "19:00",
     "home_away": "home",
-    "matchup_value": 0.4241,
+    "matchup_value": 0.4885,
     "line": {
-     "PTS": 20.8,
-     "REB": 5.13,
-     "AST": 3.55,
-     "STL": 1.26,
+     "PTS": 21.04,
+     "REB": 5.32,
+     "AST": 3.64,
+     "STL": 1.36,
      "BLK": 0.65,
-     "3PM": 0.09,
+     "3PM": 0.19,
      "DD": 0.08
     },
     "helps": [
@@ -353,30 +326,30 @@
     ]
    },
    {
-    "id": "3907497",
-    "name": "Dejounte Murray",
-    "team": "NOP",
-    "pos": "PG/SG",
+    "id": "3064440",
+    "name": "Zach LaVine",
+    "team": "SAC",
+    "pos": "SG/SF",
     "inj": "",
-    "rank": 62,
-    "slot": "PG",
-    "opp": "DEN",
+    "rank": 56,
+    "slot": "SG",
+    "opp": "NOP",
     "tip": "19:00",
-    "home_away": "home",
-    "matchup_value": 0.4233,
+    "home_away": "away",
+    "matchup_value": 0.4365,
     "line": {
-     "PTS": 17.54,
-     "REB": 4.94,
-     "AST": 5.88,
-     "STL": 1.55,
-     "BLK": 0.37,
-     "3PM": 1.69,
-     "DD": 0.13
+     "PTS": 20.39,
+     "REB": 3.52,
+     "AST": 3.18,
+     "STL": 0.78,
+     "BLK": 0.19,
+     "3PM": 2.64,
+     "DD": 0.0
     },
     "helps": [
      "FGM",
-     "STL",
-     "PTS"
+     "PTS",
+     "3PM"
     ]
    },
    {
@@ -385,15 +358,15 @@
     "team": "CLE",
     "pos": "SF/PF",
     "inj": "",
-    "rank": 117,
-    "slot": "PF",
-    "opp": "WAS",
-    "tip": "18:00",
-    "home_away": "home",
-    "matchup_value": 0.351,
+    "rank": 115,
+    "slot": "SF",
+    "opp": "ATL",
+    "tip": "19:00",
+    "home_away": "away",
+    "matchup_value": 0.3886,
     "line": {
-     "PTS": 13.15,
-     "REB": 4.75,
+     "PTS": 13.22,
+     "REB": 4.66,
      "AST": 1.96,
      "STL": 0.97,
      "BLK": 1.3,
@@ -403,7 +376,125 @@
     "helps": [
      "BLK",
      "FGM",
-     "REB"
+     "STL"
+    ]
+   }
+  ],
+  "bench": [],
+  "no_game": [
+   {
+    "id": "5104157",
+    "name": "Victor Wembanyama",
+    "team": "SAS",
+    "pos": "C",
+    "inj": "",
+    "rank": 3,
+    "why": "no game",
+    "line": {
+     "PTS": 24.58,
+     "REB": 11.59,
+     "AST": 3.18,
+     "STL": 1.17,
+     "BLK": 3.33,
+     "3PM": 1.98,
+     "DD": 0.66
+    },
+    "helps": [
+     "BLK",
+     "FGM",
+     "DD"
+    ]
+   },
+   {
+    "id": "3934672",
+    "name": "Jalen Brunson",
+    "team": "NYK",
+    "pos": "PG",
+    "inj": "",
+    "rank": 32,
+    "why": "no game",
+    "line": {
+     "PTS": 24.76,
+     "REB": 2.95,
+     "AST": 5.98,
+     "STL": 0.87,
+     "BLK": 0.19,
+     "3PM": 2.35,
+     "DD": 0.12
+    },
+    "helps": [
+     "FGM",
+     "PTS",
+     "AST"
+    ]
+   },
+   {
+    "id": "4277905",
+    "name": "Trae Young",
+    "team": "WAS",
+    "pos": "PG",
+    "inj": "",
+    "rank": 23,
+    "why": "no game",
+    "line": {
+     "PTS": 21.41,
+     "REB": 2.76,
+     "AST": 10.0,
+     "STL": 0.97,
+     "BLK": 0.09,
+     "3PM": 2.54,
+     "DD": 0.55
+    },
+    "helps": [
+     "AST",
+     "FGM",
+     "DD"
+    ]
+   },
+   {
+    "id": "6442",
+    "name": "Kyrie Irving",
+    "team": "DAL",
+    "pos": "PG",
+    "inj": "",
+    "rank": 25,
+    "why": "no game",
+    "line": {
+     "PTS": 21.69,
+     "REB": 4.28,
+     "AST": 4.3,
+     "STL": 1.26,
+     "BLK": 0.56,
+     "3PM": 2.64,
+     "DD": 0.04
+    },
+    "helps": [
+     "FGM",
+     "PTS",
+     "3PM"
+    ]
+   },
+   {
+    "id": "4396907",
+    "name": "Darius Garland",
+    "team": "LAC",
+    "pos": "PG",
+    "inj": "",
+    "rank": 40,
+    "why": "no game",
+    "line": {
+     "PTS": 20.11,
+     "REB": 2.57,
+     "AST": 6.73,
+     "STL": 1.17,
+     "BLK": 0.19,
+     "3PM": 2.64,
+     "DD": 0.19
+    },
+    "helps": [
+     "FGM",
+     "AST",
+     "PTS"
     ]
    },
    {
@@ -412,119 +503,20 @@
     "team": "DAL",
     "pos": "SF/PF",
     "inj": "",
-    "rank": 151,
-    "slot": "SF",
-    "opp": "OKC",
-    "tip": "20:30",
-    "home_away": "home",
-    "matchup_value": 0.3437,
+    "rank": 153,
+    "why": "no game",
     "line": {
-     "PTS": 12.78,
-     "REB": 6.46,
-     "AST": 1.59,
-     "STL": 0.77,
+     "PTS": 12.94,
+     "REB": 6.56,
+     "AST": 1.5,
+     "STL": 0.78,
      "BLK": 1.02,
      "3PM": 1.41,
-     "DD": 0.15
+     "DD": 0.14
     },
     "helps": [
-     "REB",
+     "FGM",
      "BLK",
-     "FGM"
-    ]
-   }
-  ],
-  "bench": [],
-  "no_game": [
-   {
-    "id": "4065733",
-    "name": "Ty Jerome",
-    "team": "MEM",
-    "pos": "PG/SG",
-    "inj": "",
-    "rank": 26,
-    "why": "no game",
-    "line": {
-     "PTS": 20.8,
-     "REB": 3.13,
-     "AST": 5.51,
-     "STL": 1.26,
-     "BLK": 0.19,
-     "3PM": 2.54,
-     "DD": 0.06
-    },
-    "helps": [
-     "FGM",
-     "3PM",
-     "PTS"
-    ]
-   },
-   {
-    "id": "4683021",
-    "name": "Deni Avdija",
-    "team": "POR",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 34,
-    "why": "no game",
-    "line": {
-     "PTS": 21.36,
-     "REB": 6.83,
-     "AST": 5.88,
-     "STL": 0.87,
-     "BLK": 0.47,
-     "3PM": 1.79,
-     "DD": 0.29
-    },
-    "helps": [
-     "FGM",
-     "PTS",
-     "REB"
-    ]
-   },
-   {
-    "id": "6606",
-    "name": "Damian Lillard",
-    "team": "POR",
-    "pos": "PG",
-    "inj": "",
-    "rank": 32,
-    "why": "no game",
-    "line": {
-     "PTS": 20.24,
-     "REB": 3.8,
-     "AST": 5.51,
-     "STL": 0.97,
-     "BLK": 0.19,
-     "3PM": 2.82,
-     "DD": 0.1
-    },
-    "helps": [
-     "3PM",
-     "FGM",
-     "PTS"
-    ]
-   },
-   {
-    "id": "3064440",
-    "name": "Zach LaVine",
-    "team": "SAC",
-    "pos": "SG/SF",
-    "inj": "",
-    "rank": 53,
-    "why": "no game",
-    "line": {
-     "PTS": 20.43,
-     "REB": 3.51,
-     "AST": 3.18,
-     "STL": 0.77,
-     "BLK": 0.19,
-     "3PM": 2.63,
-     "DD": 0.0
-    },
-    "helps": [
-     "FGM",
-     "3PM",
      "PTS"
     ]
    }
@@ -538,12 +530,12 @@
     "inj": "OUT",
     "rank": 11,
     "line": {
-     "PTS": 22.86,
-     "REB": 5.98,
+     "PTS": 22.81,
+     "REB": 5.99,
      "AST": 3.08,
-     "STL": 1.84,
+     "STL": 1.85,
      "BLK": 0.56,
-     "3PM": 2.16,
+     "3PM": 2.17,
      "DD": 0.08
     },
     "helps": [
@@ -560,22 +552,22 @@
     "inj": "OUT",
     "rank": 55,
     "line": {
-     "PTS": 17.54,
-     "REB": 6.17,
-     "AST": 2.05,
+     "PTS": 17.5,
+     "REB": 6.18,
+     "AST": 2.06,
      "STL": 0.68,
-     "BLK": 1.49,
+     "BLK": 1.48,
      "3PM": 1.88,
      "DD": 0.08
     },
     "helps": [
      "BLK",
      "FGM",
-     "REB"
+     "PTS"
     ]
    }
   ],
-  "open_slots": 0
+  "open_slots": 2
  },
  "roster_room": {
   "empty": 0,
@@ -586,35 +578,35 @@
  "moves": [
   {
    "add": {
-    "id": "4683747",
-    "name": "Jaylon Tyson",
-    "team": "CLE",
-    "pos": "SG/SF",
+    "id": "4431680",
+    "name": "Onyeka Okongwu",
+    "team": "ATL",
+    "pos": "C",
     "inj": "",
-    "rank": 159,
-    "matchup_value": 0.2925,
+    "rank": 102,
+    "matchup_value": 0.4038,
     "line": {
-     "PTS": 11.29,
-     "REB": 4.46,
-     "AST": 2.24,
-     "STL": 0.77,
-     "BLK": 0.37,
-     "3PM": 1.69,
-     "DD": 0.05
+     "PTS": 12.66,
+     "REB": 6.94,
+     "AST": 2.8,
+     "STL": 0.97,
+     "BLK": 0.83,
+     "3PM": 1.41,
+     "DD": 0.16
     },
     "helps": [
      "FGM",
-     "3PM",
-     "REB"
+     "BLK",
+     "STL"
     ]
    },
-   "gain": 0.175,
-   "games_left": 3,
+   "gain": 0.433,
+   "games_left": 2,
    "plays_today": true,
    "helps": [
     "FGM",
-    "3PM",
-    "REB"
+    "BLK",
+    "STL"
    ],
    "drop": {
     "id": "4278078",
@@ -622,21 +614,21 @@
     "team": "DAL",
     "pos": "SF/PF",
     "inj": "",
-    "rank": 151,
-    "matchup_value": 0.3437,
+    "rank": 153,
+    "matchup_value": 0.3747,
     "line": {
-     "PTS": 12.78,
-     "REB": 6.46,
-     "AST": 1.59,
-     "STL": 0.77,
+     "PTS": 12.94,
+     "REB": 6.56,
+     "AST": 1.5,
+     "STL": 0.78,
      "BLK": 1.02,
      "3PM": 1.41,
-     "DD": 0.15
+     "DD": 0.14
     },
     "helps": [
-     "REB",
+     "FGM",
      "BLK",
-     "FGM"
+     "PTS"
     ]
    }
   }
@@ -644,90 +636,34 @@
  "alternatives": [
   {
    "add": {
-    "id": "4396909",
-    "name": "Aaron Nesmith",
-    "team": "IND",
-    "pos": "SG/SF",
-    "inj": "",
-    "rank": 149,
-    "matchup_value": 0.2878,
-    "line": {
-     "PTS": 12.13,
-     "REB": 3.42,
-     "AST": 1.4,
-     "STL": 0.77,
-     "BLK": 0.47,
-     "3PM": 1.97,
-     "DD": 0.0
-    },
-    "helps": [
-     "3PM",
-     "FGM",
-     "PTS"
-    ]
-   },
-   "gain": 0.162,
-   "games_left": 3,
-   "plays_today": true,
-   "helps": [
-    "3PM",
-    "FGM",
-    "PTS"
-   ],
-   "drop": {
-    "id": "4278078",
-    "name": "P.J. Washington",
-    "team": "DAL",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 151,
-    "matchup_value": 0.3437,
-    "line": {
-     "PTS": 12.78,
-     "REB": 6.46,
-     "AST": 1.59,
-     "STL": 0.77,
-     "BLK": 1.02,
-     "3PM": 1.41,
-     "DD": 0.15
-    },
-    "helps": [
-     "REB",
-     "BLK",
-     "FGM"
-    ]
-   }
-  },
-  {
-   "add": {
-    "id": "4433192",
-    "name": "Tari Eason",
+    "id": "4711272",
+    "name": "Reed Sheppard",
     "team": "HOU",
-    "pos": "SF/PF",
+    "pos": "PG/SG",
     "inj": "",
-    "rank": 189,
-    "matchup_value": 0.2788,
+    "rank": 117,
+    "matchup_value": 0.3875,
     "line": {
-     "PTS": 9.52,
-     "REB": 5.6,
-     "AST": 1.03,
-     "STL": 1.16,
-     "BLK": 0.65,
-     "3PM": 1.03,
-     "DD": 0.06
+     "PTS": 12.01,
+     "REB": 2.85,
+     "AST": 3.46,
+     "STL": 1.56,
+     "BLK": 0.56,
+     "3PM": 2.54,
+     "DD": 0.01
     },
     "helps": [
-     "REB",
      "STL",
+     "3PM",
      "FGM"
     ]
    },
-   "gain": 0.153,
-   "games_left": 3,
-   "plays_today": true,
+   "gain": 0.342,
+   "games_left": 2,
+   "plays_today": false,
    "helps": [
-    "REB",
     "STL",
+    "3PM",
     "FGM"
    ],
    "drop": {
@@ -736,55 +672,55 @@
     "team": "DAL",
     "pos": "SF/PF",
     "inj": "",
-    "rank": 151,
-    "matchup_value": 0.3437,
+    "rank": 153,
+    "matchup_value": 0.3747,
     "line": {
-     "PTS": 12.78,
-     "REB": 6.46,
-     "AST": 1.59,
-     "STL": 0.77,
+     "PTS": 12.94,
+     "REB": 6.56,
+     "AST": 1.5,
+     "STL": 0.78,
      "BLK": 1.02,
      "3PM": 1.41,
-     "DD": 0.15
-    },
-    "helps": [
-     "REB",
-     "BLK",
-     "FGM"
-    ]
-   }
-  },
-  {
-   "add": {
-    "id": "4397136",
-    "name": "Saddiq Bey",
-    "team": "NOP",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 148,
-    "matchup_value": 0.2842,
-    "line": {
-     "PTS": 13.43,
-     "REB": 4.27,
-     "AST": 1.77,
-     "STL": 0.77,
-     "BLK": 0.09,
-     "3PM": 1.69,
-     "DD": 0.05
+     "DD": 0.14
     },
     "helps": [
      "FGM",
-     "3PM",
+     "BLK",
      "PTS"
     ]
+   }
+  },
+  {
+   "add": {
+    "id": "4351852",
+    "name": "Mitchell Robinson",
+    "team": "BOS",
+    "pos": "C",
+    "inj": "",
+    "rank": 193,
+    "matchup_value": 0.3172,
+    "line": {
+     "PTS": 6.52,
+     "REB": 9.31,
+     "AST": 0.93,
+     "STL": 1.07,
+     "BLK": 1.3,
+     "3PM": 0.0,
+     "DD": 0.1
+    },
+    "helps": [
+     "BLK",
+     "STL",
+     "REB"
+    ]
    },
-   "gain": 0.142,
-   "games_left": 3,
-   "plays_today": true,
+   "gain": 0.332,
+   "games_left": 2,
+   "plays_today": false,
    "helps": [
-    "FGM",
-    "3PM",
-    "PTS"
+    "BLK",
+    "STL",
+    "REB"
    ],
    "drop": {
     "id": "4278078",
@@ -792,109 +728,53 @@
     "team": "DAL",
     "pos": "SF/PF",
     "inj": "",
-    "rank": 151,
-    "matchup_value": 0.3437,
+    "rank": 153,
+    "matchup_value": 0.3747,
     "line": {
-     "PTS": 12.78,
-     "REB": 6.46,
-     "AST": 1.59,
-     "STL": 0.77,
+     "PTS": 12.94,
+     "REB": 6.56,
+     "AST": 1.5,
+     "STL": 0.78,
      "BLK": 1.02,
      "3PM": 1.41,
-     "DD": 0.15
+     "DD": 0.14
     },
     "helps": [
-     "REB",
+     "FGM",
      "BLK",
-     "FGM"
+     "PTS"
     ]
    }
   },
   {
    "add": {
-    "id": "6589",
-    "name": "Draymond Green",
-    "team": "GSW",
-    "pos": "PF/C",
+    "id": "3448",
+    "name": "Brook Lopez",
+    "team": "LAC",
+    "pos": "C",
     "inj": "",
-    "rank": 194,
-    "matchup_value": 0.2862,
+    "rank": 152,
+    "matchup_value": 0.356,
     "line": {
-     "PTS": 7.0,
-     "REB": 5.32,
-     "AST": 5.51,
-     "STL": 0.87,
-     "BLK": 0.74,
-     "3PM": 1.03,
-     "DD": 0.04
+     "PTS": 10.52,
+     "REB": 4.18,
+     "AST": 1.4,
+     "STL": 0.49,
+     "BLK": 1.48,
+     "3PM": 1.51,
+     "DD": 0.05
     },
     "helps": [
-     "REB",
-     "AST",
-     "BLK"
-    ]
-   },
-   "gain": 0.129,
-   "games_left": 3,
-   "plays_today": true,
-   "helps": [
-    "REB",
-    "AST",
-    "BLK"
-   ],
-   "drop": {
-    "id": "4278078",
-    "name": "P.J. Washington",
-    "team": "DAL",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 151,
-    "matchup_value": 0.3437,
-    "line": {
-     "PTS": 12.78,
-     "REB": 6.46,
-     "AST": 1.59,
-     "STL": 0.77,
-     "BLK": 1.02,
-     "3PM": 1.41,
-     "DD": 0.15
-    },
-    "helps": [
-     "REB",
      "BLK",
-     "FGM"
-    ]
-   }
-  },
-  {
-   "add": {
-    "id": "4278580",
-    "name": "Sandro Mamukelashvili",
-    "team": "LAL",
-    "pos": "PF/C",
-    "inj": "",
-    "rank": 171,
-    "matchup_value": 0.2698,
-    "line": {
-     "PTS": 10.08,
-     "REB": 4.56,
-     "AST": 1.68,
-     "STL": 0.68,
-     "BLK": 0.47,
-     "3PM": 1.32,
-     "DD": 0.03
-    },
-    "helps": [
-     "REB",
      "FGM",
      "3PM"
     ]
    },
-   "gain": 0.118,
-   "games_left": 3,
-   "plays_today": true,
+   "gain": 0.323,
+   "games_left": 2,
+   "plays_today": false,
    "helps": [
-    "REB",
+    "BLK",
     "FGM",
     "3PM"
    ],
@@ -904,21 +784,133 @@
     "team": "DAL",
     "pos": "SF/PF",
     "inj": "",
-    "rank": 151,
-    "matchup_value": 0.3437,
+    "rank": 153,
+    "matchup_value": 0.3747,
     "line": {
-     "PTS": 12.78,
-     "REB": 6.46,
-     "AST": 1.59,
-     "STL": 0.77,
+     "PTS": 12.94,
+     "REB": 6.56,
+     "AST": 1.5,
+     "STL": 0.78,
      "BLK": 1.02,
      "3PM": 1.41,
-     "DD": 0.15
+     "DD": 0.14
     },
     "helps": [
-     "REB",
+     "FGM",
      "BLK",
-     "FGM"
+     "PTS"
+    ]
+   }
+  },
+  {
+   "add": {
+    "id": "4066211",
+    "name": "Robert Williams III",
+    "team": "POR",
+    "pos": "C",
+    "inj": "",
+    "rank": 158,
+    "matchup_value": 0.334,
+    "line": {
+     "PTS": 7.26,
+     "REB": 7.51,
+     "AST": 1.03,
+     "STL": 0.68,
+     "BLK": 1.48,
+     "3PM": 0.09,
+     "DD": 0.11
+    },
+    "helps": [
+     "BLK",
+     "FGM",
+     "REB"
+    ]
+   },
+   "gain": 0.323,
+   "games_left": 2,
+   "plays_today": true,
+   "helps": [
+    "BLK",
+    "FGM",
+    "REB"
+   ],
+   "drop": {
+    "id": "4278078",
+    "name": "P.J. Washington",
+    "team": "DAL",
+    "pos": "SF/PF",
+    "inj": "",
+    "rank": 153,
+    "matchup_value": 0.3747,
+    "line": {
+     "PTS": 12.94,
+     "REB": 6.56,
+     "AST": 1.5,
+     "STL": 0.78,
+     "BLK": 1.02,
+     "3PM": 1.41,
+     "DD": 0.14
+    },
+    "helps": [
+     "FGM",
+     "BLK",
+     "PTS"
+    ]
+   }
+  },
+  {
+   "add": {
+    "id": "4712849",
+    "name": "Anthony Black",
+    "team": "ORL",
+    "pos": "PG/SG",
+    "inj": "",
+    "rank": 130,
+    "matchup_value": 0.364,
+    "line": {
+     "PTS": 12.75,
+     "REB": 3.42,
+     "AST": 3.27,
+     "STL": 1.36,
+     "BLK": 0.65,
+     "3PM": 1.41,
+     "DD": 0.01
+    },
+    "helps": [
+     "STL",
+     "FGM",
+     "PTS"
+    ]
+   },
+   "gain": 0.315,
+   "games_left": 2,
+   "plays_today": false,
+   "helps": [
+    "STL",
+    "FGM",
+    "PTS"
+   ],
+   "drop": {
+    "id": "4278078",
+    "name": "P.J. Washington",
+    "team": "DAL",
+    "pos": "SF/PF",
+    "inj": "",
+    "rank": 153,
+    "matchup_value": 0.3747,
+    "line": {
+     "PTS": 12.94,
+     "REB": 6.56,
+     "AST": 1.5,
+     "STL": 0.78,
+     "BLK": 1.02,
+     "3PM": 1.41,
+     "DD": 0.14
+    },
+    "helps": [
+     "FGM",
+     "BLK",
+     "PTS"
     ]
    }
   }
@@ -926,7 +918,7 @@
  "ir_moves": [],
  "opp_injuries": [],
  "week_plan": {
-  "date": "2026-10-28",
+  "date": "2026-10-29",
   "matchup_period": 2,
   "period": {
    "start": "2026-10-26",
@@ -934,149 +926,94 @@
   },
   "banked_past_days_at_projection": false,
   "opponent_team_id": "6",
-  "expected_cats_now": 7.35,
+  "expected_cats_now": 7.32,
   "categories": [
    {
     "cat": "FT%",
-    "mine": 0.776,
-    "theirs": 0.839,
-    "p": 0.074,
+    "mine": 0.798,
+    "theirs": 0.84,
+    "p": 0.126,
     "label": "likely loss"
    },
    {
     "cat": "3PT%",
-    "mine": 0.355,
-    "theirs": 0.34,
-    "p": 0.626,
-    "label": "favored"
+    "mine": 0.36,
+    "theirs": 0.318,
+    "p": 0.856,
+    "label": "safe"
    },
    {
     "cat": "DD",
-    "mine": 7.5,
-    "theirs": 5.1,
-    "p": 0.811,
-    "label": "favored"
+    "mine": 6.5,
+    "theirs": 7.0,
+    "p": 0.401,
+    "label": "toss-up"
    },
    {
     "cat": "REB",
-    "mine": 208.8,
-    "theirs": 231.0,
-    "p": 0.118,
+    "mine": 216.9,
+    "theirs": 243.0,
+    "p": 0.048,
     "label": "likely loss"
    },
    {
     "cat": "FGM",
-    "mine": 306.8,
-    "theirs": 289.3,
-    "p": 0.764,
+    "mine": 312.6,
+    "theirs": 299.8,
+    "p": 0.736,
     "label": "favored"
    },
    {
     "cat": "FTM",
-    "mine": 174.8,
-    "theirs": 143.3,
-    "p": 0.916,
+    "mine": 174.3,
+    "theirs": 146.6,
+    "p": 0.924,
     "label": "safe"
    },
    {
     "cat": "PTS",
-    "mine": 875.1,
-    "theirs": 803.7,
-    "p": 0.848,
-    "label": "favored"
+    "mine": 888.3,
+    "theirs": 827.5,
+    "p": 0.852,
+    "label": "safe"
    },
    {
     "cat": "BLK",
-    "mine": 26.7,
-    "theirs": 26.7,
-    "p": 0.5,
+    "mine": 25.0,
+    "theirs": 25.9,
+    "p": 0.433,
     "label": "toss-up"
    },
    {
     "cat": "3PM",
-    "mine": 86.8,
-    "theirs": 82.4,
-    "p": 0.642,
+    "mine": 89.0,
+    "theirs": 81.5,
+    "p": 0.762,
     "label": "favored"
    },
    {
     "cat": "STL",
-    "mine": 45.9,
-    "theirs": 45.3,
-    "p": 0.527,
+    "mine": 48.0,
+    "theirs": 47.2,
+    "p": 0.548,
     "label": "toss-up"
    },
    {
     "cat": "AST",
-    "mine": 215.6,
-    "theirs": 191.8,
-    "p": 0.868,
-    "label": "safe"
+    "mine": 213.0,
+    "theirs": 195.3,
+    "p": 0.839,
+    "label": "favored"
    },
    {
     "cat": "FG%",
-    "mine": 0.476,
-    "theirs": 0.464,
-    "p": 0.651,
+    "mine": 0.477,
+    "theirs": 0.456,
+    "p": 0.797,
     "label": "favored"
    }
   ],
   "days": [
-   {
-    "sp": 9,
-    "date": "2026-10-28",
-    "nba_games": 12,
-    "first_tip_ct": "18:00",
-    "my_starters": 10,
-    "my_open_slots": [],
-    "my_no_slot": [],
-    "opp_starters": 10,
-    "opp_open_slots": [],
-    "my_expected_games": 10.0,
-    "opp_expected_games": 10.0,
-    "starters": [
-     {
-      "name": "Victor Wembanyama",
-      "slot": "C"
-     },
-     {
-      "name": "Donovan Mitchell",
-      "slot": "SG"
-     },
-     {
-      "name": "Trae Young",
-      "slot": "UT"
-     },
-     {
-      "name": "Kyrie Irving",
-      "slot": "UT"
-     },
-     {
-      "name": "Darius Garland",
-      "slot": "UT"
-     },
-     {
-      "name": "Jalen Brunson",
-      "slot": "G"
-     },
-     {
-      "name": "Zion Williamson",
-      "slot": "F"
-     },
-     {
-      "name": "Dejounte Murray",
-      "slot": "PG"
-     },
-     {
-      "name": "Peyton Watson",
-      "slot": "PF"
-     },
-     {
-      "name": "P.J. Washington",
-      "slot": "SF"
-     }
-    ]
-   },
    {
     "sp": 10,
     "date": "2026-10-29",
@@ -1120,12 +1057,12 @@
       "slot": "UT"
      },
      {
-      "name": "Zion Williamson",
-      "slot": "C"
-     },
-     {
       "name": "Dejounte Murray",
       "slot": "G"
+     },
+     {
+      "name": "Zion Williamson",
+      "slot": "C"
      },
      {
       "name": "Zach LaVine",
@@ -1167,11 +1104,11 @@
       "slot": "UT"
      },
      {
-      "name": "Darius Garland",
+      "name": "Jalen Brunson",
       "slot": "G"
      },
      {
-      "name": "Jalen Brunson",
+      "name": "Darius Garland",
       "slot": "PG"
      },
      {
@@ -1220,12 +1157,12 @@
       "slot": "PG"
      },
      {
-      "name": "Zion Williamson",
-      "slot": "C"
-     },
-     {
       "name": "Dejounte Murray",
       "slot": "UT"
+     },
+     {
+      "name": "Zion Williamson",
+      "slot": "C"
      },
      {
       "name": "Zach LaVine",
@@ -1278,110 +1215,13 @@
   ],
   "stream_plan": {
    "occupant_now": "P.J. Washington",
-   "expected_cats_keep": 7.35,
+   "expected_cats_keep": 7.32,
    "plans": {
     "daily": {
      "swap_cost_assumed": 0.03,
      "adds": 4,
-     "expected_cats": 8.46,
+     "expected_cats": 8.43,
      "days": [
-      {
-       "date": "2026-10-28",
-       "occupant": "P.J. Washington",
-       "id": "4278078",
-       "team": "DAL",
-       "pos": "SF/PF",
-       "swap": false,
-       "drop": null,
-       "drop_id": null,
-       "day_gain": 0.344,
-       "plays_vs": "OKC",
-       "tip_ct": "20:30",
-       "helps": [
-        "REB",
-        "BLK",
-        "FGM"
-       ],
-       "rank": 151,
-       "line": {
-        "PTS": 12.78,
-        "REB": 6.46,
-        "AST": 1.59,
-        "STL": 0.77,
-        "BLK": 1.02,
-        "3PM": 1.41,
-        "DD": 0.15
-       },
-       "games_left": 2,
-       "alternatives": [
-        {
-         "id": "5174563",
-         "name": "Kyshawn George",
-         "team": "WAS",
-         "pos": "SG/SF",
-         "gain": 0.349,
-         "rank": 115,
-         "line": {
-          "PTS": 13.43,
-          "REB": 4.75,
-          "AST": 4.02,
-          "STL": 0.87,
-          "BLK": 0.93,
-          "3PM": 1.6,
-          "DD": 0.04
-         },
-         "helps": [
-          "FGM",
-          "BLK",
-          "REB"
-         ]
-        },
-        {
-         "id": "3059319",
-         "name": "Andrew Wiggins",
-         "team": "MIA",
-         "pos": "SF/PF",
-         "gain": 0.331,
-         "rank": 118,
-         "line": {
-          "PTS": 13.43,
-          "REB": 4.18,
-          "AST": 2.24,
-          "STL": 0.87,
-          "BLK": 0.84,
-          "3PM": 1.69,
-          "DD": 0.02
-         },
-         "helps": [
-          "FGM",
-          "3PM",
-          "BLK"
-         ]
-        },
-        {
-         "id": "3064482",
-         "name": "Bobby Portis",
-         "team": "MIA",
-         "pos": "PF/C",
-         "gain": 0.33,
-         "rank": 110,
-         "line": {
-          "PTS": 11.94,
-          "REB": 6.74,
-          "AST": 1.59,
-          "STL": 0.77,
-          "BLK": 0.37,
-          "3PM": 1.79,
-          "DD": 0.15
-         },
-         "helps": [
-          "REB",
-          "FGM",
-          "3PM"
-         ]
-        }
-       ]
-      },
       {
        "date": "2026-10-29",
        "occupant": "Onyeka Okongwu",
@@ -1391,68 +1231,46 @@
        "swap": true,
        "drop": "P.J. Washington",
        "drop_id": "4278078",
-       "day_gain": 0.368,
+       "day_gain": 0.404,
        "plays_vs": "CLE",
        "tip_ct": "19:00",
        "helps": [
-        "REB",
         "FGM",
-        "BLK"
+        "BLK",
+        "STL"
        ],
        "rank": 102,
        "line": {
-        "PTS": 12.69,
-        "REB": 6.93,
+        "PTS": 12.66,
+        "REB": 6.94,
         "AST": 2.8,
         "STL": 0.97,
-        "BLK": 0.84,
+        "BLK": 0.83,
         "3PM": 1.41,
         "DD": 0.16
        },
-       "games_left": 3,
+       "games_left": 2,
        "alternatives": [
         {
          "id": "2991070",
          "name": "Jerami Grant",
          "team": "MEM",
          "pos": "PF",
-         "gain": 0.324,
-         "rank": 107,
+         "gain": 0.366,
+         "rank": 110,
          "line": {
-          "PTS": 14.93,
-          "REB": 3.04,
+          "PTS": 14.89,
+          "REB": 3.14,
           "AST": 1.96,
           "STL": 0.68,
-          "BLK": 0.74,
+          "BLK": 0.83,
           "3PM": 2.07,
           "DD": 0.0
          },
          "helps": [
-          "3PM",
           "FGM",
-          "PTS"
-         ]
-        },
-        {
-         "id": "4066211",
-         "name": "Robert Williams III",
-         "team": "POR",
-         "pos": "C",
-         "gain": 0.313,
-         "rank": 161,
-         "line": {
-          "PTS": 7.28,
-          "REB": 7.5,
-          "AST": 1.03,
-          "STL": 0.68,
-          "BLK": 1.49,
-          "3PM": 0.09,
-          "DD": 0.11
-         },
-         "helps": [
           "BLK",
-          "REB",
-          "FGM"
+          "3PM"
          ]
         },
         {
@@ -1460,21 +1278,43 @@
          "name": "Scotty Pippen Jr.",
          "team": "MEM",
          "pos": "PG/SG",
-         "gain": 0.313,
-         "rank": 132,
+         "gain": 0.357,
+         "rank": 129,
          "line": {
-          "PTS": 10.73,
-          "REB": 3.13,
-          "AST": 4.48,
+          "PTS": 10.71,
+          "REB": 3.14,
+          "AST": 4.49,
           "STL": 1.65,
-          "BLK": 0.47,
-          "3PM": 1.03,
+          "BLK": 0.46,
+          "3PM": 1.04,
           "DD": 0.03
          },
          "helps": [
           "STL",
           "FGM",
           "AST"
+         ]
+        },
+        {
+         "id": "4066211",
+         "name": "Robert Williams III",
+         "team": "POR",
+         "pos": "C",
+         "gain": 0.334,
+         "rank": 158,
+         "line": {
+          "PTS": 7.26,
+          "REB": 7.51,
+          "AST": 1.03,
+          "STL": 0.68,
+          "BLK": 1.48,
+          "3PM": 0.09,
+          "DD": 0.11
+         },
+         "helps": [
+          "BLK",
+          "FGM",
+          "REB"
          ]
         }
        ]
@@ -1488,21 +1328,21 @@
        "swap": true,
        "drop": "Onyeka Okongwu",
        "drop_id": "4431680",
-       "day_gain": 0.365,
+       "day_gain": 0.403,
        "plays_vs": "DEN",
        "tip_ct": "21:00",
        "helps": [
         "FGM",
-        "REB",
-        "PTS"
+        "PTS",
+        "3PM"
        ],
-       "rank": 100,
+       "rank": 105,
        "line": {
-        "PTS": 17.07,
+        "PTS": 17.04,
         "REB": 6.27,
         "AST": 2.99,
         "STL": 0.68,
-        "BLK": 0.47,
+        "BLK": 0.46,
         "3PM": 1.88,
         "DD": 0.1
        },
@@ -1513,10 +1353,10 @@
          "name": "Kyshawn George",
          "team": "WAS",
          "pos": "SG/SF",
-         "gain": 0.349,
-         "rank": 115,
+         "gain": 0.392,
+         "rank": 118,
          "line": {
-          "PTS": 13.43,
+          "PTS": 13.4,
           "REB": 4.75,
           "AST": 4.02,
           "STL": 0.87,
@@ -1527,104 +1367,7 @@
          "helps": [
           "FGM",
           "BLK",
-          "REB"
-         ]
-        },
-        {
-         "id": "4278078",
-         "name": "P.J. Washington",
-         "team": "DAL",
-         "pos": "SF/PF",
-         "gain": 0.344,
-         "rank": 151,
-         "line": {
-          "PTS": 12.78,
-          "REB": 6.46,
-          "AST": 1.59,
-          "STL": 0.77,
-          "BLK": 1.02,
-          "3PM": 1.41,
-          "DD": 0.15
-         },
-         "helps": [
-          "REB",
-          "BLK",
-          "FGM"
-         ]
-        },
-        {
-         "id": "4278049",
-         "name": "Daniel Gafford",
-         "team": "DAL",
-         "pos": "C",
-         "gain": 0.341,
-         "rank": 131,
-         "line": {
-          "PTS": 9.24,
-          "REB": 6.55,
-          "AST": 1.49,
-          "STL": 0.77,
-          "BLK": 1.67,
-          "3PM": 0.0,
-          "DD": 0.12
-         },
-         "helps": [
-          "BLK",
-          "REB",
-          "FGM"
-         ]
-        }
-       ]
-      },
-      {
-       "date": "2026-10-31",
-       "occupant": "Mo Bamba",
-       "id": "4277919",
-       "team": "UTA",
-       "pos": "C",
-       "swap": true,
-       "drop": "Miles Bridges",
-       "drop_id": "4066383",
-       "day_gain": 0.481,
-       "plays_vs": "POR",
-       "tip_ct": "14:00",
-       "helps": [
-        "BLK",
-        "FGM",
-        "REB"
-       ],
-       "rank": 64,
-       "line": {
-        "PTS": 13.06,
-        "REB": 6.65,
-        "AST": 0.93,
-        "STL": 0.0,
-        "BLK": 3.72,
-        "3PM": 0.0,
-        "DD": 0.0
-       },
-       "games_left": 2,
-       "alternatives": [
-        {
-         "id": "4431680",
-         "name": "Onyeka Okongwu",
-         "team": "ATL",
-         "pos": "C",
-         "gain": 0.368,
-         "rank": 102,
-         "line": {
-          "PTS": 12.69,
-          "REB": 6.93,
-          "AST": 2.8,
-          "STL": 0.97,
-          "BLK": 0.84,
-          "3PM": 1.41,
-          "DD": 0.16
-         },
-         "helps": [
-          "REB",
-          "FGM",
-          "BLK"
+          "AST"
          ]
         },
         {
@@ -1632,21 +1375,118 @@
          "name": "Reed Sheppard",
          "team": "HOU",
          "pos": "PG/SG",
-         "gain": 0.336,
-         "rank": 119,
+         "gain": 0.388,
+         "rank": 117,
          "line": {
-          "PTS": 11.85,
-          "REB": 2.75,
-          "AST": 3.27,
-          "STL": 1.45,
+          "PTS": 12.01,
+          "REB": 2.85,
+          "AST": 3.46,
+          "STL": 1.56,
           "BLK": 0.56,
           "3PM": 2.54,
           "DD": 0.01
          },
          "helps": [
-          "3PM",
           "STL",
+          "3PM",
           "FGM"
+         ]
+        },
+        {
+         "id": "4278078",
+         "name": "P.J. Washington",
+         "team": "DAL",
+         "pos": "SF/PF",
+         "gain": 0.375,
+         "rank": 153,
+         "line": {
+          "PTS": 12.94,
+          "REB": 6.56,
+          "AST": 1.5,
+          "STL": 0.78,
+          "BLK": 1.02,
+          "3PM": 1.41,
+          "DD": 0.14
+         },
+         "helps": [
+          "FGM",
+          "BLK",
+          "PTS"
+         ]
+        }
+       ]
+      },
+      {
+       "date": "2026-10-31",
+       "occupant": "Onyeka Okongwu",
+       "id": "4431680",
+       "team": "ATL",
+       "pos": "C",
+       "swap": true,
+       "drop": "Miles Bridges",
+       "drop_id": "4066383",
+       "day_gain": 0.404,
+       "plays_vs": "NOP",
+       "tip_ct": "18:00",
+       "helps": [
+        "FGM",
+        "BLK",
+        "STL"
+       ],
+       "rank": 102,
+       "line": {
+        "PTS": 12.66,
+        "REB": 6.94,
+        "AST": 2.8,
+        "STL": 0.97,
+        "BLK": 0.83,
+        "3PM": 1.41,
+        "DD": 0.16
+       },
+       "games_left": 2,
+       "alternatives": [
+        {
+         "id": "4711272",
+         "name": "Reed Sheppard",
+         "team": "HOU",
+         "pos": "PG/SG",
+         "gain": 0.388,
+         "rank": 117,
+         "line": {
+          "PTS": 12.01,
+          "REB": 2.85,
+          "AST": 3.46,
+          "STL": 1.56,
+          "BLK": 0.56,
+          "3PM": 2.54,
+          "DD": 0.01
+         },
+         "helps": [
+          "STL",
+          "3PM",
+          "FGM"
+         ]
+        },
+        {
+         "id": "4277919",
+         "name": "Mo Bamba",
+         "team": "UTA",
+         "pos": "C",
+         "gain": 0.374,
+         "rank": 135,
+         "line": {
+          "PTS": 10.24,
+          "REB": 5.23,
+          "AST": 0.93,
+          "STL": 0.0,
+          "BLK": 2.32,
+          "3PM": 0.0,
+          "DD": 0.0
+         },
+         "helps": [
+          "BLK",
+          "FGM",
+          "PTS"
          ]
         },
         {
@@ -1654,95 +1494,95 @@
          "name": "Ryan Rollins",
          "team": "MIL",
          "pos": "PG/SG",
-         "gain": 0.329,
-         "rank": 122,
+         "gain": 0.369,
+         "rank": 121,
          "line": {
-          "PTS": 13.06,
+          "PTS": 13.13,
           "REB": 3.99,
-          "AST": 4.2,
-          "STL": 1.06,
+          "AST": 4.39,
+          "STL": 1.07,
           "BLK": 0.37,
           "3PM": 1.88,
           "DD": 0.04
          },
          "helps": [
           "FGM",
-          "3PM",
-          "STL"
+          "STL",
+          "AST"
          ]
         }
        ]
       },
       {
        "date": "2026-11-01",
-       "occupant": "Brook Lopez",
-       "id": "3448",
-       "team": "LAC",
-       "pos": "C",
+       "occupant": "Anthony Black",
+       "id": "4712849",
+       "team": "ORL",
+       "pos": "PG/SG",
        "swap": true,
-       "drop": "Mo Bamba",
-       "drop_id": "4277919",
-       "day_gain": 0.34,
-       "plays_vs": "GSW",
-       "tip_ct": "19:30",
+       "drop": "Onyeka Okongwu",
+       "drop_id": "4431680",
+       "day_gain": 0.364,
+       "plays_vs": "BOS",
+       "tip_ct": "14:30",
        "helps": [
-        "BLK",
+        "STL",
         "FGM",
-        "3PM"
+        "PTS"
        ],
-       "rank": 135,
+       "rank": 130,
        "line": {
-        "PTS": 10.91,
-        "REB": 4.27,
-        "AST": 1.31,
-        "STL": 0.58,
-        "BLK": 1.58,
-        "3PM": 1.6,
-        "DD": 0.05
+        "PTS": 12.75,
+        "REB": 3.42,
+        "AST": 3.27,
+        "STL": 1.36,
+        "BLK": 0.65,
+        "3PM": 1.41,
+        "DD": 0.01
        },
-       "games_left": 3,
+       "games_left": 2,
        "alternatives": [
         {
-         "id": "4712849",
-         "name": "Anthony Black",
-         "team": "ORL",
-         "pos": "PG/SG",
-         "gain": 0.318,
-         "rank": 137,
+         "id": "3448",
+         "name": "Brook Lopez",
+         "team": "LAC",
+         "pos": "C",
+         "gain": 0.356,
+         "rank": 152,
          "line": {
-          "PTS": 12.69,
-          "REB": 3.42,
-          "AST": 3.27,
-          "STL": 1.36,
-          "BLK": 0.56,
-          "3PM": 1.41,
-          "DD": 0.01
+          "PTS": 10.52,
+          "REB": 4.18,
+          "AST": 1.4,
+          "STL": 0.49,
+          "BLK": 1.48,
+          "3PM": 1.51,
+          "DD": 0.05
          },
          "helps": [
-          "STL",
+          "BLK",
           "FGM",
-          "PTS"
+          "3PM"
          ]
         },
         {
-         "id": "4351852",
-         "name": "Mitchell Robinson",
-         "team": "BOS",
-         "pos": "C",
-         "gain": 0.316,
-         "rank": 201,
+         "id": "4277811",
+         "name": "Collin Sexton",
+         "team": "LAL",
+         "pos": "PG/SG",
+         "gain": 0.342,
+         "rank": 112,
          "line": {
-          "PTS": 6.53,
-          "REB": 9.3,
-          "AST": 0.93,
-          "STL": 1.06,
-          "BLK": 1.3,
-          "3PM": 0.0,
-          "DD": 0.1
+          "PTS": 15.17,
+          "REB": 2.28,
+          "AST": 3.46,
+          "STL": 0.87,
+          "BLK": 0.19,
+          "3PM": 1.51,
+          "DD": 0.01
          },
          "helps": [
-          "REB",
-          "BLK",
+          "FGM",
+          "PTS",
           "STL"
          ]
         },
@@ -1751,21 +1591,21 @@
          "name": "Jakob Poeltl",
          "team": "TOR",
          "pos": "C",
-         "gain": 0.312,
+         "gain": 0.332,
          "rank": 155,
          "line": {
-          "PTS": 9.52,
-          "REB": 7.21,
+          "PTS": 9.5,
+          "REB": 7.22,
           "AST": 1.87,
-          "STL": 0.77,
+          "STL": 0.78,
           "BLK": 0.93,
           "3PM": 0.0,
           "DD": 0.15
          },
          "helps": [
-          "REB",
           "BLK",
-          "FGM"
+          "FGM",
+          "REB"
          ]
         }
        ]
@@ -1774,106 +1614,9 @@
     },
     "low_effort": {
      "swap_cost_assumed": 0.1,
-     "adds": 4,
-     "expected_cats": 8.46,
+     "adds": 3,
+     "expected_cats": 8.28,
      "days": [
-      {
-       "date": "2026-10-28",
-       "occupant": "P.J. Washington",
-       "id": "4278078",
-       "team": "DAL",
-       "pos": "SF/PF",
-       "swap": false,
-       "drop": null,
-       "drop_id": null,
-       "day_gain": 0.344,
-       "plays_vs": "OKC",
-       "tip_ct": "20:30",
-       "helps": [
-        "REB",
-        "BLK",
-        "FGM"
-       ],
-       "rank": 151,
-       "line": {
-        "PTS": 12.78,
-        "REB": 6.46,
-        "AST": 1.59,
-        "STL": 0.77,
-        "BLK": 1.02,
-        "3PM": 1.41,
-        "DD": 0.15
-       },
-       "games_left": 2,
-       "alternatives": [
-        {
-         "id": "5174563",
-         "name": "Kyshawn George",
-         "team": "WAS",
-         "pos": "SG/SF",
-         "gain": 0.349,
-         "rank": 115,
-         "line": {
-          "PTS": 13.43,
-          "REB": 4.75,
-          "AST": 4.02,
-          "STL": 0.87,
-          "BLK": 0.93,
-          "3PM": 1.6,
-          "DD": 0.04
-         },
-         "helps": [
-          "FGM",
-          "BLK",
-          "REB"
-         ]
-        },
-        {
-         "id": "3059319",
-         "name": "Andrew Wiggins",
-         "team": "MIA",
-         "pos": "SF/PF",
-         "gain": 0.331,
-         "rank": 118,
-         "line": {
-          "PTS": 13.43,
-          "REB": 4.18,
-          "AST": 2.24,
-          "STL": 0.87,
-          "BLK": 0.84,
-          "3PM": 1.69,
-          "DD": 0.02
-         },
-         "helps": [
-          "FGM",
-          "3PM",
-          "BLK"
-         ]
-        },
-        {
-         "id": "3064482",
-         "name": "Bobby Portis",
-         "team": "MIA",
-         "pos": "PF/C",
-         "gain": 0.33,
-         "rank": 110,
-         "line": {
-          "PTS": 11.94,
-          "REB": 6.74,
-          "AST": 1.59,
-          "STL": 0.77,
-          "BLK": 0.37,
-          "3PM": 1.79,
-          "DD": 0.15
-         },
-         "helps": [
-          "REB",
-          "FGM",
-          "3PM"
-         ]
-        }
-       ]
-      },
       {
        "date": "2026-10-29",
        "occupant": "Onyeka Okongwu",
@@ -1883,68 +1626,46 @@
        "swap": true,
        "drop": "P.J. Washington",
        "drop_id": "4278078",
-       "day_gain": 0.368,
+       "day_gain": 0.404,
        "plays_vs": "CLE",
        "tip_ct": "19:00",
        "helps": [
-        "REB",
         "FGM",
-        "BLK"
+        "BLK",
+        "STL"
        ],
        "rank": 102,
        "line": {
-        "PTS": 12.69,
-        "REB": 6.93,
+        "PTS": 12.66,
+        "REB": 6.94,
         "AST": 2.8,
         "STL": 0.97,
-        "BLK": 0.84,
+        "BLK": 0.83,
         "3PM": 1.41,
         "DD": 0.16
        },
-       "games_left": 3,
+       "games_left": 2,
        "alternatives": [
         {
          "id": "2991070",
          "name": "Jerami Grant",
          "team": "MEM",
          "pos": "PF",
-         "gain": 0.324,
-         "rank": 107,
+         "gain": 0.366,
+         "rank": 110,
          "line": {
-          "PTS": 14.93,
-          "REB": 3.04,
+          "PTS": 14.89,
+          "REB": 3.14,
           "AST": 1.96,
           "STL": 0.68,
-          "BLK": 0.74,
+          "BLK": 0.83,
           "3PM": 2.07,
           "DD": 0.0
          },
          "helps": [
-          "3PM",
           "FGM",
-          "PTS"
-         ]
-        },
-        {
-         "id": "4066211",
-         "name": "Robert Williams III",
-         "team": "POR",
-         "pos": "C",
-         "gain": 0.313,
-         "rank": 161,
-         "line": {
-          "PTS": 7.28,
-          "REB": 7.5,
-          "AST": 1.03,
-          "STL": 0.68,
-          "BLK": 1.49,
-          "3PM": 0.09,
-          "DD": 0.11
-         },
-         "helps": [
           "BLK",
-          "REB",
-          "FGM"
+          "3PM"
          ]
         },
         {
@@ -1952,15 +1673,15 @@
          "name": "Scotty Pippen Jr.",
          "team": "MEM",
          "pos": "PG/SG",
-         "gain": 0.313,
-         "rank": 132,
+         "gain": 0.357,
+         "rank": 129,
          "line": {
-          "PTS": 10.73,
-          "REB": 3.13,
-          "AST": 4.48,
+          "PTS": 10.71,
+          "REB": 3.14,
+          "AST": 4.49,
           "STL": 1.65,
-          "BLK": 0.47,
-          "3PM": 1.03,
+          "BLK": 0.46,
+          "3PM": 1.04,
           "DD": 0.03
          },
          "helps": [
@@ -1968,47 +1689,91 @@
           "FGM",
           "AST"
          ]
+        },
+        {
+         "id": "4066211",
+         "name": "Robert Williams III",
+         "team": "POR",
+         "pos": "C",
+         "gain": 0.334,
+         "rank": 158,
+         "line": {
+          "PTS": 7.26,
+          "REB": 7.51,
+          "AST": 1.03,
+          "STL": 0.68,
+          "BLK": 1.48,
+          "3PM": 0.09,
+          "DD": 0.11
+         },
+         "helps": [
+          "BLK",
+          "FGM",
+          "REB"
+         ]
         }
        ]
       },
       {
        "date": "2026-10-30",
-       "occupant": "Miles Bridges",
-       "id": "4066383",
-       "team": "PHO",
-       "pos": "SF/PF",
+       "occupant": "Reed Sheppard",
+       "id": "4711272",
+       "team": "HOU",
+       "pos": "PG/SG",
        "swap": true,
        "drop": "Onyeka Okongwu",
        "drop_id": "4431680",
-       "day_gain": 0.365,
-       "plays_vs": "DEN",
-       "tip_ct": "21:00",
+       "day_gain": 0.388,
+       "plays_vs": "DAL",
+       "tip_ct": "19:00",
        "helps": [
-        "FGM",
-        "REB",
-        "PTS"
+        "STL",
+        "3PM",
+        "FGM"
        ],
-       "rank": 100,
+       "rank": 117,
        "line": {
-        "PTS": 17.07,
-        "REB": 6.27,
-        "AST": 2.99,
-        "STL": 0.68,
-        "BLK": 0.47,
-        "3PM": 1.88,
-        "DD": 0.1
+        "PTS": 12.01,
+        "REB": 2.85,
+        "AST": 3.46,
+        "STL": 1.56,
+        "BLK": 0.56,
+        "3PM": 2.54,
+        "DD": 0.01
        },
-       "games_left": 1,
+       "games_left": 2,
        "alternatives": [
+        {
+         "id": "4066383",
+         "name": "Miles Bridges",
+         "team": "PHO",
+         "pos": "SF/PF",
+         "gain": 0.403,
+         "rank": 105,
+         "line": {
+          "PTS": 17.04,
+          "REB": 6.27,
+          "AST": 2.99,
+          "STL": 0.68,
+          "BLK": 0.46,
+          "3PM": 1.88,
+          "DD": 0.1
+         },
+         "helps": [
+          "FGM",
+          "PTS",
+          "3PM"
+         ]
+        },
         {
          "id": "5174563",
          "name": "Kyshawn George",
          "team": "WAS",
          "pos": "SG/SF",
-         "gain": 0.349,
-         "rank": 115,
+         "gain": 0.392,
+         "rank": 118,
          "line": {
-          "PTS": 13.43,
+          "PTS": 13.4,
           "REB": 4.75,
           "AST": 4.02,
           "STL": 0.87,
@@ -2019,7 +1784,7 @@
          "helps": [
           "FGM",
           "BLK",
-          "REB"
+          "AST"
          ]
         },
         {
@@ -2027,73 +1792,51 @@
          "name": "P.J. Washington",
          "team": "DAL",
          "pos": "SF/PF",
-         "gain": 0.344,
-         "rank": 151,
+         "gain": 0.375,
+         "rank": 153,
          "line": {
-          "PTS": 12.78,
-          "REB": 6.46,
-          "AST": 1.59,
-          "STL": 0.77,
+          "PTS": 12.94,
+          "REB": 6.56,
+          "AST": 1.5,
+          "STL": 0.78,
           "BLK": 1.02,
           "3PM": 1.41,
-          "DD": 0.15
+          "DD": 0.14
          },
          "helps": [
-          "REB",
+          "FGM",
           "BLK",
-          "FGM"
-         ]
-        },
-        {
-         "id": "4278049",
-         "name": "Daniel Gafford",
-         "team": "DAL",
-         "pos": "C",
-         "gain": 0.341,
-         "rank": 131,
-         "line": {
-          "PTS": 9.24,
-          "REB": 6.55,
-          "AST": 1.49,
-          "STL": 0.77,
-          "BLK": 1.67,
-          "3PM": 0.0,
-          "DD": 0.12
-         },
-         "helps": [
-          "BLK",
-          "REB",
-          "FGM"
+          "PTS"
          ]
         }
        ]
       },
       {
        "date": "2026-10-31",
-       "occupant": "Mo Bamba",
-       "id": "4277919",
-       "team": "UTA",
-       "pos": "C",
-       "swap": true,
-       "drop": "Miles Bridges",
-       "drop_id": "4066383",
-       "day_gain": 0.481,
-       "plays_vs": "POR",
-       "tip_ct": "14:00",
+       "occupant": "Reed Sheppard",
+       "id": "4711272",
+       "team": "HOU",
+       "pos": "PG/SG",
+       "swap": false,
+       "drop": null,
+       "drop_id": null,
+       "day_gain": 0.388,
+       "plays_vs": "OKC",
+       "tip_ct": "19:30",
        "helps": [
-        "BLK",
-        "FGM",
-        "REB"
+        "STL",
+        "3PM",
+        "FGM"
        ],
-       "rank": 64,
+       "rank": 117,
        "line": {
-        "PTS": 13.06,
-        "REB": 6.65,
-        "AST": 0.93,
-        "STL": 0.0,
-        "BLK": 3.72,
-        "3PM": 0.0,
-        "DD": 0.0
+        "PTS": 12.01,
+        "REB": 2.85,
+        "AST": 3.46,
+        "STL": 1.56,
+        "BLK": 0.56,
+        "3PM": 2.54,
+        "DD": 0.01
        },
        "games_left": 2,
        "alternatives": [
@@ -2102,43 +1845,43 @@
          "name": "Onyeka Okongwu",
          "team": "ATL",
          "pos": "C",
-         "gain": 0.368,
+         "gain": 0.404,
          "rank": 102,
          "line": {
-          "PTS": 12.69,
-          "REB": 6.93,
+          "PTS": 12.66,
+          "REB": 6.94,
           "AST": 2.8,
           "STL": 0.97,
-          "BLK": 0.84,
+          "BLK": 0.83,
           "3PM": 1.41,
           "DD": 0.16
          },
          "helps": [
-          "REB",
           "FGM",
-          "BLK"
+          "BLK",
+          "STL"
          ]
         },
         {
-         "id": "4711272",
-         "name": "Reed Sheppard",
-         "team": "HOU",
-         "pos": "PG/SG",
-         "gain": 0.336,
-         "rank": 119,
+         "id": "4277919",
+         "name": "Mo Bamba",
+         "team": "UTA",
+         "pos": "C",
+         "gain": 0.374,
+         "rank": 135,
          "line": {
-          "PTS": 11.85,
-          "REB": 2.75,
-          "AST": 3.27,
-          "STL": 1.45,
-          "BLK": 0.56,
-          "3PM": 2.54,
-          "DD": 0.01
+          "PTS": 10.24,
+          "REB": 5.23,
+          "AST": 0.93,
+          "STL": 0.0,
+          "BLK": 2.32,
+          "3PM": 0.0,
+          "DD": 0.0
          },
          "helps": [
-          "3PM",
-          "STL",
-          "FGM"
+          "BLK",
+          "FGM",
+          "PTS"
          ]
         },
         {
@@ -2146,95 +1889,95 @@
          "name": "Ryan Rollins",
          "team": "MIL",
          "pos": "PG/SG",
-         "gain": 0.329,
-         "rank": 122,
+         "gain": 0.369,
+         "rank": 121,
          "line": {
-          "PTS": 13.06,
+          "PTS": 13.13,
           "REB": 3.99,
-          "AST": 4.2,
-          "STL": 1.06,
+          "AST": 4.39,
+          "STL": 1.07,
           "BLK": 0.37,
           "3PM": 1.88,
           "DD": 0.04
          },
          "helps": [
           "FGM",
-          "3PM",
-          "STL"
+          "STL",
+          "AST"
          ]
         }
        ]
       },
       {
        "date": "2026-11-01",
-       "occupant": "Brook Lopez",
-       "id": "3448",
-       "team": "LAC",
-       "pos": "C",
+       "occupant": "Anthony Black",
+       "id": "4712849",
+       "team": "ORL",
+       "pos": "PG/SG",
        "swap": true,
-       "drop": "Mo Bamba",
-       "drop_id": "4277919",
-       "day_gain": 0.34,
-       "plays_vs": "GSW",
-       "tip_ct": "19:30",
+       "drop": "Reed Sheppard",
+       "drop_id": "4711272",
+       "day_gain": 0.364,
+       "plays_vs": "BOS",
+       "tip_ct": "14:30",
        "helps": [
-        "BLK",
+        "STL",
         "FGM",
-        "3PM"
+        "PTS"
        ],
-       "rank": 135,
+       "rank": 130,
        "line": {
-        "PTS": 10.91,
-        "REB": 4.27,
-        "AST": 1.31,
-        "STL": 0.58,
-        "BLK": 1.58,
-        "3PM": 1.6,
-        "DD": 0.05
+        "PTS": 12.75,
+        "REB": 3.42,
+        "AST": 3.27,
+        "STL": 1.36,
+        "BLK": 0.65,
+        "3PM": 1.41,
+        "DD": 0.01
        },
-       "games_left": 3,
+       "games_left": 2,
        "alternatives": [
         {
-         "id": "4712849",
-         "name": "Anthony Black",
-         "team": "ORL",
-         "pos": "PG/SG",
-         "gain": 0.318,
-         "rank": 137,
+         "id": "3448",
+         "name": "Brook Lopez",
+         "team": "LAC",
+         "pos": "C",
+         "gain": 0.356,
+         "rank": 152,
          "line": {
-          "PTS": 12.69,
-          "REB": 3.42,
-          "AST": 3.27,
-          "STL": 1.36,
-          "BLK": 0.56,
-          "3PM": 1.41,
-          "DD": 0.01
+          "PTS": 10.52,
+          "REB": 4.18,
+          "AST": 1.4,
+          "STL": 0.49,
+          "BLK": 1.48,
+          "3PM": 1.51,
+          "DD": 0.05
          },
          "helps": [
-          "STL",
+          "BLK",
           "FGM",
-          "PTS"
+          "3PM"
          ]
         },
         {
-         "id": "4351852",
-         "name": "Mitchell Robinson",
-         "team": "BOS",
-         "pos": "C",
-         "gain": 0.316,
-         "rank": 201,
+         "id": "4277811",
+         "name": "Collin Sexton",
+         "team": "LAL",
+         "pos": "PG/SG",
+         "gain": 0.342,
+         "rank": 112,
          "line": {
-          "PTS": 6.53,
-          "REB": 9.3,
-          "AST": 0.93,
-          "STL": 1.06,
-          "BLK": 1.3,
-          "3PM": 0.0,
-          "DD": 0.1
+          "PTS": 15.17,
+          "REB": 2.28,
+          "AST": 3.46,
+          "STL": 0.87,
+          "BLK": 0.19,
+          "3PM": 1.51,
+          "DD": 0.01
          },
          "helps": [
-          "REB",
-          "BLK",
+          "FGM",
+          "PTS",
           "STL"
          ]
         },
@@ -2243,21 +1986,21 @@
          "name": "Jakob Poeltl",
          "team": "TOR",
          "pos": "C",
-         "gain": 0.312,
+         "gain": 0.332,
          "rank": 155,
          "line": {
-          "PTS": 9.52,
-          "REB": 7.21,
+          "PTS": 9.5,
+          "REB": 7.22,
           "AST": 1.87,
-          "STL": 0.77,
+          "STL": 0.78,
           "BLK": 0.93,
           "3PM": 0.0,
           "DD": 0.15
          },
          "helps": [
-          "REB",
           "BLK",
-          "FGM"
+          "FGM",
+          "REB"
          ]
         }
        ]
@@ -2267,44 +2010,37 @@
    },
    "second_spot": {
     "drop": "Peyton Watson",
-    "drop_weekly_cost_cats": 0.968,
+    "drop_weekly_cost_cats": 0.709,
     "expected_cats_with_two_spots": 8.85,
-    "net_gain_vs_one_spot": 0.386,
+    "net_gain_vs_one_spot": 0.417,
     "days": [
-     {
-      "date": "2026-10-28",
-      "occupant": "Kyshawn George",
-      "team": "WAS",
-      "pos": "SG/SF",
-      "day_gain": 0.349
-     },
      {
       "date": "2026-10-29",
       "occupant": "Jerami Grant",
       "team": "MEM",
       "pos": "PF",
-      "day_gain": 0.324
+      "day_gain": 0.366
      },
      {
       "date": "2026-10-30",
       "occupant": "Reed Sheppard",
       "team": "HOU",
       "pos": "PG/SG",
-      "day_gain": 0.336
+      "day_gain": 0.388
      },
      {
       "date": "2026-10-31",
       "occupant": "Reed Sheppard",
       "team": "HOU",
       "pos": "PG/SG",
-      "day_gain": 0.336
+      "day_gain": 0.388
      },
      {
       "date": "2026-11-01",
-      "occupant": "Anthony Black",
-      "team": "ORL",
-      "pos": "PG/SG",
-      "day_gain": 0.318
+      "occupant": "Brook Lopez",
+      "team": "LAC",
+      "pos": "C",
+      "day_gain": 0.356
      }
     ]
    }
@@ -2312,14 +2048,14 @@
   "next_opponent": null,
   "trades": {
    "baseline_cats_per_week": {
-    "1": 5.59,
-    "2": 6.04,
-    "3": 6.88,
-    "4": 8.79,
-    "5": 4.71,
-    "6": 5.82,
-    "7": 5.75,
-    "8": 4.41
+    "1": 6.28,
+    "2": 5.82,
+    "3": 6.78,
+    "4": 8.85,
+    "5": 4.61,
+    "6": 5.66,
+    "7": 5.72,
+    "8": 4.3
    },
    "protected_keepers": [
     "Donovan Mitchell",
@@ -2327,279 +2063,33 @@
     "Kawhi Leonard",
     "Victor Wembanyama"
    ],
-   "n_candidates": 1149,
+   "n_candidates": 133,
    "top": [
     {
-     "partner_team_id": "1",
+     "partner_team_id": "5",
      "give": [
       {
-       "id": "4396907",
-       "name": "Darius Garland",
+       "id": "6606",
+       "name": "Damian Lillard",
        "pos": "PG",
-       "team": "LAC",
+       "team": "POR",
        "rank": 33,
-       "age": "26"
-      },
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 26,
-       "age": "29"
+       "age": "36"
       }
      ],
      "get": {
-      "id": "3136195",
-      "name": "Karl-Anthony Towns",
+      "id": "4433136",
+      "name": "Walker Kessler",
       "pos": "C",
-      "team": "NYK",
-      "rank": 8,
-      "age": "30"
-     },
-     "my_cats_per_week": 0.66,
-     "their_cats_per_week": 0.318,
-     "value_given": 5.5,
-     "value_got": 6.7,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "3",
-     "give": [
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 26,
-       "age": "29"
-      },
-      {
-       "id": "4683021",
-       "name": "Deni Avdija",
-       "pos": "SF/PF",
-       "team": "POR",
-       "rank": 34,
-       "age": "25"
-      }
-     ],
-     "get": {
-      "id": "3155942",
-      "name": "Domantas Sabonis",
-      "pos": "PF/C",
-      "team": "SAC",
-      "rank": 10,
-      "age": "30"
-     },
-     "my_cats_per_week": 0.666,
-     "their_cats_per_week": 0.28,
-     "value_given": 5.3,
-     "value_got": 6.6,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "3",
-     "give": [
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 26,
-       "age": "29"
-      },
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 32,
-       "age": "36"
-      }
-     ],
-     "get": {
-      "id": "3155942",
-      "name": "Domantas Sabonis",
-      "pos": "PF/C",
-      "team": "SAC",
-      "rank": 10,
-      "age": "30"
-     },
-     "my_cats_per_week": 0.665,
-     "their_cats_per_week": 0.218,
-     "value_given": 5.7,
-     "value_got": 6.6,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "1",
-     "give": [
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 26,
-       "age": "29"
-      },
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 32,
-       "age": "36"
-      }
-     ],
-     "get": {
-      "id": "3136195",
-      "name": "Karl-Anthony Towns",
-      "pos": "C",
-      "team": "NYK",
-      "rank": 8,
-      "age": "30"
-     },
-     "my_cats_per_week": 0.606,
-     "their_cats_per_week": 0.366,
-     "value_given": 5.7,
-     "value_got": 6.7,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "7",
-     "give": [
-      {
-       "id": "4683021",
-       "name": "Deni Avdija",
-       "pos": "SF/PF",
-       "team": "POR",
-       "rank": 34,
-       "age": "25"
-      },
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 32,
-       "age": "36"
-      }
-     ],
-     "get": {
-      "id": "4432158",
-      "name": "Evan Mobley",
-      "pos": "PF/C",
-      "team": "CLE",
-      "rank": 31,
+      "team": "LAL",
+      "rank": 70,
       "age": "25"
      },
-     "my_cats_per_week": 0.544,
-     "their_cats_per_week": 0.316,
-     "value_given": 3.9,
-     "value_got": 2.6,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "7",
-     "give": [
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 26,
-       "age": "29"
-      },
-      {
-       "id": "4683021",
-       "name": "Deni Avdija",
-       "pos": "SF/PF",
-       "team": "POR",
-       "rank": 34,
-       "age": "25"
-      }
-     ],
-     "get": {
-      "id": "4432158",
-      "name": "Evan Mobley",
-      "pos": "PF/C",
-      "team": "CLE",
-      "rank": 31,
-      "age": "25"
-     },
-     "my_cats_per_week": 0.532,
-     "their_cats_per_week": 0.364,
-     "value_given": 5.3,
-     "value_got": 2.6,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "5",
-     "give": [
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 32,
-       "age": "36"
-      },
-      {
-       "id": "3064440",
-       "name": "Zach LaVine",
-       "pos": "SG/SF",
-       "team": "SAC",
-       "rank": 53,
-       "age": "31"
-      }
-     ],
-     "get": {
-      "id": "4066261",
-      "name": "Bam Adebayo",
-      "pos": "PF/C",
-      "team": "MIA",
-      "rank": 65,
-      "age": "29"
-     },
-     "my_cats_per_week": 0.534,
-     "their_cats_per_week": 0.285,
-     "value_given": 1.9,
-     "value_got": -1.4,
-     "gets_extra_spot": true
-    },
-    {
-     "partner_team_id": "7",
-     "give": [
-      {
-       "id": "4065733",
-       "name": "Ty Jerome",
-       "pos": "PG/SG",
-       "team": "MEM",
-       "rank": 26,
-       "age": "29"
-      },
-      {
-       "id": "4683021",
-       "name": "Deni Avdija",
-       "pos": "SF/PF",
-       "team": "POR",
-       "rank": 34,
-       "age": "25"
-      }
-     ],
-     "get": {
-      "id": "4701230",
-      "name": "Jalen Johnson",
-      "pos": "PF",
-      "team": "ATL",
-      "rank": 13,
-      "age": "24"
-     },
-     "my_cats_per_week": 0.584,
-     "their_cats_per_week": 0.182,
-     "value_given": 5.3,
-     "value_got": 6.2,
-     "gets_extra_spot": true
+     "my_cats_per_week": 0.369,
+     "their_cats_per_week": 0.131,
+     "value_given": 1.8,
+     "value_got": -2.4,
+     "gets_extra_spot": false
     },
     {
      "partner_team_id": "5",
@@ -2611,32 +2101,128 @@
        "team": "MEM",
        "rank": 26,
        "age": "29"
-      },
-      {
-       "id": "3064440",
-       "name": "Zach LaVine",
-       "pos": "SG/SF",
-       "team": "SAC",
-       "rank": 53,
-       "age": "31"
       }
      ],
      "get": {
-      "id": "4066261",
-      "name": "Bam Adebayo",
-      "pos": "PF/C",
-      "team": "MIA",
-      "rank": 65,
-      "age": "29"
+      "id": "4433136",
+      "name": "Walker Kessler",
+      "pos": "C",
+      "team": "LAL",
+      "rank": 70,
+      "age": "25"
      },
-     "my_cats_per_week": 0.506,
-     "their_cats_per_week": 0.336,
+     "my_cats_per_week": 0.343,
+     "their_cats_per_week": 0.165,
      "value_given": 3.4,
-     "value_got": -1.4,
-     "gets_extra_spot": true
+     "value_got": -2.4,
+     "gets_extra_spot": false
     },
     {
-     "partner_team_id": "1",
+     "partner_team_id": "7",
+     "give": [
+      {
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 33,
+       "age": "36"
+      }
+     ],
+     "get": {
+      "id": "5105623",
+      "name": "Kel'el Ware",
+      "pos": "C",
+      "team": "MIL",
+      "rank": 88,
+      "age": "22"
+     },
+     "my_cats_per_week": 0.352,
+     "their_cats_per_week": 0.103,
+     "value_given": 1.8,
+     "value_got": -4.4,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "5",
+     "give": [
+      {
+       "id": "3907497",
+       "name": "Dejounte Murray",
+       "pos": "PG/SG",
+       "team": "NOP",
+       "rank": 61,
+       "age": "30"
+      }
+     ],
+     "get": {
+      "id": "4433136",
+      "name": "Walker Kessler",
+      "pos": "C",
+      "team": "LAL",
+      "rank": 70,
+      "age": "25"
+     },
+     "my_cats_per_week": 0.253,
+     "their_cats_per_week": 0.307,
+     "value_given": -0.9,
+     "value_got": -2.4,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "7",
+     "give": [
+      {
+       "id": "4065733",
+       "name": "Ty Jerome",
+       "pos": "PG/SG",
+       "team": "MEM",
+       "rank": 26,
+       "age": "29"
+      }
+     ],
+     "get": {
+      "id": "5105623",
+      "name": "Kel'el Ware",
+      "pos": "C",
+      "team": "MIL",
+      "rank": 88,
+      "age": "22"
+     },
+     "my_cats_per_week": 0.32,
+     "their_cats_per_week": 0.147,
+     "value_given": 3.4,
+     "value_got": -4.4,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "7",
+     "give": [
+      {
+       "id": "3907497",
+       "name": "Dejounte Murray",
+       "pos": "PG/SG",
+       "team": "NOP",
+       "rank": 61,
+       "age": "30"
+      }
+     ],
+     "get": {
+      "id": "5105623",
+      "name": "Kel'el Ware",
+      "pos": "C",
+      "team": "MIL",
+      "rank": 88,
+      "age": "22"
+     },
+     "my_cats_per_week": 0.203,
+     "their_cats_per_week": 0.302,
+     "value_given": -0.9,
+     "value_got": -4.4,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "3",
      "give": [
       {
        "id": "4065733",
@@ -2647,27 +2233,53 @@
        "age": "29"
       },
       {
-       "id": "4683021",
-       "name": "Deni Avdija",
-       "pos": "SF/PF",
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
        "team": "POR",
-       "rank": 34,
-       "age": "25"
+       "rank": 33,
+       "age": "36"
       }
      ],
      "get": {
-      "id": "3136195",
-      "name": "Karl-Anthony Towns",
-      "pos": "C",
-      "team": "NYK",
-      "rank": 8,
+      "id": "3155942",
+      "name": "Domantas Sabonis",
+      "pos": "PF/C",
+      "team": "SAC",
+      "rank": 10,
       "age": "30"
      },
-     "my_cats_per_week": 0.463,
-     "their_cats_per_week": 0.466,
-     "value_given": 5.3,
-     "value_got": 6.7,
+     "my_cats_per_week": 0.202,
+     "their_cats_per_week": 0.305,
+     "value_given": 5.2,
+     "value_got": 6.3,
      "gets_extra_spot": true
+    },
+    {
+     "partner_team_id": "1",
+     "give": [
+      {
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 33,
+       "age": "36"
+      }
+     ],
+     "get": {
+      "id": "5105565",
+      "name": "Donovan Clingan",
+      "pos": "C",
+      "team": "POR",
+      "rank": 94,
+      "age": "22"
+     },
+     "my_cats_per_week": 0.18,
+     "their_cats_per_week": 0.448,
+     "value_given": 1.8,
+     "value_got": -4.7,
+     "gets_extra_spot": false
     },
     {
      "partner_team_id": "8",
@@ -2677,16 +2289,8 @@
        "name": "Damian Lillard",
        "pos": "PG",
        "team": "POR",
-       "rank": 32,
+       "rank": 33,
        "age": "36"
-      },
-      {
-       "id": "4395628",
-       "name": "Zion Williamson",
-       "pos": "PF/C",
-       "team": "NOP",
-       "rank": 50,
-       "age": "26"
       }
      ],
      "get": {
@@ -2694,48 +2298,92 @@
       "name": "Amen Thompson",
       "pos": "SG/SF",
       "team": "HOU",
-      "rank": 45,
+      "rank": 47,
       "age": "23"
      },
-     "my_cats_per_week": 0.46,
-     "their_cats_per_week": 0.461,
-     "value_given": 2.1,
-     "value_got": 0.2,
-     "gets_extra_spot": true
+     "my_cats_per_week": 0.322,
+     "their_cats_per_week": 0.014,
+     "value_given": 1.8,
+     "value_got": 0.3,
+     "gets_extra_spot": false
     },
     {
-     "partner_team_id": "5",
+     "partner_team_id": "1",
      "give": [
-      {
-       "id": "4396907",
-       "name": "Darius Garland",
-       "pos": "PG",
-       "team": "LAC",
-       "rank": 33,
-       "age": "26"
-      },
       {
        "id": "3064440",
        "name": "Zach LaVine",
        "pos": "SG/SF",
        "team": "SAC",
-       "rank": 53,
+       "rank": 56,
        "age": "31"
       }
      ],
      "get": {
-      "id": "4066261",
-      "name": "Bam Adebayo",
+      "id": "4869780",
+      "name": "Derik Queen",
       "pos": "PF/C",
-      "team": "MIA",
-      "rank": 65,
-      "age": "29"
+      "team": "NOP",
+      "rank": 83,
+      "age": "21"
      },
-     "my_cats_per_week": 0.487,
-     "their_cats_per_week": 0.216,
-     "value_given": 1.7,
-     "value_got": -1.4,
-     "gets_extra_spot": true
+     "my_cats_per_week": 0.222,
+     "their_cats_per_week": 0.204,
+     "value_given": -0.6,
+     "value_got": -3.9,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "1",
+     "give": [
+      {
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 33,
+       "age": "36"
+      }
+     ],
+     "get": {
+      "id": "4869780",
+      "name": "Derik Queen",
+      "pos": "PF/C",
+      "team": "NOP",
+      "rank": 83,
+      "age": "21"
+     },
+     "my_cats_per_week": 0.207,
+     "their_cats_per_week": 0.231,
+     "value_given": 1.8,
+     "value_got": -3.9,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "3",
+     "give": [
+      {
+       "id": "3064440",
+       "name": "Zach LaVine",
+       "pos": "SG/SF",
+       "team": "SAC",
+       "rank": 56,
+       "age": "31"
+      }
+     ],
+     "get": {
+      "id": "3032976",
+      "name": "Rudy Gobert",
+      "pos": "C",
+      "team": "MIN",
+      "rank": 142,
+      "age": "34"
+     },
+     "my_cats_per_week": 0.158,
+     "their_cats_per_week": 0.419,
+     "value_given": -0.6,
+     "value_got": -7.1,
+     "gets_extra_spot": false
     }
    ]
   }

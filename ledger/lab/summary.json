@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-10-28T10:00-05:00",
+ "updated_ct": "2026-10-29T06:48-05:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 2,
-  "days_scored": 2,
+  "days_scored": 3,
   "opponent_team_id": "6",
   "opponent": "Team 6"
  },
- "decided": "2026-10-28",
+ "decided": "2026-10-29",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 5.0,
-    "days": 2
+    "cats_won": 7.5,
+    "days": 3
    },
    "season": {
     "weeks": 1,
@@ -32,10 +32,10 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.38,
+   "adds_per_day": 0.44,
    "status": "control",
    "today": [
-    "Add Ausar Thompson for Sandro Mamukelashvili"
+    "Add Onyeka Okongwu for Ausar Thompson"
    ]
   },
   {
@@ -45,8 +45,8 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.5,
-    "days": 2
+    "cats_won": 10.5,
+    "days": 3
    },
    "season": {
     "weeks": 1,
@@ -54,15 +54,15 @@
     "avg_cats_won": 9.0,
     "edge": 0.0,
     "confidence": null,
-    "smooth_edge": 0.429,
+    "smooth_edge": 0.434,
     "worst_week": 0.0
    },
-   "adds_per_day": 2.62,
+   "adds_per_day": 2.67,
    "status": "testing",
    "today": [
-    "Add Zion Williamson for Mitchell Robinson",
-    "Add Ausar Thompson for Day'Ron Sharpe",
-    "Add Kyshawn George for Neemias Queta"
+    "Add Dejounte Murray for Ausar Thompson",
+    "Add Onyeka Okongwu for Kyshawn George",
+    "Add Robert Williams III for Collin Sexton"
    ]
   },
   {
@@ -72,8 +72,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 7.5,
-    "days": 2
+    "cats_won": 9.5,
+    "days": 3
    },
    "season": {
     "weeks": 1,
@@ -81,13 +81,14 @@
     "avg_cats_won": 9.0,
     "edge": 0.0,
     "confidence": null,
-    "smooth_edge": 0.334,
+    "smooth_edge": 0.336,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.38,
+   "adds_per_day": 1.33,
    "status": "testing",
    "today": [
-    "Add Draymond Green for Mitchell Robinson"
+    "Add Dejounte Murray for Draymond Green",
+    "Add Onyeka Okongwu for Reed Sheppard"
    ]
   },
   {
@@ -97,8 +98,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 5.0,
-    "days": 2
+    "cats_won": 4.5,
+    "days": 3
    },
    "season": {
     "weeks": 1,
@@ -106,14 +107,13 @@
     "avg_cats_won": 9.0,
     "edge": 0.0,
     "confidence": null,
-    "smooth_edge": 0.356,
+    "smooth_edge": 0.354,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.38,
+   "adds_per_day": 1.44,
    "status": "testing",
    "today": [
-    "Add Mo Bamba for Dejounte Murray",
-    "Spot B: add Onyeka Okongwu for Neemias Queta"
+    "Add Dejounte Murray for Mo Bamba"
    ]
   },
   {
@@ -124,7 +124,7 @@
    "is_control": false,
    "week": {
     "cats_won": 7.5,
-    "days": 2
+    "days": 3
    },
    "season": {
     "weeks": 1,
@@ -132,10 +132,10 @@
     "avg_cats_won": 9.0,
     "edge": 0.0,
     "confidence": null,
-    "smooth_edge": -0.177,
+    "smooth_edge": -0.178,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.38,
+   "adds_per_day": 0.33,
    "status": "testing",
    "today": []
   },
@@ -146,8 +146,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 5.0,
-    "days": 2
+    "cats_won": 7.5,
+    "days": 3
    },
    "season": {
     "weeks": 1,
@@ -155,10 +155,10 @@
     "avg_cats_won": 9.0,
     "edge": 0.0,
     "confidence": null,
-    "smooth_edge": -0.177,
+    "smooth_edge": -0.178,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.12,
+   "adds_per_day": 0.11,
    "status": "reference",
    "today": []
   }
