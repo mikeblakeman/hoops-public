@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-10-31T09:46-05:00",
- "data_run_ct": "2026-10-31T09:46-05:00",
+ "generated_ct": "2026-10-31T10:46-05:00",
+ "data_run_ct": "2026-10-31T10:46-05:00",
  "date": "2026-10-31",
  "matchup_period": 2,
  "period": {
@@ -1373,7 +1373,7 @@
       "rule": "This week comes first: a next-week move may cost this week at most 0.05 expected categories, and must gain next week more than that cost plus any extra add.",
       "max_cost": 0.05,
       "min_net": 0.005,
-      "options_tried": 23,
+      "options_tried": 25,
       "end_holder_id": "6589",
       "end_holder": "Draymond Green",
       "changed": false,
@@ -1600,7 +1600,7 @@
       "rule": "This week comes first: a next-week move may cost this week at most 0.05 expected categories, and must gain next week more than that cost plus any extra add.",
       "max_cost": 0.05,
       "min_net": 0.005,
-      "options_tried": 23,
+      "options_tried": 25,
       "end_holder_id": "6589",
       "end_holder": "Draymond Green",
       "changed": false,
@@ -2193,14 +2193,14 @@
   },
   "trades": {
    "baseline_cats_per_week": {
-    "1": 6.41,
-    "2": 5.95,
-    "3": 6.95,
-    "4": 8.86,
-    "5": 5.11,
-    "6": 4.53,
-    "7": 5.86,
-    "8": 4.34
+    "1": 6.38,
+    "2": 5.93,
+    "3": 6.9,
+    "4": 8.84,
+    "5": 5.09,
+    "6": 4.49,
+    "7": 5.83,
+    "8": 4.54
    },
    "protected_keepers": [
     "Donovan Mitchell",
@@ -2208,8 +2208,34 @@
     "Kawhi Leonard",
     "Victor Wembanyama"
    ],
-   "n_candidates": 242,
+   "n_candidates": 233,
    "top": [
+    {
+     "partner_team_id": "5",
+     "give": [
+      {
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 48,
+       "age": "36"
+      }
+     ],
+     "get": {
+      "id": "4433136",
+      "name": "Walker Kessler",
+      "pos": "C",
+      "team": "LAL",
+      "rank": 71,
+      "age": "25"
+     },
+     "my_cats_per_week": 0.349,
+     "their_cats_per_week": 0.193,
+     "value_given": 0.1,
+     "value_got": -2.3,
+     "gets_extra_spot": false
+    },
     {
      "partner_team_id": "5",
      "give": [
@@ -2231,35 +2257,9 @@
       "age": "28"
      },
      "my_cats_per_week": 0.435,
-     "their_cats_per_week": 0.016,
+     "their_cats_per_week": 0.009,
      "value_given": 0.1,
      "value_got": -4.7,
-     "gets_extra_spot": false
-    },
-    {
-     "partner_team_id": "5",
-     "give": [
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 48,
-       "age": "36"
-      }
-     ],
-     "get": {
-      "id": "4433136",
-      "name": "Walker Kessler",
-      "pos": "C",
-      "team": "LAL",
-      "rank": 71,
-      "age": "25"
-     },
-     "my_cats_per_week": 0.345,
-     "their_cats_per_week": 0.184,
-     "value_given": 0.1,
-     "value_got": -2.3,
      "gets_extra_spot": false
     },
     {
@@ -2282,8 +2282,8 @@
       "rank": 74,
       "age": "27"
      },
-     "my_cats_per_week": 0.285,
-     "their_cats_per_week": 0.363,
+     "my_cats_per_week": 0.284,
+     "their_cats_per_week": 0.357,
      "value_given": 0.1,
      "value_got": -2.8,
      "gets_extra_spot": false
@@ -2308,8 +2308,8 @@
       "rank": 108,
       "age": "29"
      },
-     "my_cats_per_week": 0.338,
-     "their_cats_per_week": 0.182,
+     "my_cats_per_week": 0.336,
+     "their_cats_per_week": 0.18,
      "value_given": 0.1,
      "value_got": -5.7,
      "gets_extra_spot": false
@@ -2327,17 +2327,17 @@
       }
      ],
      "get": {
-      "id": "4066383",
-      "name": "Miles Bridges",
-      "pos": "SF/PF",
-      "team": "PHO",
-      "rank": 94,
-      "age": "28"
+      "id": "4433136",
+      "name": "Walker Kessler",
+      "pos": "C",
+      "team": "LAL",
+      "rank": 71,
+      "age": "25"
      },
-     "my_cats_per_week": 0.363,
-     "their_cats_per_week": 0.129,
+     "my_cats_per_week": 0.282,
+     "their_cats_per_week": 0.287,
      "value_given": 2.7,
-     "value_got": -4.7,
+     "value_got": -2.3,
      "gets_extra_spot": false
     },
     {
@@ -2360,8 +2360,8 @@
       "rank": 146,
       "age": "34"
      },
-     "my_cats_per_week": 0.265,
-     "their_cats_per_week": 0.549,
+     "my_cats_per_week": 0.264,
+     "their_cats_per_week": 0.557,
      "value_given": 0.1,
      "value_got": -7.5,
      "gets_extra_spot": false
@@ -2386,8 +2386,8 @@
       "rank": 108,
       "age": "29"
      },
-     "my_cats_per_week": 0.258,
-     "their_cats_per_week": 0.312,
+     "my_cats_per_week": 0.257,
+     "their_cats_per_week": 0.307,
      "value_given": 2.7,
      "value_got": -5.7,
      "gets_extra_spot": false
@@ -2412,8 +2412,8 @@
       "rank": 95,
       "age": "31"
      },
-     "my_cats_per_week": 0.247,
-     "their_cats_per_week": 0.375,
+     "my_cats_per_week": 0.246,
+     "their_cats_per_week": 0.379,
      "value_given": 0.1,
      "value_got": -4.8,
      "gets_extra_spot": false
@@ -2438,7 +2438,7 @@
       "rank": 152,
       "age": "24"
      },
-     "my_cats_per_week": 0.239,
+     "my_cats_per_week": 0.237,
      "their_cats_per_week": 0.508,
      "value_given": 0.1,
      "value_got": -7.7,
@@ -2464,8 +2464,8 @@
       "rank": 43,
       "age": "41"
      },
-     "my_cats_per_week": 0.303,
-     "their_cats_per_week": 0.165,
+     "my_cats_per_week": 0.305,
+     "their_cats_per_week": 0.164,
      "value_given": 2.7,
      "value_got": 0.6,
      "gets_extra_spot": false
@@ -2490,8 +2490,8 @@
       "rank": 89,
       "age": "26"
      },
-     "my_cats_per_week": 0.23,
-     "their_cats_per_week": 0.406,
+     "my_cats_per_week": 0.229,
+     "their_cats_per_week": 0.411,
      "value_given": 0.1,
      "value_got": -4.4,
      "gets_extra_spot": false
@@ -2516,8 +2516,8 @@
       "rank": 92,
       "age": "22"
      },
-     "my_cats_per_week": 0.221,
-     "their_cats_per_week": 0.348,
+     "my_cats_per_week": 0.22,
+     "their_cats_per_week": 0.357,
      "value_given": 0.1,
      "value_got": -4.7,
      "gets_extra_spot": false
