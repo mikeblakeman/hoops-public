@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-10-30T06:40-05:00",
+ "updated_ct": "2026-10-31T06:15-05:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 2,
-  "days_scored": 4,
+  "days_scored": 5,
   "opponent_team_id": "6",
   "opponent": "Team 6"
  },
- "decided": "2026-10-30",
+ "decided": "2026-10-31",
  "decision_mode": "live",
  "strategies": [
   {
@@ -21,7 +21,7 @@
    "is_control": true,
    "week": {
     "cats_won": 11.0,
-    "days": 4
+    "days": 5
    },
    "season": {
     "weeks": 1,
@@ -32,10 +32,10 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.5,
+   "adds_per_day": 0.55,
    "status": "control",
    "today": [
-    "Add Bobby Portis for Onyeka Okongwu"
+    "Add Kel'el Ware for Bobby Portis"
    ]
   },
   {
@@ -46,7 +46,7 @@
    "is_control": false,
    "week": {
     "cats_won": 11.0,
-    "days": 4
+    "days": 5
    },
    "season": {
     "weeks": 1,
@@ -57,14 +57,14 @@
     "smooth_edge": 0.432,
     "worst_week": 0.0
    },
-   "adds_per_day": 2.7,
+   "adds_per_day": 2.91,
    "status": "testing",
    "today": [
-    "Add Mitchell Robinson for Robert Williams III",
-    "Add Daniel Gafford for Onyeka Okongwu",
-    "Add Bobby Portis for Dejounte Murray",
-    "Add Ausar Thompson for Zach LaVine",
-    "Add Trevon Brazile for Zion Williamson"
+    "Add Kel'el Ware for Trevon Brazile",
+    "Add Julian Champagnie for Ausar Thompson",
+    "Add Zach LaVine for Daniel Gafford",
+    "Add Dejounte Murray for Bobby Portis",
+    "Add Grayson Allen for Mitchell Robinson"
    ]
   },
   {
@@ -74,8 +74,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.0,
-    "days": 4
+    "cats_won": 10.0,
+    "days": 5
    },
    "season": {
     "weeks": 1,
@@ -86,14 +86,13 @@
     "smooth_edge": 0.336,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.4,
+   "adds_per_day": 1.73,
    "status": "testing",
    "today": [
-    "Add Mitchell Robinson for Peyton Watson",
-    "Add Jakob Poeltl for Onyeka Okongwu",
-    "Add Grayson Allen for Dejounte Murray",
-    "Add Danny Wolf for Zach LaVine",
-    "Add Obi Toppin for Zion Williamson"
+    "Add Zach LaVine for Mitchell Robinson",
+    "Add Julian Champagnie for Obi Toppin",
+    "Add Kel'el Ware for Danny Wolf",
+    "Add Cam Spencer for Jakob Poeltl"
    ]
   },
   {
@@ -103,8 +102,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 11.0,
-    "days": 4
+    "cats_won": 10.5,
+    "days": 5
    },
    "season": {
     "weeks": 1,
@@ -115,11 +114,11 @@
     "smooth_edge": 0.354,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.4,
+   "adds_per_day": 1.45,
    "status": "testing",
    "today": [
-    "Add Anthony Black for Dejounte Murray",
-    "Spot B: add Andrew Wiggins for Onyeka Okongwu"
+    "Add Dejounte Murray for Anthony Black",
+    "Spot B: add Kel'el Ware for Andrew Wiggins"
    ]
   },
   {
@@ -129,8 +128,8 @@
    "effort": "1 to 3 adds a week",
    "is_control": false,
    "week": {
-    "cats_won": 8.5,
-    "days": 4
+    "cats_won": 6.5,
+    "days": 5
    },
    "season": {
     "weeks": 1,
@@ -141,12 +140,9 @@
     "smooth_edge": -0.178,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.3,
+   "adds_per_day": 0.36,
    "status": "testing",
-   "today": [
-    "Move Reed Sheppard to IR",
-    "Add Grayson Allen"
-   ]
+   "today": []
   },
   {
    "id": "hold",
@@ -155,8 +151,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 10.0,
-    "days": 4
+    "cats_won": 8.0,
+    "days": 5
    },
    "season": {
     "weeks": 1,
@@ -167,7 +163,7 @@
     "smooth_edge": -0.178,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.1,
+   "adds_per_day": 0.09,
    "status": "reference",
    "today": []
   }
