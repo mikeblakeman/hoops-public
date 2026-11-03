@@ -10,6 +10,7 @@ notes) before writing the document to the page's database as brief/latest.
 import argparse
 import csv
 import json
+import shutil
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -328,13 +329,94 @@ def stale_note(status, hours=10, rebuilt_from=None, lineup_date=None):
             "be behind."]
 
 
-def build(snap, kind="morning", teams=None, plan="daily"):
+def _when(iso):
+    try:
+        return datetime.fromisoformat(iso).astimezone(CT).strftime("%a %-I:%M %p")
+    except (TypeError, ValueError):
+        return "after the review period"
+
+
+def pending_build(snap, kind, teams, plan, pending_file):
+    """A trade Mike accepted that ESPN still holds for review (relay/pending.py). Returns (doc, bd), or None when
+    there is no active pending trade. If the trade lands before the next game day's first tip, the whole brief is
+    built on the post-trade roster; if it lands later, today stays on the current roster and the Week ahead rows
+    and a 'once it processes' action come from the post-trade roster for that day."""
+    from relay import pending as PEND
+    from relay import matchup
+    status = json.loads((snap / "status.json").read_text())
+    settings = json.loads((snap / "league_settings.json").read_text())
+    my_tid = str(status.get("my_team_id"))
+    hours = (settings.get("trade") or {}).get("review_hours") or 48
+    trades, notes = PEND.active(snap, PEND.load(snap, pending_file), my_tid, hours)
+    if not trades:
+        if not notes:
+            return None
+        doc, bd = build(snap, kind, teams, plan, _nested=True)
+        doc["notes"] = notes + doc["notes"]
+        return doc, bd
+    eff, mode = PEND.effect_day(snap, trades)
+    desc = "; ".join(PEND.describe(t) for t in trades)
+    proc = max((t.get("process_ct") or "" for t in trades), default="")
+    tmp = PEND.materialize(snap, trades, my_tid)
+    try:
+        head = {"kind": "watch", "text": f"Trade pending: {desc}. ESPN should process it about {_when(proc)} CT.",
+                "why": f"The league holds accepted trades for {hours} hours; 3 veto votes cancel one, and your league "
+                       "manager can push it through early."}
+        if mode == "now" or not eff:
+            nb = matchup.build(tmp, datetime.now(CT).date())
+            (tmp / "brief_data.json").write_text(json.dumps(nb))
+            doc, bd = build(tmp, kind, teams, plan, _nested=True)
+            for a in doc["actions"]:
+                if a["kind"] == "add" and "open roster spot" in a["text"]:
+                    a["text"] = "Once the trade shows in ESPN, " + a["text"][0].lower() + a["text"][1:]
+            head["why"] += " This brief already assumes it has gone through."
+            fallback = {"kind": "watch",
+                        "text": (f"If it has not processed before the first tip: keep {' and '.join(trades[0]['names_out'])} "
+                                 "in your lineup if they play, and skip any add that needs the spot the trade opens."),
+                        "why": "Your roster stays full until ESPN moves the players."}
+            doc["actions"] = [head, fallback] + doc["actions"]
+            doc["notes"] = [f"Built as if your trade ({desc}) has processed; ESPN holds it until about {_when(proc)} CT."] \
+                + notes + doc["notes"]
+        else:
+            doc, bd = build(snap, kind, teams, plan, _nested=True)
+            nb = matchup.build(tmp, datetime.fromisoformat(eff).date())
+            (tmp / "brief_data.json").write_text(json.dumps(nb))
+            pdoc, _ = build(tmp, kind, teams, plan, _nested=True)
+            if doc.get("week") and pdoc.get("week"):
+                post = {c["date"]: c for c in pdoc["week"]["coverage"]}
+                doc["week"]["coverage"] = [post.get(c["date"], c) if c["date"] >= eff else c
+                                           for c in doc["week"]["coverage"]]
+                doc["week"]["light_days"] = [c["date"] for c in doc["week"]["coverage"]
+                                             if len(c.get("my_open_slots", [])) >= 4]
+            then = [a["text"].rstrip(".") for a in pdoc["actions"] if a["kind"] in ("add", "ir")]
+            starters = [p["name"] for p in pdoc["lineup"].get("starters", [])]
+            head["why"] += " Until then, use your current roster as below."
+            doc["actions"] = [head] + doc["actions"] + [{
+                "kind": "watch",
+                "text": f"{_dow(eff)}, once the trade has processed: " + ("; ".join(then) + "." if then else
+                                                                       "no roster move needed."),
+                "why": "Start: " + ", ".join(starters) + "." if starters else "No games for your players that day."}]
+            doc["notes"] = [f"Week ahead rows from {_dow(eff)} on assume your trade ({desc}) has processed."] \
+                + notes + doc["notes"]
+        doc["pending_trades"] = [{k: t.get(k) for k in ("id", "names_out", "names_in", "accepted_ct", "process_ct",
+                                                        "source")} | {"mode": mode, "effective": eff} for t in trades]
+        return doc, bd
+    finally:
+        shutil.rmtree(tmp.parent, ignore_errors=True)
+
+
+def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=False):
     """teams: optional {team_id: {"name": ..., "owners": ...}} to restore names
     (the public data mirror carries team ids only). plan: which stream plan the actions and the week card
-    follow ("low_effort" = few adds and hold, "daily" = chase every gain)."""
+    follow ("low_effort" = few adds and hold, "daily" = chase every gain). pending: optional JSON file of trades
+    still in ESPN's review period (relay/pending.py), on top of the data job's snapshots/pending_trades.json."""
     if plan not in PLANS:
         raise ValueError(f"plan must be one of {PLANS}")
     snap = Path(snap)
+    if not _nested:
+        res = pending_build(snap, kind, teams, plan, pending)
+        if res:
+            return res
     bd = json.loads((snap / "brief_data.json").read_text())
     bd, rebuilt_from = fresh_brief_data(snap, bd)
     if teams:
@@ -602,9 +684,11 @@ def main():
     ap.add_argument("--plan", choices=PLANS, default="daily",
                     help="stream plan the actions and the week card follow (one plan, never a mix)")
     ap.add_argument("--teams", help="JSON file {team_id: {name, owners}} to restore team names")
+    ap.add_argument("--pending", help="JSON file of trades still in ESPN's review period (project doc "
+                                      "claude/league/pending-trades.json); see relay/pending.py")
     a = ap.parse_args()
     teams = json.loads(Path(a.teams).read_text()) if a.teams else None
-    doc, bd = build(a.snap, a.kind, teams, a.plan)
+    doc, bd = build(a.snap, a.kind, teams, a.plan, pending=a.pending)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(doc, indent=1))
     n = 0 if a.no_log else log_decisions(bd, a.kind, a.plan)

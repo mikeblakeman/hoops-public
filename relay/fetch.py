@@ -102,6 +102,28 @@ def run(out_dir, client, my_swid):
         write_csv(out / "draft_picks.csv", picks[0])
         write_json(out / "draft_meta.json", picks[1])
 
+    # trades accepted but still in ESPN's review period (relay/pending.py); best effort, never blocks the run
+    def pending():
+        from . import pending as P
+        payloads = [league]
+        try:
+            payloads.append(client.league(["mPendingTransactions"]))
+        except EspnAuthError:
+            raise
+        except Exception as e:  # noqa: BLE001  unknown view or not allowed: the roster payload may still carry it
+            status["warnings"].append(f"pending transactions view: {type(e).__name__}")
+        seen_path = out / "pending_seen.json"
+        seen = json.loads(seen_path.read_text()) if seen_path.exists() else {}
+        hours = (settings.get("trade") or {}).get("review_hours") or 48
+        trades, probe = P.extract_espn(payloads, status.get("my_team_id"), hours, seen)
+        write_json(seen_path, {k: v for k, v in seen.items() if k in {t["id"] for t in trades}})
+        write_json(out / "pending_trades.json", {"trades": trades})
+        write_json(out / "debug" / "pending_probe.json", probe)
+        return len(trades)
+    n_pending = step("pending_trades", pending)
+    if n_pending:
+        status["pending_trades"] = n_pending
+
     # schedule
     sched_rows, sp_dates = [], {}
     sched = step("pro_schedule", client.pro_schedule)

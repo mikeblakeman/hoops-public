@@ -258,6 +258,9 @@ def rosters(league):
                 "keeper_value": pe.get("keeperValue"),
                 "keeper_value_future": pe.get("keeperValueFuture"),
                 "lineup_locked": pe.get("lineupLocked"),
+                # ids of trades waiting on ESPN's review period that include this player (relay/pending.py)
+                "pending_tx": ";".join(str(x) for x in (en.get("pendingTransactionIds") or
+                                                         pe.get("pendingTransactionIds") or [])),
             })
     return rows
 
