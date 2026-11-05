@@ -2,6 +2,9 @@
 
 Follow `playbook/common.md` first.
 
+- Quick questions (one command, read-only, made for light models): `python3 -I tools/ask.py snapshots <today|games|fa|alt NAME|player NAME> --teams ~/teams.json`.
+  `alt "Wendell Carter Jr."` = he was taken or is out, who replaces him; `--taken/--added/--dropped NAME` correct for
+  moves made in ESPN after the data run. `python3 -I tools/ask.py -h` lists every option.
 - Who to start / what to do today: `python tools/brief.py snapshots out/brief.json --no-log --teams ~/teams.json`;
   check news for any starter listed as day-to-day.
 - Week planning: `snapshots/brief_data.json` `week_plan` has slot coverage for every remaining day, the day-by-day
