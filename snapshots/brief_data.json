@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-11-05T07:30-06:00",
- "data_run_ct": "2026-11-05T07:30-06:00",
+ "generated_ct": "2026-11-05T09:28-06:00",
+ "data_run_ct": "2026-11-05T09:28-06:00",
  "date": "2026-11-05",
  "matchup_period": 3,
  "period": {
@@ -1450,28 +1450,6 @@
          ]
         },
         {
-         "id": "3062679",
-         "name": "Josh Hart",
-         "team": "NYK",
-         "pos": "SG/SF",
-         "gain": 0.089,
-         "rank": 93,
-         "line": {
-          "PTS": 9.98,
-          "REB": 7.18,
-          "AST": 4.3,
-          "STL": 1.53,
-          "BLK": 0.28,
-          "3PM": 1.52,
-          "DD": 0.18
-         },
-         "helps": [
-          "STL",
-          "AST",
-          "3PM"
-         ]
-        },
-        {
          "id": "3064290",
          "name": "Aaron Gordon",
          "team": "DEN",
@@ -1491,6 +1469,28 @@
           "STL",
           "AST",
           "FTM"
+         ]
+        },
+        {
+         "id": "6589",
+         "name": "Draymond Green",
+         "team": "GSW",
+         "pos": "PF/C",
+         "gain": 0.084,
+         "rank": 189,
+         "line": {
+          "PTS": 6.47,
+          "REB": 5.48,
+          "AST": 5.51,
+          "STL": 0.96,
+          "BLK": 0.74,
+          "3PM": 0.95,
+          "DD": 0.04
+         },
+         "helps": [
+          "AST",
+          "STL",
+          "3PM"
          ]
         }
        ]
@@ -1867,25 +1867,25 @@
          ]
         },
         {
-         "id": "3062679",
-         "name": "Josh Hart",
-         "team": "NYK",
-         "pos": "SG/SF",
-         "gain": 0.089,
-         "rank": 93,
+         "id": "3064290",
+         "name": "Aaron Gordon",
+         "team": "DEN",
+         "pos": "PF",
+         "gain": 0.085,
+         "rank": 110,
          "line": {
-          "PTS": 9.98,
-          "REB": 7.18,
-          "AST": 4.3,
-          "STL": 1.53,
+          "PTS": 13.3,
+          "REB": 5.1,
+          "AST": 2.71,
+          "STL": 0.77,
           "BLK": 0.28,
-          "3PM": 1.52,
-          "DD": 0.18
+          "3PM": 1.42,
+          "DD": 0.1
          },
          "helps": [
           "STL",
           "AST",
-          "3PM"
+          "FTM"
          ]
         }
        ]
@@ -2030,14 +2030,14 @@
   "next_opponent": null,
   "trades": {
    "baseline_cats_per_week": {
-    "1": 7.39,
-    "2": 6.7,
-    "3": 6.58,
-    "4": 9.67,
-    "5": 4.53,
-    "6": 4.08,
-    "7": 4.56,
-    "8": 4.48
+    "1": 7.38,
+    "2": 6.69,
+    "3": 6.56,
+    "4": 9.66,
+    "5": 4.5,
+    "6": 4.06,
+    "7": 4.53,
+    "8": 4.61
    },
    "protected_keepers": [
     "Anthony Davis",
@@ -2046,7 +2046,7 @@
     "Kawhi Leonard",
     "Victor Wembanyama"
    ],
-   "n_candidates": 41,
+   "n_candidates": 42,
    "top": [
     {
      "partner_team_id": "3",
@@ -2068,8 +2068,8 @@
       "rank": 17,
       "age": "30"
      },
-     "my_cats_per_week": 0.158,
-     "their_cats_per_week": 0.331,
+     "my_cats_per_week": 0.16,
+     "their_cats_per_week": 0.335,
      "value_given": 5.2,
      "value_got": 5.0,
      "gets_extra_spot": false
@@ -2095,7 +2095,7 @@
       "age": "26"
      },
      "my_cats_per_week": 0.16,
-     "their_cats_per_week": 0.266,
+     "their_cats_per_week": 0.271,
      "value_given": -0.5,
      "value_got": -3.1,
      "gets_extra_spot": false
@@ -2121,7 +2121,7 @@
       "age": "22"
      },
      "my_cats_per_week": 0.158,
-     "their_cats_per_week": 0.252,
+     "their_cats_per_week": 0.263,
      "value_given": -0.5,
      "value_got": -5.2,
      "gets_extra_spot": false
@@ -2147,7 +2147,7 @@
       "age": "23"
      },
      "my_cats_per_week": 0.13,
-     "their_cats_per_week": 0.375,
+     "their_cats_per_week": 0.389,
      "value_given": -0.5,
      "value_got": -1.8,
      "gets_extra_spot": false
@@ -2199,7 +2199,7 @@
       "age": "25"
      },
      "my_cats_per_week": 0.109,
-     "their_cats_per_week": 0.289,
+     "their_cats_per_week": 0.297,
      "value_given": -0.5,
      "value_got": -0.7,
      "gets_extra_spot": false
@@ -2224,8 +2224,8 @@
       "rank": 85,
       "age": "21"
      },
-     "my_cats_per_week": 0.099,
-     "their_cats_per_week": 0.438,
+     "my_cats_per_week": 0.1,
+     "their_cats_per_week": 0.439,
      "value_given": -0.5,
      "value_got": -4.0,
      "gets_extra_spot": false
@@ -2251,7 +2251,7 @@
       "age": "28"
      },
      "my_cats_per_week": 0.103,
-     "their_cats_per_week": 0.275,
+     "their_cats_per_week": 0.28,
      "value_given": -0.5,
      "value_got": -2.5,
      "gets_extra_spot": false
@@ -2276,10 +2276,36 @@
       "rank": 72,
       "age": "23"
      },
-     "my_cats_per_week": 0.12,
-     "their_cats_per_week": 0.231,
+     "my_cats_per_week": 0.119,
+     "their_cats_per_week": 0.235,
      "value_given": -0.5,
      "value_got": -2.6,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "6",
+     "give": [
+      {
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 52,
+       "age": "36"
+      }
+     ],
+     "get": {
+      "id": "5175737",
+      "name": "Yaxel Lendeborg",
+      "pos": "SF/PF",
+      "team": "GSW",
+      "rank": 59,
+      "age": "24"
+     },
+     "my_cats_per_week": 0.148,
+     "their_cats_per_week": 0.172,
+     "value_given": -0.5,
+     "value_got": -0.9,
      "gets_extra_spot": false
     },
     {
@@ -2303,35 +2329,9 @@
       "age": "26"
      },
      "my_cats_per_week": 0.083,
-     "their_cats_per_week": 0.33,
+     "their_cats_per_week": 0.335,
      "value_given": -0.5,
      "value_got": -5.3,
-     "gets_extra_spot": false
-    },
-    {
-     "partner_team_id": "6",
-     "give": [
-      {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 52,
-       "age": "36"
-      }
-     ],
-     "get": {
-      "id": "5175737",
-      "name": "Yaxel Lendeborg",
-      "pos": "SF/PF",
-      "team": "GSW",
-      "rank": 59,
-      "age": "24"
-     },
-     "my_cats_per_week": 0.147,
-     "their_cats_per_week": 0.169,
-     "value_given": -0.5,
-     "value_got": -0.9,
      "gets_extra_spot": false
     },
     {
@@ -2354,8 +2354,8 @@
       "rank": 66,
       "age": "23"
      },
-     "my_cats_per_week": 0.096,
-     "their_cats_per_week": 0.267,
+     "my_cats_per_week": 0.095,
+     "their_cats_per_week": 0.275,
      "value_given": 0.4,
      "value_got": -1.8,
      "gets_extra_spot": false
