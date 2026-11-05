@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-04T07:18-06:00",
+ "updated_ct": "2026-11-05T07:30-06:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 3,
-  "days_scored": 1,
+  "days_scored": 2,
   "opponent_team_id": "2",
   "opponent": "Team 2"
  },
- "decided": "2026-11-04",
+ "decided": "2026-11-05",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 6.0,
-    "days": 1
+    "cats_won": 11.0,
+    "days": 2
    },
    "season": {
     "weeks": 2,
@@ -32,7 +32,7 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.64,
+   "adds_per_day": 0.6,
    "status": "control",
    "today": []
   },
@@ -43,8 +43,8 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 5.5,
-    "days": 1
+    "cats_won": 9.0,
+    "days": 2
    },
    "season": {
     "weeks": 2,
@@ -55,9 +55,15 @@
     "smooth_edge": 1.74,
     "worst_week": 0.0
    },
-   "adds_per_day": 3.0,
+   "adds_per_day": 2.8,
    "status": "ahead",
-   "today": []
+   "today": [
+    "Add Draymond Green for Jakob Poeltl",
+    "Add Bobby Portis for Kel'el Ware",
+    "Add Oso Ighodaro for Zach LaVine",
+    "Add Brandon Williams for Damian Lillard",
+    "Add Khaman Maluach for Dejounte Murray"
+   ]
   },
   {
    "id": "smart_fill",
@@ -66,8 +72,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 5.5,
-    "days": 1
+    "cats_won": 9.0,
+    "days": 2
    },
    "season": {
     "weeks": 2,
@@ -78,9 +84,12 @@
     "smooth_edge": 1.252,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.86,
+   "adds_per_day": 1.73,
    "status": "ahead",
-   "today": []
+   "today": [
+    "Add Oso Ighodaro for Jakob Poeltl",
+    "Add Draymond Green for Kel'el Ware"
+   ]
   },
   {
    "id": "two_spots",
@@ -89,8 +98,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 6.0,
-    "days": 1
+    "cats_won": 11.0,
+    "days": 2
    },
    "season": {
     "weeks": 2,
@@ -101,9 +110,11 @@
     "smooth_edge": 0.463,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.5,
+   "adds_per_day": 1.4,
    "status": "testing",
-   "today": []
+   "today": [
+    "Spot B: add Jordan Goodwin for Kel'el Ware"
+   ]
   },
   {
    "id": "schedule_stack",
@@ -112,8 +123,8 @@
    "effort": "1 to 3 adds a week",
    "is_control": false,
    "week": {
-    "cats_won": 7.0,
-    "days": 1
+    "cats_won": 11.0,
+    "days": 2
    },
    "season": {
     "weeks": 2,
@@ -124,7 +135,7 @@
     "smooth_edge": -1.103,
     "worst_week": -5.0
    },
-   "adds_per_day": 0.43,
+   "adds_per_day": 0.4,
    "status": "behind",
    "today": []
   },
@@ -135,8 +146,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 5.5,
-    "days": 1
+    "cats_won": 9.0,
+    "days": 2
    },
    "season": {
     "weeks": 2,
