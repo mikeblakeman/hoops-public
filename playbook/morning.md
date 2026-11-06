@@ -2,7 +2,10 @@
 
 Follow `playbook/common.md` first.
 
-1. Build: `python tools/brief.py snapshots out/brief.json --kind morning --no-log --teams ~/teams.json`
+1. Brief: `~/out/morning.json` (from `prebuilt/brief_morning.json` with team names restored, see common.md 3b).
+   Its `date` must be today; `prebuilt.data_run_ct` says which data run it used (say so if it is old). Do not
+   rebuild it by hand unless `prebuilt/status.json` reports an error for `morning` or the date is not today.
+   (Interactive sessions: `python tools/brief.py snapshots out/brief.json --kind morning --no-log --teams ~/teams.json`.)
    The actions and the page's Week ahead card must show ONE stream plan. `brief.py` uses `daily` (add on every day
    the gain is worth it; Mike's choice, 2026-10-22) unless you pass `--plan low_effort` (few adds, then hold); the doc's `week.plan_used` records which, and
    the card draws that plan. Pick the plan when you build. Never hand-write actions from the other plan (that is how
@@ -35,9 +38,9 @@ Follow `playbook/common.md` first.
    check (rest-night designations often flip to day-to-day by morning). If he is day-to-day, remove the IR action
    and the open-spot add that depends on it, and fix `lineup` to match.
    The lineup card shows today's lineup AFTER the recommended moves (`lineup.after_moves` lists them). If you change
-   or cancel a move, rebuild the card to match: `python -c "import json;from relay import matchup as M;
-   print(json.dumps(M.lineup_after('snapshots', M.today_ct(), [ADD_IDS], [DROP_IDS])))"` and set `lineup`
-   (and `lineup.after_moves`) from it.
+   or cancel a move, take the matching ready-made card from `lineup_options` and set it as `lineup`: the key is the
+   alternative's player id (switch to that alternative) or `hold:<planned player id>` (skip the planned add). If no
+   option fits, edit `lineup` by hand and say so in the notes.
 3. Expert calls (about 3 searches): today's public fantasy basketball waiver, streaming and start/sit articles (for
    example ESPN, CBS, Yahoo, NBC Sports, FantasyPros, Hashtag Basketball, RotoBaller, Basketball Monster).
    Collect up to 15 specific calls: `{date, source, url, player, call, horizon_days, note}` where call is one of
@@ -62,11 +65,15 @@ Follow `playbook/common.md` first.
 5. Mondays (or the first day of a new matchup): weekly review. Skip it, and leave `weekly` null, until a matchup
    has finished (the brief's `matchup_period` is 2 or later and `ledger/summary.json` exists).
    - Decisions: read `ledger/summary.json` (graded by the data job): `add_win_rate`, `adds_graded`, `misses`.
-   - Expert calls: export the page database collection `calls` (ArtifactData list with `out_dir` ~/calls), then run
-     `python tools/grade.py snapshots --ledger ~/ledger --calls-dir ~/calls` and read `~/ledger/summary.json` `sources`.
+   - Expert calls: export the page database collection `calls` (ArtifactData list with `out_dir` ~/calls). Grade
+     each call whose horizon has finished by looking it up in `prebuilt/call_values.csv` (player by name or id,
+     `start` = the call's date, `horizon_days` = its horizon) and applying the rule in
+     `prebuilt/call_values_meta.json`; then build `sources` per source: `n`, `hits`, `shrunk_rate`, `trust`.
+     A small script you write yourself for this is fine; do not run `tools/grade.py` in a scheduled run.
    - Fill `weekly`: `result` (last matchup's category score), `add_win_rate`, `adds_graded`, `misses`, `sources`,
      and 1 to 3 `lessons` (patterns only, never one-off outcomes). Append one line summarizing the week to the
      project doc `claude/log/decisions.md`.
 6. Publish: ArtifactData batch on the brief page: set `brief/latest` and set `briefs/<date>-morning` from
-   `out/brief.json` (read `brief/latest` first to get its version for `if_version`).
+   `~/out/morning.json` (read `brief/latest` first to get its version for `if_version`). The extra keys
+   `prebuilt`, `move_ids` and `lineup_options` can stay; the page ignores them.
 7. End with a two-line summary.

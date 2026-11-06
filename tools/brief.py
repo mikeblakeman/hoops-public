@@ -586,6 +586,9 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
     }
     doc["matchup"]["trend"] = trend_doc(bd)
     doc["lab"] = lab
+    # ids behind the lineup card, so tools/prebuild.py can rebuild the card for an alternative add
+    doc["move_ids"] = {"add": [str(i) for i in add_ids], "drop": [str(i) for i in drop_ids],
+                       "ir": [str(i) for i in ir_ids], "bench": [str(i) for i in bench_ids]}
     return doc, bd
 
 

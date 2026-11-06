@@ -100,6 +100,22 @@ def main(snap, out):
         for fp in sorted((led / "context").glob("*.json")):
             (out / "ledger" / "context" / fp.name).write_text(scrub(fp.read_text(), secrets))
 
+    # finished briefs built here, from the public copy (team ids only), so scheduled Claude runs only read JSON:
+    # they are not allowed to execute code cloned from GitHub (tools/prebuild.py has the history).
+    pre = out / "prebuilt"
+    try:
+        sys.path.insert(0, str(ROOT / "tools"))
+        import prebuild
+        st = prebuild.main(s_out, pre)
+        print(f"prebuilt: {st.get('built')} errors={len(st.get('errors', []))}")
+    except Exception as e:  # never block the mirror over the prebuilt briefs
+        pre.mkdir(exist_ok=True)
+        (pre / "status.json").write_text(json.dumps({"built": {}, "errors": [f"prebuild crashed: {e!r}"]}))
+        print(f"prebuild crashed: {e!r}")
+    for fp in pre.rglob("*"):
+        if fp.is_file():
+            fp.write_text(scrub(fp.read_text(), secrets))
+
     # final check: nothing identifying slipped through
     leaks = []
     for fp in out.rglob("*"):

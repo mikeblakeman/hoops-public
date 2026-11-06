@@ -3,8 +3,11 @@
 Follow `playbook/common.md` first.
 
 1. ArtifactData get `brief/latest` on the brief page (note its version).
-2. Rebuild with the same stream plan the morning brief used (`week.plan_used` in `brief/latest`; default `daily`):
-   `python tools/brief.py snapshots out/prelock.json --kind prelock --no-log --teams ~/teams.json --plan <plan_used>`.
+2. Fresh pre-lock build: `~/out/prelock.json` (from `prebuilt/brief_prelock.json` with names restored, see
+   common.md 3b; built by the newest data run with the `daily` plan). If `brief/latest` used another
+   `week.plan_used`, keep the morning's actions and week card and use the pre-lock build only for injuries and the
+   lineup. (Interactive sessions: `python tools/brief.py snapshots out/prelock.json --kind prelock --no-log
+   --teams ~/teams.json --plan <plan_used>`.)
 3. Search for late news on the user's starters with games tonight (ruled out, minutes limit, rest) and on the
    recommended pickups.
 3b. Check the week plan in the rebuilt brief: if tomorrow has a planned add, confirm the player is healthy and note it
