@@ -1,5 +1,5 @@
 {
  "through": "2026-11-06",
- "replacement_value": -6.23,
+ "replacement_value": -6.33,
  "rule": "A positive call (add, stream, start, buy, hold) hits when value_pg >= replacement_value; a negative call (sit, drop, sell) hits when value_pg < replacement_value. No games (blank value_pg): a positive call misses, a negative call hits. Look up the row with start = the call's date and horizon_days = the call's horizon (1, 7 or 14). Source hit rate shown to Mike = (hits + 2.5) / (calls + 5); 'small sample' under 50 calls."
 }
