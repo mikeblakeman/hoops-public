@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-09T08:23-06:00",
+ "updated_ct": "2026-11-10T07:48-06:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 4,
-  "days_scored": 0,
+  "days_scored": 1,
   "opponent_team_id": "5",
   "opponent": "Team 5"
  },
- "decided": "2026-11-09",
+ "decided": "2026-11-10",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.5,
+    "days": 1
    },
    "season": {
     "weeks": 2,
@@ -32,10 +32,10 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.63,
+   "adds_per_day": 0.65,
    "status": "control",
    "today": [
-    "Add Daniel Gafford for Kris Dunn"
+    "Add Josh Hart for Daniel Gafford"
    ]
   },
   {
@@ -45,23 +45,24 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.5,
+    "days": 1
    },
    "season": {
     "weeks": 2,
     "live_weeks": 0,
     "avg_cats_won": 10.5,
     "edge": 1.75,
-    "confidence": 0.759,
-    "smooth_edge": 1.508,
+    "confidence": 0.758,
+    "smooth_edge": 1.505,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.05,
+   "adds_per_day": 3.0,
    "status": "ahead",
    "today": [
-    "Add Daniel Gafford for Kris Dunn",
-    "Add Jakob Poeltl for Zach LaVine"
+    "Add Zach LaVine for Daniel Gafford",
+    "Add Ryan Rollins for Jakob Poeltl",
+    "Add Josh Hart for Dejounte Murray"
    ]
   },
   {
@@ -71,23 +72,22 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 8.5,
+    "days": 1
    },
    "season": {
     "weeks": 2,
     "live_weeks": 0,
     "avg_cats_won": 10.25,
     "edge": 1.5,
-    "confidence": 0.73,
-    "smooth_edge": 0.987,
+    "confidence": 0.729,
+    "smooth_edge": 0.984,
     "worst_week": 0.5
    },
-   "adds_per_day": 1.63,
+   "adds_per_day": 1.65,
    "status": "ahead",
    "today": [
-    "Add Daniel Gafford for Kris Dunn",
-    "Add Julian Champagnie for Zach LaVine"
+    "Add Josh Hart for Julian Champagnie"
    ]
   },
   {
@@ -97,23 +97,23 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.5,
+    "days": 1
    },
    "season": {
     "weeks": 2,
     "live_weeks": 0,
     "avg_cats_won": 9.0,
     "edge": 0.25,
-    "confidence": 0.9,
+    "confidence": 0.899,
     "smooth_edge": 0.358,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.21,
+   "adds_per_day": 1.25,
    "status": "ahead",
    "today": [
-    "Add Daniel Gafford for Kris Dunn",
-    "Spot B: add Jakob Poeltl for Kel'el Ware"
+    "Add Josh Hart for Daniel Gafford",
+    "Spot B: add Kel'el Ware for Jakob Poeltl"
    ]
   },
   {
@@ -123,25 +123,21 @@
    "effort": "1 to 3 adds a week",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 8.5,
+    "days": 1
    },
    "season": {
     "weeks": 2,
     "live_weeks": 0,
     "avg_cats_won": 6.5,
     "edge": -2.25,
-    "confidence": 0.25,
-    "smooth_edge": -0.986,
+    "confidence": 0.249,
+    "smooth_edge": -0.988,
     "worst_week": -5.0
    },
-   "adds_per_day": 0.32,
+   "adds_per_day": 0.45,
    "status": "behind",
-   "today": [
-    "Add Daniel Gafford for Kris Dunn (4 games vs 3)",
-    "Add Jakob Poeltl for Zach LaVine (4 games vs 3)",
-    "Add Tari Eason for Damian Lillard (4 games vs 3)"
-   ]
+   "today": []
   },
   {
    "id": "hold",
@@ -150,16 +146,16 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.5,
+    "days": 1
    },
    "season": {
     "weeks": 2,
     "live_weeks": 0,
     "avg_cats_won": 6.75,
     "edge": -2.0,
-    "confidence": 0.049,
-    "smooth_edge": -1.471,
+    "confidence": 0.05,
+    "smooth_edge": -1.473,
     "worst_week": -3.5
    },
    "adds_per_day": 0.05,
