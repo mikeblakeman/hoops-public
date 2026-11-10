@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-11-10T11:56-06:00",
- "data_run_ct": "2026-11-10T11:55-06:00",
+ "generated_ct": "2026-11-10T16:24-06:00",
+ "data_run_ct": "2026-11-10T16:24-06:00",
  "date": "2026-11-10",
  "matchup_period": 4,
  "period": {
@@ -549,7 +549,7 @@
     "name": "Zion Williamson",
     "team": "NOP",
     "pos": "PF/C",
-    "inj": "DAY_TO_DAY",
+    "inj": "",
     "rank": 29,
     "line": {
      "PTS": 20.31,
@@ -770,6 +770,62 @@
   },
   {
    "add": {
+    "id": "4278402",
+    "name": "Jordan Goodwin",
+    "team": "PHO",
+    "pos": "PG/SG",
+    "inj": "",
+    "rank": 196,
+    "matchup_value": 0.1877,
+    "line": {
+     "PTS": 7.94,
+     "REB": 4.24,
+     "AST": 2.15,
+     "STL": 1.42,
+     "BLK": 0.18,
+     "3PM": 1.62,
+     "DD": 0.02
+    },
+    "helps": [
+     "STL",
+     "3PM",
+     "AST"
+    ]
+   },
+   "gain": 0.378,
+   "games_left": 3,
+   "plays_today": true,
+   "helps": [
+    "STL",
+    "3PM",
+    "AST"
+   ],
+   "drop": {
+    "id": "4066211",
+    "name": "Robert Williams III",
+    "team": "POR",
+    "pos": "C",
+    "inj": "",
+    "rank": 141,
+    "matchup_value": 0.1687,
+    "line": {
+     "PTS": 6.92,
+     "REB": 6.97,
+     "AST": 1.12,
+     "STL": 0.85,
+     "BLK": 1.47,
+     "3PM": 0.1,
+     "DD": 0.1
+    },
+    "helps": [
+     "STL",
+     "REB",
+     "BLK"
+    ]
+   }
+  },
+  {
+   "add": {
     "id": "2991043",
     "name": "Caris LeVert",
     "team": "MIL",
@@ -855,62 +911,6 @@
     "STL",
     "3PM",
     "AST"
-   ],
-   "drop": {
-    "id": "4066211",
-    "name": "Robert Williams III",
-    "team": "POR",
-    "pos": "C",
-    "inj": "",
-    "rank": 141,
-    "matchup_value": 0.1687,
-    "line": {
-     "PTS": 6.92,
-     "REB": 6.97,
-     "AST": 1.12,
-     "STL": 0.85,
-     "BLK": 1.47,
-     "3PM": 0.1,
-     "DD": 0.1
-    },
-    "helps": [
-     "STL",
-     "REB",
-     "BLK"
-    ]
-   }
-  },
-  {
-   "add": {
-    "id": "4896372",
-    "name": "Walter Clayton Jr.",
-    "team": "DAL",
-    "pos": "PG/SG",
-    "inj": "",
-    "rank": 205,
-    "matchup_value": 0.1838,
-    "line": {
-     "PTS": 8.4,
-     "REB": 2.73,
-     "AST": 3.92,
-     "STL": 0.76,
-     "BLK": 0.28,
-     "3PM": 1.43,
-     "DD": 0.01
-    },
-    "helps": [
-     "AST",
-     "3PM",
-     "STL"
-    ]
-   },
-   "gain": 0.354,
-   "games_left": 3,
-   "plays_today": false,
-   "helps": [
-    "AST",
-    "3PM",
-    "STL"
    ],
    "drop": {
     "id": "4066211",
@@ -1497,25 +1497,25 @@
          ]
         },
         {
-         "id": "6475",
-         "name": "Klay Thompson",
-         "team": "MIA",
-         "pos": "SG/SF",
-         "gain": 0.186,
-         "rank": 151,
+         "id": "4278402",
+         "name": "Jordan Goodwin",
+         "team": "PHO",
+         "pos": "PG/SG",
+         "gain": 0.188,
+         "rank": 196,
          "line": {
-          "PTS": 12.92,
-          "REB": 1.79,
-          "AST": 1.68,
-          "STL": 0.28,
-          "BLK": 0.46,
-          "3PM": 3.43,
-          "DD": 0.0
+          "PTS": 7.94,
+          "REB": 4.24,
+          "AST": 2.15,
+          "STL": 1.42,
+          "BLK": 0.18,
+          "3PM": 1.62,
+          "DD": 0.02
          },
          "helps": [
+          "STL",
           "3PM",
-          "AST",
-          "FGM"
+          "AST"
          ]
         }
        ]
@@ -2086,25 +2086,25 @@
          ]
         },
         {
-         "id": "6475",
-         "name": "Klay Thompson",
-         "team": "MIA",
-         "pos": "SG/SF",
-         "gain": 0.186,
-         "rank": 151,
+         "id": "4278402",
+         "name": "Jordan Goodwin",
+         "team": "PHO",
+         "pos": "PG/SG",
+         "gain": 0.188,
+         "rank": 196,
          "line": {
-          "PTS": 12.92,
-          "REB": 1.79,
-          "AST": 1.68,
-          "STL": 0.28,
-          "BLK": 0.46,
-          "3PM": 3.43,
-          "DD": 0.0
+          "PTS": 7.94,
+          "REB": 4.24,
+          "AST": 2.15,
+          "STL": 1.42,
+          "BLK": 0.18,
+          "3PM": 1.62,
+          "DD": 0.02
          },
          "helps": [
+          "STL",
           "3PM",
-          "AST",
-          "FGM"
+          "AST"
          ]
         }
        ]
@@ -2651,14 +2651,14 @@
   "next_opponent": null,
   "trades": {
    "baseline_cats_per_week": {
-    "1": 7.52,
-    "2": 6.43,
-    "3": 7.2,
-    "4": 8.11,
-    "5": 6.32,
-    "6": 4.17,
-    "7": 5.0,
-    "8": 3.26
+    "1": 7.29,
+    "2": 6.47,
+    "3": 7.21,
+    "4": 8.18,
+    "5": 6.37,
+    "6": 4.13,
+    "7": 5.23,
+    "8": 3.12
    },
    "protected_keepers": [
     "Anthony Davis",
@@ -2667,34 +2667,8 @@
     "Kawhi Leonard",
     "Victor Wembanyama"
    ],
-   "n_candidates": 75,
+   "n_candidates": 76,
    "top": [
-    {
-     "partner_team_id": "1",
-     "give": [
-      {
-       "id": "4396907",
-       "name": "Darius Garland",
-       "pos": "PG",
-       "team": "LAC",
-       "rank": 41,
-       "age": "26"
-      }
-     ],
-     "get": {
-      "id": "4066336",
-      "name": "Lauri Markkanen",
-      "pos": "SF/PF",
-      "team": "UTA",
-      "rank": 43,
-      "age": "29"
-     },
-     "my_cats_per_week": 0.639,
-     "their_cats_per_week": 0.16,
-     "value_given": 0.6,
-     "value_got": 0.2,
-     "gets_extra_spot": false
-    },
     {
      "partner_team_id": "2",
      "give": [
@@ -2715,8 +2689,8 @@
       "rank": 72,
       "age": "19"
      },
-     "my_cats_per_week": 0.665,
-     "their_cats_per_week": 0.032,
+     "my_cats_per_week": 0.641,
+     "their_cats_per_week": 0.052,
      "value_given": -1.4,
      "value_got": -2.5,
      "gets_extra_spot": false
@@ -2741,8 +2715,8 @@
       "rank": 48,
       "age": "32"
      },
-     "my_cats_per_week": 0.515,
-     "their_cats_per_week": 0.261,
+     "my_cats_per_week": 0.511,
+     "their_cats_per_week": 0.291,
      "value_given": 0.6,
      "value_got": -0.2,
      "gets_extra_spot": false
@@ -2767,10 +2741,36 @@
       "rank": 59,
       "age": "28"
      },
-     "my_cats_per_week": 0.625,
-     "their_cats_per_week": 0.005,
+     "my_cats_per_week": 0.629,
+     "their_cats_per_week": 0.011,
      "value_given": 0.6,
      "value_got": -0.9,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "1",
+     "give": [
+      {
+       "id": "4396907",
+       "name": "Darius Garland",
+       "pos": "PG",
+       "team": "LAC",
+       "rank": 41,
+       "age": "26"
+      }
+     ],
+     "get": {
+      "id": "4066336",
+      "name": "Lauri Markkanen",
+      "pos": "SF/PF",
+      "team": "UTA",
+      "rank": 43,
+      "age": "29"
+     },
+     "my_cats_per_week": 0.435,
+     "their_cats_per_week": 0.419,
+     "value_given": 0.6,
+     "value_got": 0.2,
      "gets_extra_spot": false
     },
     {
@@ -2793,8 +2793,8 @@
       "rank": 36,
       "age": "24"
      },
-     "my_cats_per_week": 0.445,
-     "their_cats_per_week": 0.277,
+     "my_cats_per_week": 0.432,
+     "their_cats_per_week": 0.294,
      "value_given": 3.6,
      "value_got": 1.0,
      "gets_extra_spot": false
@@ -2819,62 +2819,10 @@
       "rank": 27,
       "age": "36"
      },
-     "my_cats_per_week": 0.467,
-     "their_cats_per_week": 0.196,
+     "my_cats_per_week": 0.47,
+     "their_cats_per_week": 0.203,
      "value_given": 3.6,
      "value_got": 2.4,
-     "gets_extra_spot": false
-    },
-    {
-     "partner_team_id": "7",
-     "give": [
-      {
-       "id": "4396907",
-       "name": "Darius Garland",
-       "pos": "PG",
-       "team": "LAC",
-       "rank": 41,
-       "age": "26"
-      }
-     ],
-     "get": {
-      "id": "4432639",
-      "name": "Jabari Smith Jr.",
-      "pos": "PF/C",
-      "team": "HOU",
-      "rank": 70,
-      "age": "23"
-     },
-     "my_cats_per_week": 0.413,
-     "their_cats_per_week": 0.352,
-     "value_given": 0.6,
-     "value_got": -2.5,
-     "gets_extra_spot": false
-    },
-    {
-     "partner_team_id": "3",
-     "give": [
-      {
-       "id": "4396907",
-       "name": "Darius Garland",
-       "pos": "PG",
-       "team": "LAC",
-       "rank": 41,
-       "age": "26"
-      }
-     ],
-     "get": {
-      "id": "4871145",
-      "name": "Josh Giddey",
-      "pos": "PG/SG",
-      "team": "CHI",
-      "rank": 57,
-      "age": "23"
-     },
-     "my_cats_per_week": 0.526,
-     "their_cats_per_week": 0.071,
-     "value_given": 0.6,
-     "value_got": -0.7,
      "gets_extra_spot": false
     },
     {
@@ -2897,10 +2845,62 @@
       "rank": 79,
       "age": "29"
      },
-     "my_cats_per_week": 0.516,
-     "their_cats_per_week": 0.079,
+     "my_cats_per_week": 0.513,
+     "their_cats_per_week": 0.089,
      "value_given": 0.6,
      "value_got": -3.2,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "3",
+     "give": [
+      {
+       "id": "4396907",
+       "name": "Darius Garland",
+       "pos": "PG",
+       "team": "LAC",
+       "rank": 41,
+       "age": "26"
+      }
+     ],
+     "get": {
+      "id": "4871145",
+      "name": "Josh Giddey",
+      "pos": "PG/SG",
+      "team": "CHI",
+      "rank": 57,
+      "age": "23"
+     },
+     "my_cats_per_week": 0.513,
+     "their_cats_per_week": 0.074,
+     "value_given": 0.6,
+     "value_got": -0.7,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "7",
+     "give": [
+      {
+       "id": "4396907",
+       "name": "Darius Garland",
+       "pos": "PG",
+       "team": "LAC",
+       "rank": 41,
+       "age": "26"
+      }
+     ],
+     "get": {
+      "id": "4432639",
+      "name": "Jabari Smith Jr.",
+      "pos": "PF/C",
+      "team": "HOU",
+      "rank": 70,
+      "age": "23"
+     },
+     "my_cats_per_week": 0.384,
+     "their_cats_per_week": 0.396,
+     "value_given": 0.6,
+     "value_got": -2.5,
      "gets_extra_spot": false
     },
     {
@@ -2923,8 +2923,8 @@
       "rank": 95,
       "age": "26"
      },
-     "my_cats_per_week": 0.479,
-     "their_cats_per_week": 0.122,
+     "my_cats_per_week": 0.472,
+     "their_cats_per_week": 0.118,
      "value_given": -1.4,
      "value_got": -4.5,
      "gets_extra_spot": false
@@ -2949,8 +2949,8 @@
       "rank": 42,
       "age": "29"
      },
-     "my_cats_per_week": 0.418,
-     "their_cats_per_week": 0.203,
+     "my_cats_per_week": 0.41,
+     "their_cats_per_week": 0.222,
      "value_given": 3.6,
      "value_got": 0.6,
      "gets_extra_spot": false
@@ -2968,17 +2968,17 @@
       }
      ],
      "get": {
-      "id": "3155942",
-      "name": "Domantas Sabonis",
-      "pos": "PF/C",
-      "team": "SAC",
-      "rank": 18,
-      "age": "30"
+      "id": "4278104",
+      "name": "Michael Porter Jr.",
+      "pos": "SF/PF",
+      "team": "BKN",
+      "rank": 40,
+      "age": "28"
      },
-     "my_cats_per_week": 0.369,
-     "their_cats_per_week": 0.364,
+     "my_cats_per_week": 0.441,
+     "their_cats_per_week": 0.151,
      "value_given": 3.6,
-     "value_got": 4.1,
+     "value_got": 0.6,
      "gets_extra_spot": false
     }
    ]
