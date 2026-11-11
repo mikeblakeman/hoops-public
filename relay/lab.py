@@ -32,6 +32,7 @@ from zoneinfo import ZoneInfo
 
 from . import history as H
 from . import matchup as MU
+from . import moves as MV
 from . import strategies as S
 
 CT = ZoneInfo("America/Chicago")
@@ -199,6 +200,41 @@ def normalize_ir(st, D, day):
     return notes
 
 
+def activate_ir(st, snap, day, scores=None):
+    """Healthy players stuck on IR come off it first, by the SAME rule the brief uses (relay.matchup
+    plan_activations, read through relay.moves.activation_moves): the drop is picked by expected categories and is
+    never a protected player. So paper `current` keeps matching the brief, and no strategy gets a phantom edge or
+    penalty from a healthy player stuck on IR. Returns (notes, blocked, activation dict or None). `blocked`: every
+    possible drop is protected, so the player stays on IR and the paper team makes no add today (ESPN's rule).
+    If the engine cannot run, falls back to normalize_ir."""
+    try:
+        D = MU.Data(snap, my_roster=st["roster"], my_scores=scores, free_ids=st["dropped"])
+        d = date.fromisoformat(day)
+        c = MU._context(D, d)
+        if not c or not c["sps"] or not MU.ir_returns(D, d, c["sps"])["now"]:
+            return [], False, None
+        acts, _D2, _c = MU.plan_activations(D, snap, d, c, st["protected"])
+    except Exception as e:  # noqa: BLE001
+        return [f"activation rule failed ({type(e).__name__}); fallback used"] + normalize_ir(st, MU.Data(snap), day), \
+            False, None
+    am = MV.activation_moves({"ir_activations": acts})
+    notes = []
+    for pid in am["drop_ids"]:
+        if pid in st["protected"]:          # never reached: the rule excludes protected players
+            st["violations"] += 1
+            continue
+        st["roster"] = [x for x in st["roster"] if x["player_id"] != pid]
+        if pid not in st["dropped"]:
+            st["dropped"].append(pid)
+    for r in st["roster"]:
+        if r["player_id"] in am["activate_ids"]:
+            r["slot"] = "BE"
+    notes += [("activate: " + t) for t in am["text"]]
+    if am["blocked"]:
+        notes.append("adds blocked: a healthy player is on IR and every drop is protected")
+    return notes, am["blocked"], am
+
+
 def week_scores(lab, sid, mp, before):
     """Paper totals so far this matchup (scored days before `before`), as a component dict, or None."""
     tot, n = {c: 0.0 for c in COMP}, 0
@@ -292,6 +328,22 @@ def name_of(D, pid):
     return (D.vals.get(pid) or {}).get("name") or pid
 
 
+def activation_text(D, am):
+    """Today's paper IR activations in the brief's words."""
+    if not am:
+        return []
+    out = []
+    for a in am["activations"]:
+        n = a["player"]["name"]
+        if a.get("blocked"):
+            out.append(f"Choose a drop to move {n} off IR")
+        elif a.get("drop"):
+            out.append(f"Drop {a['drop']['name']}, then move {n} off IR")
+        else:
+            out.append(f"Move {n} off IR")
+    return out
+
+
 def today_text(D, applied, notes_out):
     """Today's paper moves in plain words for the page (only moves that were actually applied)."""
     if not (applied["ir"] or applied["adds"] or applied["drops"]):
@@ -329,8 +381,9 @@ def decide_day(snap, day, lab=None, mode="live", run=None, missed=False):
                 continue
             if not st or st.get("matchup_period") != mp:
                 st = reset_state(sid, view, D0, mp, prow, day)
-            entry = {"notes": normalize_ir(st, D0, day)}
             scores = week_scores(lab, sid, mp, day)
+            act_notes, blocked, am = activate_ir(st, view, day, scores)
+            entry = {"notes": act_notes}
             if missed:
                 out = S.result(notes=["no data run before first tip: no moves"])
             else:
@@ -340,8 +393,14 @@ def decide_day(snap, day, lab=None, mode="live", run=None, missed=False):
                 except Exception as e:  # noqa: BLE001  one strategy failing never stops the others
                     out = S.result(notes=[f"error: {type(e).__name__}: {e}"])
                     entry["error"] = traceback.format_exc(limit=4)
+            if blocked and out.get("adds"):
+                out = dict(out, adds=[], drops=[], pairs=[],
+                           notes=out.get("notes", []) + ["adds skipped: ESPN blocks adds while a healthy player is on IR"])
             Dp = MU.Data(view, my_roster=st["roster"], my_scores=scores, free_ids=st["dropped"])
             applied, notes = apply_moves(st, out, Dp, day)
+            if am:
+                applied["activate"] = am["activate_ids"]
+                applied["activate_drops"] = am["drop_ids"]
             if missed:
                 lineup = fallback_lineup(view, day, st)
             else:
@@ -349,7 +408,9 @@ def decide_day(snap, day, lab=None, mode="live", run=None, missed=False):
             st["days"] = sorted(set(st.get("days", [])) | {day})
             st["last_date"] = day
             entry.update(decision={k: out.get(k, []) for k in ("ir", "adds", "drops", "bench")},
-                         applied=applied, today=today_text(Dp, applied, out.get("notes", [])),
+                         activation=({"activate": am["activate_ids"], "drops": am["drop_ids"], "blocked": am["blocked"]}
+                                     if am else None),
+                         applied=applied, today=activation_text(Dp, am) + today_text(Dp, applied, out.get("notes", [])),
                          notes=entry["notes"] + out.get("notes", []) + notes,
                          lineup=lineup, roster=[r["player_id"] for r in st["roster"]],
                          ir=[r["player_id"] for r in st["roster"] if r.get("slot") == "IR"],

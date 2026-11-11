@@ -114,6 +114,12 @@ def grade_decisions(lines, since):
             v = val(r["player_id"])
             out.append({"date": day, "rec": "add", "name": r["name"], "value": round(v, 4),
                         "alt_median": round(median, 4), "win": v >= median})
+        # IR activations (claude/engine/ir-activation-spec.md): the player moved off IR vs the player dropped for him
+        for r in rs:
+            if r["rec"] == "ir_activate" and r.get("related_id"):
+                v, vd = val(r["player_id"]), val(r["related_id"])
+                out.append({"date": day, "rec": "ir_activate", "name": r["name"], "value": round(v, 4),
+                            "alt_median": round(vd, 4), "win": v >= vd})
         best_add = max((val(r["player_id"]) for r in adds), default=0.0)
         for rank, r in enumerate(passes, 1):
             v = val(r["player_id"])
@@ -200,19 +206,23 @@ def main():
         calls_from_db(a.calls_dir, a.snap)
     lines, last_day = daily_lines(a.snap)
     meta = json.loads((Path(a.snap) / "valuation_meta.json").read_text())
-    dec, misses = grade_decisions(lines, a.since)
+    graded, misses = grade_decisions(lines, a.since)
+    dec = [d for d in graded if d["rec"] == "add"]
+    acts = [d for d in graded if d["rec"] == "ir_activate"]
     calls, board = grade_calls(lines, last_day, meta.get("params", {}), meta.get("replacement_value", 0))
     LEDGER.mkdir(exist_ok=True)
     summary = {
         "through": last_day, "since": a.since,
         "adds_graded": len(dec), "adds_beat_alternatives": sum(1 for d in dec if d["win"]),
         "add_win_rate": round(sum(1 for d in dec if d["win"]) / len(dec), 3) if dec else None,
+        "ir_activations_graded": len(acts),
+        "ir_activation_win_rate": round(sum(1 for d in acts if d["win"]) / len(acts), 3) if acts else None,
         "misses": sorted(misses, key=lambda m: -(m["value"] - m["best_add"]))[:5],
         "expert_calls_graded": len(calls),
         "sources": board,
     }
     (LEDGER / "summary.json").write_text(json.dumps(summary, indent=1))
-    for name, data in (("graded_decisions.csv", dec), ("graded_calls.csv", calls)):
+    for name, data in (("graded_decisions.csv", graded), ("graded_calls.csv", calls)):
         if data:
             with (LEDGER / name).open("w", newline="") as fh:
                 w = csv.DictWriter(fh, fieldnames=list(data[0].keys()))

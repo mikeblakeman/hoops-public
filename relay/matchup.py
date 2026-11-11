@@ -23,7 +23,7 @@ Model
 import csv
 import json
 import math
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -138,6 +138,16 @@ class Data:
             st = "ONTEAM" if pid in paper else "FREEAGENT" if pid in free else v.get("status")
             vals[pid] = v if st == v.get("status") else dict(v, status=st)
         self.vals = vals
+
+    def with_my_roster(self, rows):
+        """A copy of this Data with my team's roster replaced by `rows` (same shape as rosters.csv rows). Paper
+        overrides already applied (scores, players the paper team dropped) carry over. Used to build the brief on
+        the roster after an IR activation; a removed player keeps his snapshot status, so the engine never offers
+        him straight back."""
+        import copy
+        D2 = copy.copy(self)
+        D2._override_roster(rows)
+        return D2
 
 
 def player_line(v):
@@ -390,6 +400,178 @@ def outlook(D, mine, opp_sim, sps, key_m, cur_m, cur_o, bench_negative=False):
     return odds(D.cats, cur_m, cur_o, rm, vm, ro, vo), gm, go
 
 
+# ---------------------------------------------------------------- IR activation
+# ESPN (support.espn.com, read 2026-11-11): only players tagged Out, IR or IL may sit in an IR slot, and while a
+# healthy player sits there ESPN refuses EVERY add. Activating him needs a free active roster spot.
+# claude/engine/ir-activation-spec.md
+IR_OK = {"OUT", "INJURY_RESERVE"}
+SHORT_STASH_DAYS = 2   # an IR move whose return date is this close says the add into his spot is temporary
+
+
+def ir_returns(D, day, sps=None):
+    """My IR-slot players who must come off IR. {"now": [player], "returning": [(player, iso date)]}.
+    now: not IR-eligible on `day` (valuations status not OUT or INJURY_RESERVE, or the injury report's return date
+    is on or before `day`). returning: still eligible today, but the return date falls on a later remaining day of
+    this matchup (`sps`); the date is the first of those days on or after the return date.
+    rosters.csv injury_status is NORMAL for every row, so it is never used; make_player reads valuations.csv."""
+    d = day.isoformat() if hasattr(day, "isoformat") else str(day)
+    later = sorted(D.sp_dates[sp] for sp in (sps or []) if D.sp_dates.get(sp, "") > d)
+    now, returning = [], []
+    for r in D.roster:
+        if r["team_id"] != D.my_tid or r.get("slot") != "IR":
+            continue
+        p = make_player(D, r["player_id"], "IR")
+        if not p:
+            continue
+        st = ((D.vals.get(p["id"]) or {}).get("injury_status") or "").upper()
+        rd = p.get("ret") or ""
+        if st not in IR_OK or (rd and rd <= d):
+            now.append(p)
+        elif rd and later and rd <= later[-1]:
+            returning.append((p, next(x for x in later if x >= rd)))
+    return {"now": now, "returning": returning}
+
+
+def protected_ids(snap, D):
+    """Keepers plus my top 10 by season value: never dropped (the strategy lab's helper, relay.strategies)."""
+    from . import strategies as S   # lazy: strategies imports this module
+    return set(S.protected_set(snap, D, S.real_rows(D)))
+
+
+def _act_rows(D, activate_ids=(), drop_ids=()):
+    act, drops = {str(i) for i in activate_ids}, {str(i) for i in drop_ids}
+    out = []
+    for r in D.roster:
+        if r["team_id"] != D.my_tid or r["player_id"] in drops:
+            continue
+        # keep acquisition_type and acquired_ct: a drafted player coming off IR is never the streaming spot
+        out.append(dict(r, slot="BE") if r["player_id"] in act else dict(r))
+    return out
+
+
+def post_activation(D, activate_ids=(), drop_ids=()):
+    """Data on the roster after moving `activate_ids` off IR (to the bench) and dropping `drop_ids`."""
+    if not activate_ids and not drop_ids:
+        return D
+    return D.with_my_roster(_act_rows(D, activate_ids, drop_ids))
+
+
+def _game_words(g):
+    if not g:
+        return None
+    h, m = (int(x) for x in g["tip_ct"].split(":")[:2])
+    tip = f"{(h - 1) % 12 + 1}:{m:02d} {'AM' if h < 12 else 'PM'}"
+    return f"{'vs' if g.get('home_away') == 'home' else 'at'} {g['opp']} at {tip}"
+
+
+def choose_drop(D, roster, player, ctx, protected, empty=0):
+    """Best way to bring `player` (on IR in `roster`) back to the active roster over the days in ctx["sps"].
+    Scores every active non-IR player outside `protected` by expected categories with `player` active and that
+    player dropped (the same outlook as fills and moves) and picks the best. An empty active spot means no drop.
+    Every candidate protected: blocked, with the best two options for Mike to choose from."""
+    sps, key, opp_sim = ctx["sps"], ctx["key"], ctx["opp_sim"]
+    cur_m, cur_o = ctx["cur_m"], ctx["cur_o"]
+
+    def exp(r):
+        O2, _, _ = outlook(D, r, opp_sim, sps, key, cur_m, cur_o, True)
+        return sum(o["p"] for o in O2.values())
+
+    base = exp(roster)
+    d0 = D.sp_dates.get(sps[0], "") if sps else ""
+    # a player due back is ranked by his availability on the return day (his flat status may still say OUT)
+    on = [dict(p, slot="BE", avail=max(p["avail"], avail_on(p, d0))) if p["id"] == player["id"] else p
+          for p in roster]
+    if empty > 0:
+        return {"drop": None, "gain": exp(on) - base, "blocked": False, "options": []}
+    scored = sorted(((exp([q for q in on if q is not x]) - base, x) for x in on
+                     if x["slot"] != "IR" and x["id"] != player["id"]), key=lambda t: -t[0])
+    free = [(g, x) for g, x in scored if str(x["id"]) not in protected]
+    if free:
+        return {"drop": free[0][1], "gain": free[0][0], "blocked": False, "options": []}
+    return {"drop": None, "gain": None, "blocked": True, "options": scored[:2]}
+
+
+def plan_activations(D, snap, today, ctx=None, protected=None):
+    """Healthy players stuck on IR today, each with the drop that frees his spot. Returns (activations, D after,
+    ctx after). Activations are applied in order on the roster left by the ones before. A blocked one (every
+    possible drop is protected) changes nothing and blocks adds until Mike chooses."""
+    ctx = ctx or _context(D, today)
+    if not ctx or not ctx["sps"]:
+        return [], D, ctx
+    need = ir_returns(D, today, ctx["sps"])["now"]
+    if not need:
+        return [], D, ctx
+    protected = {str(i) for i in (protected if protected is not None else protected_ids(snap, D))}
+    roster, O, sp0 = list(ctx["mine"]), ctx["O"], ctx["sps"][0]
+    empty = roster_room(D, [])[0]
+    acts, act_ids, drop_ids = [], [], []
+    for p in need:
+        ch = choose_drop(D, roster, p, ctx, protected, empty)
+        g = D.games.get((sp0, p["team"]))
+        a = {"player": _pinfo(p, O, game=g), "drop": _pinfo(ch["drop"], O) if ch["drop"] else None,
+             "gain": None if ch["gain"] is None else round(ch["gain"], 3), "plays_today": bool(g),
+             "tip": g["tip_ct"] if g else None, "game": _game_words(g), "blocked": ch["blocked"],
+             "options": [dict(_pinfo(x, O), gain=round(gn, 3)) for gn, x in ch["options"]],
+             "status": ((D.vals.get(p["id"]) or {}).get("injury_status") or "").upper(),
+             "return_date": p.get("ret") or ""}
+        a["reason"] = ("ESPN shows him " + (a["status"].replace("_", " ").lower() or "active") +
+                       (f" (return date {a['return_date']})" if a["return_date"] else "") +
+                       ", so he cannot stay on IR, and ESPN blocks every add until he leaves it.")
+        acts.append(a)
+        if ch["blocked"]:
+            continue
+        roster = [dict(q, slot="BE") if q["id"] == p["id"] else q for q in roster if q is not ch["drop"]]
+        act_ids.append(p["id"])
+        if ch["drop"]:
+            drop_ids.append(ch["drop"]["id"])
+        else:
+            empty -= 1
+    if not act_ids:
+        return acts, D, ctx
+    D2 = post_activation(D, act_ids, drop_ids)
+    return acts, D2, _context(D2, today)
+
+
+def returns_later(D, snap, today, sps, stream_days=None, protected=None, players=None, add_ids=()):
+    """IR players due back on a later day of this matchup, each with the drop to make that morning, picked on that
+    day's roster: today's open-spot adds (`add_ids`) kept, the players going to IR today on IR, and the streaming
+    spot held by the plan's player that day. `players`: extra [(player, date)] for short IR stashes recommended
+    today. Returns [{player, date, drop, gain, blocked, options}]."""
+    found = ir_returns(D, today, sps)["returning"] + list(players or [])
+    if not found:
+        return []
+    protected = {str(i) for i in (protected if protected is not None else protected_ids(snap, D))}
+    occ = {d["date"]: d.get("id") for d in (stream_days or [])}
+    occ_now = None
+    if stream_days:
+        d0 = stream_days[0]
+        occ_now = d0.get("drop_id") if d0.get("swap") else d0.get("id")
+    out = []
+    for p, when in found:
+        c = _context(D, date.fromisoformat(when))
+        if not c or not c["sps"]:
+            continue
+        stash = {str(q["id"]) for q, _w in (players or [])}
+        roster = [dict(q, slot="IR") if str(q["id"]) in stash else q for q in c["mine"]]
+        for pid in add_ids:
+            x = make_player(D, pid)
+            if x and not any(q["id"] == x["id"] for q in roster):
+                roster.append(x)
+        holder = occ.get(when)
+        if occ_now and holder and holder != occ_now:
+            roster = [q for q in roster if q["id"] != occ_now]
+            x = make_player(D, holder)
+            if x and not any(q["id"] == holder for q in roster):
+                roster.append(x)
+        cap_active = sum(int(v) for k, v in (D.settings.get("lineup_slots") or {}).items() if k != "IR")
+        empty = max(0, cap_active - sum(1 for q in roster if q["slot"] != "IR"))
+        ch = choose_drop(D, roster, p, c, protected, empty)
+        out.append({"player": _pinfo(p, c["O"]), "date": when, "drop": _pinfo(ch["drop"], c["O"]) if ch["drop"] else None,
+                    "gain": None if ch["gain"] is None else round(ch["gain"], 3), "blocked": ch["blocked"],
+                    "options": [dict(_pinfo(x, c["O"]), gain=round(g, 3)) for g, x in ch["options"]]})
+    return out
+
+
 # ---------------------------------------------------------------- main
 def _context(D, today):
     """Everything the lineup and move search share: period, both rosters, scores, the opponent's simulated
@@ -457,10 +639,13 @@ def _roster_after(D, mine, add_ids=(), drop_ids=(), ir_ids=()):
     return roster
 
 
-def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), bench_ids=()):
-    """Today's lineup after the moves the brief recommends (players added, dropped or moved to IR), so the
-    page's lineup card shows the same players as its actions. None if it cannot be built."""
-    D = Data(snap)
+def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), bench_ids=(), activate_ids=(),
+                 activate_drop_ids=()):
+    """Today's lineup after the moves the brief recommends (players moved off IR, added, dropped or moved to IR),
+    so the page's lineup card shows the same players as its actions. None if it cannot be built.
+    activate_ids / activate_drop_ids: today's IR activations and the drops that make room for them (applied first,
+    the same post-activation roster build() uses)."""
+    D = post_activation(Data(snap), activate_ids, activate_drop_ids)
     ctx = _context(D, today)
     if not ctx or not ctx["sps"]:
         return None
@@ -468,13 +653,15 @@ def lineup_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), bench_ids=()):
     return _lineup(D, roster, ctx["sps"][0], ctx["key"], ctx["O"], bench_ids)
 
 
-def coverage_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), current_streamer=None, streamer_by_date=None):
+def coverage_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), current_streamer=None, streamer_by_date=None,
+                   activate_ids=(), activate_drop_ids=(), returns=()):
     """Day-by-day slot coverage for the rest of the matchup on the roster the brief recommends: today's IR
-    moves and open-spot adds kept all week, and the streaming spot held by the plan's player for each date
-    (`streamer_by_date`: date -> player id or None, replacing `current_streamer`). Today's row uses the same
-    availability rule as the lineup card, so the two always agree. Returns [{date, my_starters, my_open_slots,
-    my_no_slot, starters}] or None."""
-    D = Data(snap)
+    activations, IR moves and open-spot adds kept all week, and the streaming spot held by the plan's player for
+    each date (`streamer_by_date`: date -> player id or None, replacing `current_streamer`). `returns`: IR players
+    due back later this matchup, [{id, date, drop_id}]; from that date he is active and drop_id is gone. Today's
+    row uses the same availability rule as the lineup card, so the two always agree. Returns [{date, my_starters,
+    my_open_slots, my_no_slot, starters}] or None."""
+    D = post_activation(Data(snap), activate_ids, activate_drop_ids)
     ctx = _context(D, today)
     if not ctx or not ctx["sps"]:
         return None
@@ -492,6 +679,11 @@ def coverage_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), current_stre
                 x = make_player(D, occ)
                 if x:
                     roster.append(x)
+        for r in returns or ():
+            if d >= r["date"]:
+                gone = str(r.get("drop_id") or "")
+                roster = [dict(p, slot="BE", avail=max(p["avail"], avail_on(p, d))) if str(p["id"]) == str(r["id"])
+                          else p for p in roster if str(p["id"]) != gone]
         active = [p for p in roster if p["slot"] != "IR"]
         if i == 0:
             playing = [p for p in active if plays(D, p, sp) and p["avail"] > 0]
@@ -504,14 +696,22 @@ def coverage_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), current_stre
     return out
 
 
-def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades=True):
+def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades=True, protected=None):
     """D: a prebuilt Data (the strategy lab passes one with a paper roster). with_trades=False skips the
-    league-wide trade search, which changes nothing in the lineup, moves or stream plan."""
+    league-wide trade search, which changes nothing in the lineup, moves or stream plan. protected: player ids an
+    IR activation may never drop (default: keepers plus the top 10, relay.strategies.protected_set).
+
+    A healthy player in an IR slot blocks every add in ESPN, so he comes off IR first (plan_activations) and
+    everything below (lineup, fills, moves, week plan, next opponent, trades) is built on the roster after it."""
     D = D or Data(snap)
     today = today or today_ct()
     ctx = _context(D, today)
     if ctx is None:
         return {"error": "no matchup period found", "date": today.isoformat()}
+    if protected is None and ir_returns(D, today, ctx["sps"])["now"]:
+        protected = protected_ids(snap, D)
+    acts, D, ctx = plan_activations(D, snap, today, ctx, protected)
+    adds_blocked = any(a["blocked"] for a in acts)
     mp, sps, prow, opp = ctx["mp"], ctx["sps"], ctx["prow"], ctx["opp"]
     mine, theirs, cur_m, cur_o = ctx["mine"], ctx["theirs"], ctx["cur_m"], ctx["cur_o"]
     opp_sim, O, gm, go, key = ctx["opp_sim"], ctx["O"], ctx["gm"], ctx["go"], ctx["key"]
@@ -565,6 +765,8 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades
         roster_f.append(x)
         base_f += gain
         pool.remove(x)
+    if adds_blocked:          # ESPN refuses every add until the healthy IR player is activated
+        fills, fill_alts = [], []
     fill_ids = {f["add"]["id"] for f in fills}
     fa = [x for x in fa if x["id"] not in fill_ids]
 
@@ -589,6 +791,8 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades
         if len(chosen) >= len(drops):
             break
     alternatives = [m for m in moves if m not in chosen][:n_moves]
+    if adds_blocked:
+        chosen, alternatives = [], []
 
     cats = []
     for c in D.cats:
@@ -620,6 +824,8 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades
         "alternatives": alternatives,
         "ir_moves": [_pinfo(p, O) for p in ir_moves],
         "opp_injuries": [_pinfo(p, O) for p in theirs if p["inj"]],
+        "ir_activations": acts,
+        "adds_blocked": adds_blocked,
     }
     # day-by-day plan for the whole matchup (coverage, streaming spot, trades); advisory,
     # so a failure here must never cost the daily brief
@@ -628,6 +834,34 @@ def build(snap, today=None, n_fa=60, n_moves=5, max_fills=4, D=None, with_trades
         result["week_plan"] = weekplan.plan(snap, today, D, with_trades=with_trades)
     except Exception as e:  # noqa: BLE001
         result["week_plan"] = {"error": f"{type(e).__name__}: {e}"}
+    # IR players due back later this matchup (and short IR stashes made today): the drop to make that morning
+    try:
+        wp = result["week_plan"]
+        days = ((wp.get("stream_plan") or {}).get("plans") or {}).get("daily", {}).get("days") \
+            if not wp.get("error") else None
+        short = []
+        end = D.sp_dates.get(sps[-1], "") if sps else ""
+        soon = (today + timedelta(days=SHORT_STASH_DAYS)).isoformat()
+        moved = {p["id"] for p in ir_room}
+        for p in ir_moves:
+            rd = p.get("ret") or ""
+            if p["id"] in moved and rd and rd <= soon and rd <= end:
+                later = sorted(D.sp_dates[sp] for sp in sps if D.sp_dates[sp] >= max(rd, today.isoformat())
+                               and D.sp_dates[sp] > today.isoformat())
+                if later:
+                    short.append((p, later[0]))
+        rl = returns_later(D, snap, today, sps, days, protected, players=short,
+                           add_ids=[f["add"]["id"] for f in fills])
+        short_ids = {p["id"] for p, _w in short}
+        result["ir_returns_later"] = [r for r in rl if r["player"]["id"] not in short_ids]
+        by = {r["player"]["id"]: r for r in rl}
+        for m in result["ir_moves"]:
+            r = by.get(m["id"])
+            if r and m["id"] in short_ids:
+                m["return"] = {"date": r["date"], "drop": r["drop"], "blocked": r["blocked"]}
+    except Exception as e:  # noqa: BLE001  advisory; never lose the daily brief
+        result["ir_returns_later"] = []
+        result["ir_returns_error"] = f"{type(e).__name__}: {e}"
     return result
 
 

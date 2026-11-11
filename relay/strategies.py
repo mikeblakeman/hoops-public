@@ -370,6 +370,11 @@ def real_decision(snap, day, sid):
     D = MU.Data(snap)
     rows = real_rows(D)
     protected = set(protected_set(snap, D, rows))
+    # healthy players on IR come off it first, by the brief's rule (relay.matchup.plan_activations)
+    acts, D_act, _c = MU.plan_activations(D, snap, day, None, protected)
+    am = MV.activation_moves({"ir_activations": acts})
+    if am["activate_ids"]:
+        D, rows = D_act, real_rows(D_act)
     mp, sps, prow = MU.current_period(D, day)
     state = {}
     if sid == "two_spots":
@@ -378,6 +383,9 @@ def real_decision(snap, day, sid):
         state["stacked"] = mp
     ctx = Ctx(snap, day, rows, state=state)
     out = decide(sid, ctx, rows, protected, day)
+    if am["blocked"]:     # ESPN refuses every add while a healthy player sits on IR
+        out = dict(out, adds=[], drops=[], pairs=[], notes=out["notes"] + ["adds blocked until the IR activation"])
+    out.update(activations=am["activations"], activate_ids=am["activate_ids"], activate_drop_ids=am["drop_ids"])
     Dx = ctx.data()
 
     def info(pid):

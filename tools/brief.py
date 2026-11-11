@@ -20,7 +20,7 @@ CT = ZoneInfo("America/Chicago")
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from relay.moves import IDLE_GAIN, defer_idle_swap, load_strategy, select_moves  # noqa: E402,F401  (shared with the lab)
+from relay.moves import IDLE_GAIN, activation_moves, defer_idle_swap, load_strategy, select_moves  # noqa: E402,F401  (shared with the lab)
 
 LEDGER = ROOT / "ledger"
 DEC_FIELDS = ["date", "kind", "matchup_period", "rec", "player_id", "name", "team",
@@ -109,15 +109,19 @@ def week_doc(wp, teams=None, plan="daily"):
 
 def fresh_week_plan(snap, bd):
     """The data run can be a day old (a morning run that did not land). Its week plan then starts on a day that is
-    already played, so rebuild the plan from the same snapshots for today. Falls back to the stored plan."""
+    already played, so rebuild the plan from the same snapshots for today. Falls back to the stored plan.
+    The rebuild uses the roster after today's IR activations, like matchup.build."""
     today = datetime.now(CT).date().isoformat()
     if not bd.get("date") or bd["date"] >= today:
         return bd.get("week_plan") or {}, None
     try:
         import sys
         sys.path.insert(0, str(ROOT))
-        from relay import weekplan
-        wp = weekplan.plan(snap, today)
+        from datetime import date as _date
+        from relay import matchup, weekplan
+        D = matchup.Data(snap)
+        _acts, D, _ctx = matchup.plan_activations(D, snap, _date.fromisoformat(today))
+        wp = weekplan.plan(snap, today, D)
         if wp.get("stream_plan") and not wp.get("error"):
             return wp, today
     except Exception:  # noqa: BLE001
@@ -125,27 +129,90 @@ def fresh_week_plan(snap, bd):
     return bd.get("week_plan") or {}, None
 
 
-def lineup_after(snap, day, add_ids, drop_ids, ir_ids, bench_ids=()):
+def lineup_after(snap, day, add_ids, drop_ids, ir_ids, bench_ids=(), activate_ids=(), activate_drop_ids=()):
     """Today's lineup with the recommended moves applied (relay.matchup.lineup_after); None if it fails."""
     try:
         import sys
         sys.path.insert(0, str(ROOT))
         from datetime import date as _date
         from relay import matchup
-        return matchup.lineup_after(snap, _date.fromisoformat(day), add_ids, drop_ids, ir_ids, bench_ids)
+        return matchup.lineup_after(snap, _date.fromisoformat(day), add_ids, drop_ids, ir_ids, bench_ids,
+                                    activate_ids, activate_drop_ids)
     except Exception:  # noqa: BLE001
         return None
 
 
-def coverage_after(snap, day, add_ids, drop_ids, ir_ids, current_streamer, streamer_by_date):
+def coverage_after(snap, day, add_ids, drop_ids, ir_ids, current_streamer, streamer_by_date,
+                   activate_ids=(), activate_drop_ids=(), returns=()):
     """relay.matchup.coverage_after for the brief's date; None if it fails (the planner's rows stay)."""
     try:
         from datetime import date as _date
         from relay import matchup
         return matchup.coverage_after(snap, _date.fromisoformat(day), add_ids, drop_ids, ir_ids,
-                                      current_streamer, streamer_by_date)
+                                      current_streamer, streamer_by_date, activate_ids, activate_drop_ids, returns)
     except Exception:  # noqa: BLE001
         return None
+
+
+def _first_name(name):
+    return (name or "").split(" ")[0] or name
+
+
+def activation_actions(acts):
+    """The first actions of the day: move healthy players off IR (ESPN blocks every add until then)."""
+    out = []
+    for a in acts or []:
+        p = a["player"]
+        who = f"{p['name']} ({p['team']})"
+        if a.get("blocked"):
+            opts = a.get("options") or []
+            names = " or ".join(o["name"] for o in opts) or "someone"
+            text = f"Move {who} off IR: drop {names}, your call."
+            gains = "; ".join(f"dropping {o['name']} is {o['gain']:+.2f} expected categories" for o in opts)
+            why = (f"Every possible drop is a keeper or a top-10 player, so the brief will not pick one. "
+                   f"{gains + '. ' if gains else ''}ESPN blocks every add until he leaves IR, so no adds today "
+                   "until you choose.")
+            out.append({"kind": "ir", "text": text, "why": why, "activate": True, "blocked": True})
+            continue
+        text = (f"Drop {a['drop']['name']}, then move {who} off IR." if a.get("drop")
+                else f"Move {who} off IR into your open roster spot; no drop needed.")
+        why = "ESPN blocks every add until a healthy player leaves IR."
+        if a.get("plays_today") and a.get("game"):
+            why += f" {_first_name(p['name'])} plays tonight {a['game']}."
+        else:
+            why += f" {_first_name(p['name'])} has no game today."
+        if a.get("gain") is not None:
+            why += f" About {a['gain']:+.2f} expected categories this week."
+        out.append({"kind": "ir", "text": text, "why": why, "activate": True})
+    return out
+
+
+def return_actions(bd):
+    """'Plan ahead' actions for IR players expected back later this matchup (and short IR stashes made today)."""
+    rets = list(bd.get("ir_returns_later") or []) + [
+        {"player": m, "date": m["return"]["date"], "drop": m["return"].get("drop"),
+         "blocked": m["return"].get("blocked")} for m in bd.get("ir_moves") or [] if m.get("return")]
+    out = []
+    for r in sorted(rets, key=lambda r: r["date"]):
+        name = r["player"]["name"]
+        if r.get("drop"):
+            step = f"Drop {r['drop']['name']}, then move him off IR."
+        elif r.get("blocked"):
+            step = "Choose a drop (every option is protected), then move him off IR."
+        else:
+            step = "Move him off IR into your open roster spot."
+        out.append({"kind": "watch", "text": f"Plan ahead: {_dow(r['date'])}: {name} is expected back. {step}",
+                    "why": "ESPN blocks every add while a healthy player sits on IR. Check his status that morning; "
+                           "if he is still out, leave him on IR.", "returns": r["date"]})
+    return out
+
+
+def returns_for_coverage(bd):
+    rets = list(bd.get("ir_returns_later") or []) + [
+        {"player": m, "date": m["return"]["date"], "drop": m["return"].get("drop")}
+        for m in bd.get("ir_moves") or [] if m.get("return")]
+    return [{"id": r["player"]["id"], "date": r["date"], "drop_id": (r.get("drop") or {}).get("id")}
+            for r in rets if not r.get("blocked")]
 
 
 def apply_coverage(wp, cov):
@@ -191,11 +258,25 @@ def fresh_brief_data(snap, bd):
     return bd, None
 
 
+def ir_text(p):
+    """'Move X to IR', plus the return day for a short stash (relay.matchup SHORT_STASH_DAYS)."""
+    r = p.get("return")
+    return sentence(f"Move {p['name']} to IR" + (f" (short stash: back {_dow(r['date'])})" if r else ""))
+
+
 def ir_why(p, row=None):
     """IR moves depend on ESPN's live designation, which can change after the data run (Kyrie, Oct 25 2026: listed
-    Out after a rest night, day-to-day by morning). Say so, and flag short rest designations that usually clear."""
+    Out after a rest night, day-to-day by morning). Say so, and flag short rest designations that usually clear.
+    A short stash (back within 2 days) also says the add into his spot is temporary and names the planned drop,
+    so the stash cannot quietly block adds on the day he is healthy again."""
     why = ("He is listed out; this frees a roster spot for a streamer. ESPN allows IR only while he shows Out. "
            "If ESPN shows him day-to-day, skip this and the add that depends on it.")
+    ret = p.get("return") if isinstance(p, dict) else None
+    if ret:
+        drop = (ret.get("drop") or {}).get("name")
+        plan = (f"drop {drop}, then move {p['name']} off IR" if drop else f"move {p['name']} off IR")
+        why = (f"Temporary: he is expected back {_dow(ret['date'])}, so the add into his spot is short-term. "
+               f"That morning, {plan}; a healthy player left on IR blocks every add. ") + why
     row = row or {}
     back = row.get("return_date") or ""
     tomorrow = (datetime.now(CT).date() + timedelta(days=1)).isoformat()
@@ -284,7 +365,8 @@ def strategy_actions(dec, inj, cfg):
 
 
 def strategy_text(dec):
-    return ([f"{p['name']} to IR" for p in dec.get("ir_players", []) if p] +
+    return (activation_moves({"ir_activations": dec.get("activations")})["text"] +
+            [f"{p['name']} to IR" for p in dec.get("ir_players", []) if p] +
             [f"add {m['add']['name']}" + (f" for {m['drop']['name']}" if m.get("drop") else "")
              for m in dec.get("moves", [])])
 
@@ -430,24 +512,30 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
     inj = {r["player_id"]: r for r in rows(snap / "injuries.csv")}
     lu = bd["lineup"]
 
+    wp, replanned = fresh_week_plan(snap, bd)
+    # which moves to make today: shared with the strategy lab's control (relay/moves.py), so the lab's `current`
+    # paper team makes exactly these moves. It also applies defer_idle_swap to every stream plan in wp.
+    # ESPN order: IR activations first (a healthy player on IR blocks every add), then IR moves, fills, the stream step.
+    sel = select_moves(bd, wp, plan)
+    bd["week_plan"] = wp   # the ledger logs the same plan the actions follow
+    wp_ok, plan_days, carry, step, top = sel["wp_ok"], sel["plan_days"], sel["carry"], sel["step"], sel["top"]
+    act_first = activation_actions(sel["activations"])
     actions = []
-    for p in bd.get("ir_moves", []):
-        actions.append({"kind": "ir", "text": sentence(f"Move {p['name']} to IR"), "why": ir_why(p, inj.get(p["id"]))})
-    for f in bd.get("fills", []):
+    stash = {p["name"]: p for p in sel["ir"] if p.get("return")}
+    for p in sel["ir"]:
+        actions.append({"kind": "ir", "text": ir_text(p), "why": ir_why(p, inj.get(p["id"]))})
+    for f in sel["fills"]:
         a = f["add"]
         where = (f"Then add {a['name']} ({a['team']}) to the spot that opens, only if the IR move went through"
                  if f.get("after_ir_move") else f"Add {a['name']} ({a['team']}) to your open roster spot")
         today = "plays today, " if f["plays_today"] else ""
         helps = ", ".join(f["helps"]) or "several categories"
-        actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"),
-                        "why": f"{today}{f['games_left']} games left this matchup; helps {helps}. "
-                               f"+{f['gain']:.2f} expected categories."})
-    wp, replanned = fresh_week_plan(snap, bd)
-    # which moves to make today: shared with the strategy lab's control (relay/moves.py), so the lab's `current`
-    # paper team makes exactly these moves. It also applies defer_idle_swap to every stream plan in wp.
-    sel = select_moves(bd, wp, plan)
-    bd["week_plan"] = wp   # the ledger logs the same plan the actions follow
-    wp_ok, plan_days, carry, step, top = sel["wp_ok"], sel["plan_days"], sel["carry"], sel["step"], sel["top"]
+        why = (f"{today}{f['games_left']} games left this matchup; helps {helps}. "
+               f"+{f['gain']:.2f} expected categories.")
+        held = stash.get(f.get("after_ir_move"))
+        if held:
+            why += f" Temporary: {held['name']} is due back {_dow(held['return']['date'])}."
+        actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"), "why": why})
     # Phase 3: relay/strategy.json names the strategy Mike approved. `current` is the logic above; any other
     # strategy decides today's moves itself (relay.strategies.real_decision) and replaces the actions so far.
     cfg = load_strategy()
@@ -459,10 +547,12 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                           "follow the current plan.")
         else:
             actions = strategy_actions(strat, inj, cfg)
+            act_first = activation_actions(strat.get("activations"))
             step, top, carry, plan_days = None, [], {}, []
             bd["strategy_moves"] = strat      # the ledger logs these moves
             if wp_ok:
-                cov = coverage_after(snap, bd["date"], strat["adds"], strat["drops"], strat["ir"], None, None)
+                cov = coverage_after(snap, bd["date"], strat["adds"], strat["drops"], strat["ir"], None, None,
+                                     strat.get("activate_ids", []), strat.get("activate_drop_ids", []))
                 apply_coverage(wp, cov)
     if step:
         where = (f"Add {step['occupant']} ({step['team']}), drop {step['drop']}" if step.get("drop")
@@ -479,8 +569,9 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
         by_date = {d["date"]: d.get("id") for d in plan_days}
         if d0.get("swap") and not step:          # today's plan swap is not one of today's actions
             by_date[d0["date"]] = cur_id
-        cov = coverage_after(snap, bd["date"], [f["add"]["id"] for f in bd.get("fills", [])], [],
-                             [p["id"] for p in bd.get("ir_moves", [])], cur_id, by_date)
+        cov = coverage_after(snap, bd["date"], [f["add"]["id"] for f in sel["fills"]], [],
+                             [p["id"] for p in sel["ir"]], cur_id, by_date,
+                             sel["activate_ids"], sel["activate_drop_ids"], returns_for_coverage(bd))
         apply_coverage(wp, cov)
     later = [d for d in plan_days[1:] if d["swap"]]
     light = [d for d in wp.get("days", [])[1:] if len(d["my_open_slots"]) >= 4] if wp_ok else []
@@ -492,6 +583,8 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                         "text": "Plan ahead: " + ("; ".join(parts) if parts else "no more streaming moves") + ".",
                         "why": ("Light days: " + ", ".join(thin) + ". " if thin else "") +
                                "Make each add in the morning, before the day's first tip."})
+    if not strat:
+        actions += return_actions(bd)
     for m in top:
         a, d = m["add"], m["drop"]
         today = "plays today, " if m["plays_today"] else ""
@@ -501,12 +594,14 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                                f"+{m['gain']:.2f} expected categories."})
     # The lineup card shows today's lineup AFTER the moves above, so it names the same players as the actions.
     ir_ids, add_ids, drop_ids, moves_txt = sel["ir_ids"], sel["add_ids"], sel["drop_ids"], sel["text"]
+    act_ids, act_drop_ids = sel["activate_ids"], sel["activate_drop_ids"]
     bench_ids = []
     if strat:
         ir_ids, add_ids, drop_ids = strat["ir"], strat["adds"], strat["drops"]
         moves_txt, bench_ids = strategy_text(strat), strat["bench"]
-    if add_ids or drop_ids or ir_ids or bench_ids:
-        after = lineup_after(snap, bd["date"], add_ids, drop_ids, ir_ids, bench_ids)
+        act_ids, act_drop_ids = strat.get("activate_ids", []), strat.get("activate_drop_ids", [])
+    if add_ids or drop_ids or ir_ids or bench_ids or act_ids:
+        after = lineup_after(snap, bd["date"], add_ids, drop_ids, ir_ids, bench_ids, act_ids, act_drop_ids)
         if after:
             lu = dict(after, after_moves=moves_txt)
             bd["lineup"] = lu   # the ledger logs the lineup the brief shows
@@ -526,7 +621,8 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
             first.append({"kind": "bench", "text": f"{p['name']} has a game but no open slot.",
                           "why": "Your starters with games rate higher in this matchup."})
     lab = lab_doc(bd["date"], teams)
-    actions = switch_actions(lab) + first + actions
+    # an IR activation is always the first action: ESPN refuses every add until it is done
+    actions = act_first + switch_actions(lab) + first + actions
     if lu.get("open_slots"):
         n = lu["open_slots"]
         room = bd.get("roster_room") or {}
@@ -563,6 +659,8 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
         "alternatives": [] if strat else [as_move(f) for f in bd.get("fill_alternatives", [])] + (
             [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
+        "ir_activations": strat.get("activations", []) if strat else bd.get("ir_activations", []),
+        "ir_returns_later": bd.get("ir_returns_later", []),
         "week": dict(week_doc(wp_doc, teams, plan), plan_date=replanned or bd.get("week_plan_date") or bd["date"],
                      strategy=cfg["active"]) if wp_ok else None,
         "next_opponent": next_opp_doc(wp_doc, teams, plan) if wp_ok else None,
@@ -588,7 +686,8 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
     doc["lab"] = lab
     # ids behind the lineup card, so tools/prebuild.py can rebuild the card for an alternative add
     doc["move_ids"] = {"add": [str(i) for i in add_ids], "drop": [str(i) for i in drop_ids],
-                       "ir": [str(i) for i in ir_ids], "bench": [str(i) for i in bench_ids]}
+                       "ir": [str(i) for i in ir_ids], "bench": [str(i) for i in bench_ids],
+                       "activate": [str(i) for i in act_ids], "activate_drop": [str(i) for i in act_drop_ids]}
     return doc, bd
 
 
@@ -631,6 +730,14 @@ def log_decisions(bd, kind, plan="daily"):
         new.append({"rec": "start", "player_id": p["id"], "name": p["name"], "team": p["team"]})
     for p in bd["lineup"]["bench"]:
         new.append({"rec": "bench", "player_id": p["id"], "name": p["name"], "team": p["team"], "note": p.get("why", "")})
+    acts = (bd.get("strategy_moves") or {}).get("activations") if bd.get("strategy_moves") else bd.get("ir_activations")
+    for a in acts or []:
+        d = a.get("drop") or {}
+        new.append({"rec": "ir_activate", "player_id": a["player"]["id"], "name": a["player"]["name"],
+                    "team": a["player"]["team"], "related_id": d.get("id", ""),
+                    "related_name": d.get("name") or ("choice needed" if a.get("blocked") else "open spot"),
+                    "gain": a.get("gain") if a.get("gain") is not None else "",
+                    "note": "blocked: every drop protected" if a.get("blocked") else ""})
     fill_recs = () if bd.get("strategy_moves") else ((bd.get("fills", []), "add"), (bd.get("fill_alternatives", []), "pass"))
     for recs, rec in fill_recs:
         for f in recs:
@@ -645,7 +752,9 @@ def log_decisions(bd, kind, plan="daily"):
                     "note": f"strategy:{strat['strategy']}"})
     if not strat and wp.get("stream_plan") and not wp.get("error") and wp["stream_plan"]["plans"][plan].get("days"):
         d0 = wp["stream_plan"]["plans"][plan]["days"][0]
-        if d0["swap"] and d0.get("id") not in {f["add"]["id"] for f in bd.get("fills", [])}:   # same rule as build()
+        am = activation_moves(bd)
+        if d0["swap"] and d0.get("id") not in {f["add"]["id"] for f in bd.get("fills", [])} \
+                and not am["blocked"] and str(d0.get("drop_id") or "") not in am["drop_ids"]:   # same rule as select_moves
             new.append({"rec": "add", "player_id": d0["id"], "name": d0["occupant"], "team": d0["team"],
                         "related_id": d0.get("drop_id") or "", "related_name": d0.get("drop") or "open spot",
                         "gain": d0["day_gain"], "note": "week_plan"})

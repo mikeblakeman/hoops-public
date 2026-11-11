@@ -72,6 +72,8 @@ def lineup_options(snap, doc):
     import brief
     ids = doc.get("move_ids") or {}
     adds, drops, irs, bench = (list(ids.get(k) or []) for k in ("add", "drop", "ir", "bench"))
+    # today's IR activations stay in every option: they come before any add (ESPN blocks adds until then)
+    act, act_drop = (list(ids.get(k) or []) for k in ("activate", "activate_drop"))
     out = {}
     primary = [m for m in doc.get("moves") or [] if (m.get("add") or {}).get("id")]
     for alt in doc.get("alternatives") or []:
@@ -82,14 +84,14 @@ def lineup_options(snap, doc):
         if not a_id or not base or a_id in out:
             continue
         new_adds = [a_id if x == str(base["add"]["id"]) else x for x in adds]
-        card = brief.lineup_after(snap, doc["date"], new_adds, drops, irs, bench)
+        card = brief.lineup_after(snap, doc["date"], new_adds, drops, irs, bench, act, act_drop)
         if card:
             out[a_id] = dict(card, after_moves=[f"add {alt['add'].get('name')}" +
                                                 (f" for {alt['drop'].get('name')}" if a_drop else "")])
     for m in primary:
         p_id, d_id = str(m["add"]["id"]), str((m.get("drop") or {}).get("id") or "")
         card = brief.lineup_after(snap, doc["date"], [x for x in adds if x != p_id],
-                                  [x for x in drops if x != d_id], irs, bench)
+                                  [x for x in drops if x != d_id or x in act_drop], irs, bench, act, act_drop)
         if card:
             out[f"hold:{p_id}"] = dict(card, after_moves=[f"skip adding {m['add'].get('name')}"])
     return out

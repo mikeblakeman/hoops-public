@@ -34,6 +34,15 @@ Follow `playbook/common.md` first.
    why. Edit BOTH the action and that day in `week.stream_plan.plans[<plan_used>].days` (`occupant`, `team`, `drop`,
    `swap`) so the Week ahead card shows the same players; never leave a note explaining a mismatch. If news changes
    any other recommendation (a starter ruled out), edit `actions` and `lineup` together and say why.
+   IR activations come first. A healthy player in an IR slot makes ESPN refuse EVERY add, so when
+   `ir_activations` is not empty the brief's first action is "Drop X, then move Y off IR" (marked `activate`).
+   Never put an add ahead of it, and never write an add that needs a roster spot while a healthy player sits on IR.
+   Before writing actions, check that each player in `lineup.ir` is still out (news or ESPN status). If one is
+   healthy and the brief has no activation for him (the data run predates the news), make the activation the first
+   action, pick the drop the same way (a non-protected player; ask `tools/ask.py` in interactive sessions), and
+   cancel any add that the drop would need. If the activation says "your call" (every drop is a keeper or top 10),
+   leave the adds out until Mike chooses. "Plan ahead: <day>: X is expected back" actions name the drop for the
+   day an IR player returns; an IR move marked "short stash" means the add into his spot is temporary.
    IR moves: an `ir` action is only valid while ESPN shows the player Out. Check his current status in the news
    check (rest-night designations often flip to day-to-day by morning). If he is day-to-day, remove the IR action
    and the open-spot add that depends on it, and fix `lineup` to match.

@@ -15,6 +15,8 @@ Options (any command)
   --taken NAME     rostered by another team since the data run (repeat for each)
   --added NAME     Mike added him since the data run (repeat)
   --dropped NAME   Mike dropped him since the data run (repeat)
+  --activate NAME  Mike moved him off IR since the data run (repeat); he keeps his acquisition, so a drafted or
+                   traded player never becomes the streaming spot. Pair it with --dropped for the player he cut.
   --for NAME       (fa, alt) compare against dropping this player instead of the streaming spot's player
   --pos P          (fa) only players eligible at P (PG, SG, SF, PF, C, G, F)
   --week           (fa) include players with no game on the day but games later this week
@@ -122,7 +124,9 @@ class Ctx:
         self.D = MU.Data(self.snap)
         self.X = WP.Extra(self.snap)
         self.day = parse_day(a.date, self.now)
-        self.changed = bool(a.added or a.dropped or a.taken)
+        a.activate = getattr(a, "activate", None)
+        self.changed = bool(a.added or a.dropped or a.taken or a.activate)
+        self.activations = []
         for q in a.taken or []:
             p = self.find(q)
             self.D.vals[p["id"]] = dict(self.D.vals[p["id"]], status="ONTEAM", on_team_id="?")
@@ -130,13 +134,61 @@ class Ctx:
             p = self.find(q)
             self.D.roster = [r for r in self.D.roster if not (r["team_id"] == self.D.my_tid and r["player_id"] == p["id"])]
             self.D.vals[p["id"]] = dict(self.D.vals[p["id"]], status="DROPPED")
+        activate = list(a.activate or [])
         for q in a.added or []:
             p = self.find(q)
+            mine = next((r for r in self.D.roster if r["team_id"] == self.D.my_tid and r["player_id"] == p["id"]), None)
+            if mine is not None:
+                if mine.get("slot") == "IR":
+                    # he was already Mike's: moving him off IR is an activation, not a pickup (an "add" would
+                    # make a drafted player the streaming spot)
+                    self.notes.append(f"{p['name']} is already on your roster (IR), so he was moved off IR rather "
+                                      "than added.")
+                    activate.append(q)
+                continue
             self.D.roster = [r for r in self.D.roster if r["player_id"] != p["id"]]
             self.D.roster.append({"team_id": self.D.my_tid, "player_id": p["id"], "name": p["name"], "slot": "BE",
                                   "acquisition_type": "ADD", "acquired_ct": self.now.isoformat(timespec="minutes"),
                                   "injury_status": self.D.vals[p["id"]].get("injury_status", "")})
             self.D.vals[p["id"]] = dict(self.D.vals[p["id"]], status="ONTEAM", on_team_id=self.D.my_tid)
+        for q in activate:
+            p = self.find(q)
+            row = next((r for r in self.D.roster if r["team_id"] == self.D.my_tid and r["player_id"] == p["id"]), None)
+            if row is None:
+                raise SystemExit(f"{p['name']} is not on your roster.")
+            if row.get("slot") == "IR":
+                # same move the engine makes: to the bench, acquisition type and time unchanged
+                self.D.roster = [dict(r, slot="BE") if r is row else r for r in self.D.roster]
+        if activate:
+            ls = self.D.settings.get("lineup_slots") or {}
+            cap = sum(int(v) for k, v in ls.items() if k != "IR")
+            n = sum(1 for r in self.D.roster if r["team_id"] == self.D.my_tid and r.get("slot") != "IR")
+            if n > cap:
+                self.notes.append(f"That leaves {n} active players; ESPN allows {cap}, so someone must be dropped "
+                                  "first. Pass --dropped NAME for the player you cut.")
+        self._auto_activate()
+
+    def _auto_activate(self):
+        """The brief's first move when a healthy player sits on IR (relay.matchup.plan_activations): apply it so
+        today, fa and alt answer on the same roster the brief plans for, and say so."""
+        try:
+            acts, D2, _c = MU.plan_activations(self.D, self.snap, self.day)
+        except Exception as e:  # noqa: BLE001  never block a quick answer
+            self.notes.append(f"IR activation check skipped ({type(e).__name__}).")
+            return
+        self.activations = acts
+        for x in acts:
+            n = x["player"]["name"]
+            if x.get("blocked"):
+                opts = " or ".join(o["name"] for o in x.get("options") or []) or "someone"
+                self.notes.append(f"{n} is healthy but on IR, and every possible drop is protected. Choose: drop "
+                                  f"{opts}, then move him off IR. ESPN blocks every add until then.")
+            else:
+                how = f"drop {x['drop']['name']}, then move him off IR" if x.get("drop") else "move him off IR"
+                self.notes.append(f"{n} is healthy but on IR. The brief's first move: {how} (ESPN blocks every add "
+                                  "until then). These answers assume you did; pass --activate if you already have.")
+        if any(not x.get("blocked") for x in acts):
+            self.D = D2
 
     def _pending(self, a):
         """Trades in ESPN review: the data job's snapshots/pending_trades.json plus the optional chat-kept file."""
@@ -559,6 +611,7 @@ def main(argv=None):
     ap.add_argument("--taken", action="append")
     ap.add_argument("--added", action="append")
     ap.add_argument("--dropped", action="append")
+    ap.add_argument("--activate", action="append")
     ap.add_argument("--for", dest="for_name")
     ap.add_argument("--pos")
     ap.add_argument("--week", action="store_true")
