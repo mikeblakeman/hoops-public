@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-11-12T09:58-06:00",
- "data_run_ct": "2026-11-12T09:58-06:00",
+ "generated_ct": "2026-11-12T11:05-06:00",
+ "data_run_ct": "2026-11-12T11:05-06:00",
  "date": "2026-11-12",
  "matchup_period": 4,
  "period": {
@@ -766,62 +766,6 @@
   },
   {
    "add": {
-    "id": "4278594",
-    "name": "Naji Marshall",
-    "team": "DAL",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 217,
-    "matchup_value": 0.1632,
-    "line": {
-     "PTS": 10.25,
-     "REB": 3.37,
-     "AST": 2.98,
-     "STL": 0.94,
-     "BLK": 0.18,
-     "3PM": 0.77,
-     "DD": 0.01
-    },
-    "helps": [
-     "AST",
-     "REB",
-     "STL"
-    ]
-   },
-   "gain": 0.314,
-   "games_left": 3,
-   "plays_today": true,
-   "helps": [
-    "AST",
-    "REB",
-    "STL"
-   ],
-   "drop": {
-    "id": "5105623",
-    "name": "Kel'el Ware",
-    "team": "MIL",
-    "pos": "C",
-    "inj": "",
-    "rank": 185,
-    "matchup_value": 0.2044,
-    "line": {
-     "PTS": 8.96,
-     "REB": 7.4,
-     "AST": 0.75,
-     "STL": 0.57,
-     "BLK": 1.1,
-     "3PM": 0.77,
-     "DD": 0.25
-    },
-    "helps": [
-     "REB",
-     "DD",
-     "STL"
-    ]
-   }
-  },
-  {
-   "add": {
     "id": "4278402",
     "name": "Jordan Goodwin",
     "team": "PHO",
@@ -851,6 +795,62 @@
     "STL",
     "3PM",
     "REB"
+   ],
+   "drop": {
+    "id": "5105623",
+    "name": "Kel'el Ware",
+    "team": "MIL",
+    "pos": "C",
+    "inj": "",
+    "rank": 185,
+    "matchup_value": 0.2044,
+    "line": {
+     "PTS": 8.96,
+     "REB": 7.4,
+     "AST": 0.75,
+     "STL": 0.57,
+     "BLK": 1.1,
+     "3PM": 0.77,
+     "DD": 0.25
+    },
+    "helps": [
+     "REB",
+     "DD",
+     "STL"
+    ]
+   }
+  },
+  {
+   "add": {
+    "id": "5211175",
+    "name": "Zaccharie Risacher",
+    "team": "DAL",
+    "pos": "SF",
+    "inj": "",
+    "rank": 262,
+    "matchup_value": 0.1511,
+    "line": {
+     "PTS": 7.67,
+     "REB": 4.03,
+     "AST": 1.21,
+     "STL": 0.94,
+     "BLK": 0.64,
+     "3PM": 1.06,
+     "DD": 0.0
+    },
+    "helps": [
+     "REB",
+     "STL",
+     "3PM"
+    ]
+   },
+   "gain": 0.265,
+   "games_left": 3,
+   "plays_today": true,
+   "helps": [
+    "REB",
+    "STL",
+    "3PM"
    ],
    "drop": {
     "id": "5105623",
@@ -2067,14 +2067,14 @@
   "next_opponent": null,
   "trades": {
    "baseline_cats_per_week": {
-    "1": 5.82,
-    "2": 6.12,
-    "3": 7.05,
-    "4": 8.89,
-    "5": 5.74,
-    "6": 4.91,
-    "7": 6.31,
-    "8": 3.16
+    "1": 5.95,
+    "2": 5.91,
+    "3": 6.66,
+    "4": 8.96,
+    "5": 5.87,
+    "6": 5.05,
+    "7": 6.42,
+    "8": 3.19
    },
    "protected_keepers": [
     "Anthony Davis",
@@ -2083,34 +2083,8 @@
     "Kawhi Leonard",
     "Victor Wembanyama"
    ],
-   "n_candidates": 15,
+   "n_candidates": 16,
    "top": [
-    {
-     "partner_team_id": "6",
-     "give": [
-      {
-       "id": "3907497",
-       "name": "Dejounte Murray",
-       "pos": "PG/SG",
-       "team": "NOP",
-       "rank": 81,
-       "age": "30"
-      }
-     ],
-     "get": {
-      "id": "4684742",
-      "name": "Ausar Thompson",
-      "pos": "SF/PF",
-      "team": "DET",
-      "rank": 119,
-      "age": "23"
-     },
-     "my_cats_per_week": 0.125,
-     "their_cats_per_week": 0.297,
-     "value_given": -3.1,
-     "value_got": -6.4,
-     "gets_extra_spot": false
-    },
     {
      "partner_team_id": "7",
      "give": [
@@ -2131,10 +2105,36 @@
       "rank": 86,
       "age": "23"
      },
-     "my_cats_per_week": 0.123,
-     "their_cats_per_week": 0.355,
+     "my_cats_per_week": 0.136,
+     "their_cats_per_week": 0.375,
      "value_given": -1.9,
      "value_got": -3.6,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "6",
+     "give": [
+      {
+       "id": "3907497",
+       "name": "Dejounte Murray",
+       "pos": "PG/SG",
+       "team": "NOP",
+       "rank": 81,
+       "age": "30"
+      }
+     ],
+     "get": {
+      "id": "4684742",
+      "name": "Ausar Thompson",
+      "pos": "SF/PF",
+      "team": "DET",
+      "rank": 119,
+      "age": "23"
+     },
+     "my_cats_per_week": 0.138,
+     "their_cats_per_week": 0.295,
+     "value_given": -3.1,
+     "value_got": -6.4,
      "gets_extra_spot": false
     },
     {
@@ -2157,10 +2157,36 @@
       "rank": 19,
       "age": "36"
      },
-     "my_cats_per_week": 0.138,
-     "their_cats_per_week": 0.265,
+     "my_cats_per_week": 0.143,
+     "their_cats_per_week": 0.276,
      "value_given": 3.3,
      "value_got": 3.9,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "3",
+     "give": [
+      {
+       "id": "4395628",
+       "name": "Zion Williamson",
+       "pos": "PF/C",
+       "team": "NOP",
+       "rank": 26,
+       "age": "26"
+      }
+     ],
+     "get": {
+      "id": "3155942",
+      "name": "Domantas Sabonis",
+      "pos": "PF/C",
+      "team": "SAC",
+      "rank": 29,
+      "age": "30"
+     },
+     "my_cats_per_week": 0.101,
+     "their_cats_per_week": 0.308,
+     "value_given": 2.4,
+     "value_got": 2.0,
      "gets_extra_spot": false
     },
     {
@@ -2184,90 +2210,12 @@
       "age": "23"
      },
      "my_cats_per_week": 0.145,
-     "their_cats_per_week": 0.187,
+     "their_cats_per_week": 0.207,
      "value_given": -0.3,
      "value_got": -3.6,
      "gets_extra_spot": false
     },
     {
-     "partner_team_id": "3",
-     "give": [
-      {
-       "id": "4395628",
-       "name": "Zion Williamson",
-       "pos": "PF/C",
-       "team": "NOP",
-       "rank": 26,
-       "age": "26"
-      }
-     ],
-     "get": {
-      "id": "3155942",
-      "name": "Domantas Sabonis",
-      "pos": "PF/C",
-      "team": "SAC",
-      "rank": 29,
-      "age": "30"
-     },
-     "my_cats_per_week": 0.07,
-     "their_cats_per_week": 0.295,
-     "value_given": 2.4,
-     "value_got": 2.0,
-     "gets_extra_spot": false
-    },
-    {
-     "partner_team_id": "3",
-     "give": [
-      {
-       "id": "4396907",
-       "name": "Darius Garland",
-       "pos": "PG",
-       "team": "LAC",
-       "rank": 52,
-       "age": "26"
-      }
-     ],
-     "get": {
-      "id": "1966",
-      "name": "LeBron James",
-      "pos": "SF/PF",
-      "team": "PHL",
-      "rank": 61,
-      "age": "41"
-     },
-     "my_cats_per_week": 0.179,
-     "their_cats_per_week": 0.005,
-     "value_given": -0.3,
-     "value_got": -1.2,
-     "gets_extra_spot": false
-    },
-    {
-     "partner_team_id": "2",
-     "give": [
-      {
-       "id": "4396907",
-       "name": "Darius Garland",
-       "pos": "PG",
-       "team": "LAC",
-       "rank": 52,
-       "age": "26"
-      }
-     ],
-     "get": {
-      "id": "3934719",
-      "name": "OG Anunoby",
-      "pos": "SF/PF",
-      "team": "NYK",
-      "rank": 70,
-      "age": "29"
-     },
-     "my_cats_per_week": 0.143,
-     "their_cats_per_week": 0.05,
-     "value_given": -0.3,
-     "value_got": -2.5,
-     "gets_extra_spot": false
-    },
-    {
      "partner_team_id": "1",
      "give": [
       {
@@ -2287,9 +2235,35 @@
       "rank": 79,
       "age": "22"
      },
-     "my_cats_per_week": 0.067,
-     "their_cats_per_week": 0.201,
+     "my_cats_per_week": 0.09,
+     "their_cats_per_week": 0.226,
      "value_given": -1.9,
+     "value_got": -3.0,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "1",
+     "give": [
+      {
+       "id": "4396907",
+       "name": "Darius Garland",
+       "pos": "PG",
+       "team": "LAC",
+       "rank": 52,
+       "age": "26"
+      }
+     ],
+     "get": {
+      "id": "5105565",
+      "name": "Donovan Clingan",
+      "pos": "C",
+      "team": "POR",
+      "rank": 79,
+      "age": "22"
+     },
+     "my_cats_per_week": 0.138,
+     "their_cats_per_week": 0.075,
+     "value_given": -0.3,
      "value_got": -3.0,
      "gets_extra_spot": false
     },
@@ -2313,14 +2287,14 @@
       "rank": 70,
       "age": "29"
      },
-     "my_cats_per_week": 0.093,
-     "their_cats_per_week": 0.135,
+     "my_cats_per_week": 0.108,
+     "their_cats_per_week": 0.132,
      "value_given": -1.9,
      "value_got": -2.5,
      "gets_extra_spot": false
     },
     {
-     "partner_team_id": "1",
+     "partner_team_id": "2",
      "give": [
       {
        "id": "4396907",
@@ -2332,17 +2306,17 @@
       }
      ],
      "get": {
-      "id": "5105565",
-      "name": "Donovan Clingan",
-      "pos": "C",
-      "team": "POR",
-      "rank": 79,
-      "age": "22"
+      "id": "3934719",
+      "name": "OG Anunoby",
+      "pos": "SF/PF",
+      "team": "NYK",
+      "rank": 70,
+      "age": "29"
      },
-     "my_cats_per_week": 0.128,
-     "their_cats_per_week": 0.052,
+     "my_cats_per_week": 0.144,
+     "their_cats_per_week": 0.041,
      "value_given": -0.3,
-     "value_got": -3.0,
+     "value_got": -2.5,
      "gets_extra_spot": false
     },
     {
@@ -2365,8 +2339,8 @@
       "rank": 103,
       "age": "21"
      },
-     "my_cats_per_week": 0.084,
-     "their_cats_per_week": 0.087,
+     "my_cats_per_week": 0.106,
+     "their_cats_per_week": 0.105,
      "value_given": -1.0,
      "value_got": -5.1,
      "gets_extra_spot": false
@@ -2375,26 +2349,52 @@
      "partner_team_id": "2",
      "give": [
       {
-       "id": "3907497",
-       "name": "Dejounte Murray",
-       "pos": "PG/SG",
-       "team": "NOP",
-       "rank": 81,
-       "age": "30"
+       "id": "6606",
+       "name": "Damian Lillard",
+       "pos": "PG",
+       "team": "POR",
+       "rank": 64,
+       "age": "36"
       }
      ],
      "get": {
-      "id": "3908845",
-      "name": "John Collins",
-      "pos": "PF/C",
-      "team": "DET",
-      "rank": 112,
-      "age": "29"
+      "id": "5041935",
+      "name": "Cameron Boozer",
+      "pos": "PF",
+      "team": "MEM",
+      "rank": 68,
+      "age": "19"
      },
-     "my_cats_per_week": 0.05,
-     "their_cats_per_week": 0.106,
-     "value_given": -3.1,
-     "value_got": -6.0,
+     "my_cats_per_week": 0.095,
+     "their_cats_per_week": 0.031,
+     "value_given": -1.9,
+     "value_got": -2.4,
+     "gets_extra_spot": false
+    },
+    {
+     "partner_team_id": "3",
+     "give": [
+      {
+       "id": "4396907",
+       "name": "Darius Garland",
+       "pos": "PG",
+       "team": "LAC",
+       "rank": 52,
+       "age": "26"
+      }
+     ],
+     "get": {
+      "id": "4431671",
+      "name": "Jaden McDaniels",
+      "pos": "SF/PF",
+      "team": "MIN",
+      "rank": 98,
+      "age": "26"
+     },
+     "my_cats_per_week": 0.071,
+     "their_cats_per_week": 0.029,
+     "value_given": -0.3,
+     "value_got": -4.4,
      "gets_extra_spot": false
     }
    ]
