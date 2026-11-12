@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-11T06:59-06:00",
+ "updated_ct": "2026-11-12T08:00-06:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 4,
-  "days_scored": 2,
+  "days_scored": 3,
   "opponent_team_id": "5",
   "opponent": "Team 5"
  },
- "decided": "2026-11-11",
+ "decided": "2026-11-12",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 8.5,
-    "days": 2
+    "cats_won": 6.5,
+    "days": 3
    },
    "season": {
     "weeks": 2,
@@ -32,11 +32,11 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.67,
+   "adds_per_day": 0.68,
    "status": "control",
    "today": [
-    "Move Josh Hart to IR",
-    "Add Daniel Gafford"
+    "Drop Damian Lillard, then move Josh Hart off IR",
+    "Add Ausar Thompson for Daniel Gafford"
    ]
   },
   {
@@ -46,8 +46,8 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 8.5,
-    "days": 2
+    "cats_won": 7.0,
+    "days": 3
    },
    "season": {
     "weeks": 2,
@@ -58,11 +58,15 @@
     "smooth_edge": 1.505,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.0,
+   "adds_per_day": 2.91,
    "status": "ahead",
    "today": [
-    "Move Josh Hart to IR",
-    "Add Tari Eason"
+    "Drop Tari Eason, then move Josh Hart off IR",
+    "Add Ausar Thompson for Damian Lillard",
+    "Add Jordan Goodwin for Kel'el Ware",
+    "Add Jonathan Kuminga for Ryan Rollins",
+    "Add Santi Aldama for Josh Hart",
+    "Add Jamal Shead for Zach LaVine"
    ]
   },
   {
@@ -72,8 +76,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 5.5,
-    "days": 2
+    "cats_won": 6.0,
+    "days": 3
    },
    "season": {
     "weeks": 2,
@@ -84,11 +88,12 @@
     "smooth_edge": 0.984,
     "worst_week": 0.5
    },
-   "adds_per_day": 1.62,
+   "adds_per_day": 1.59,
    "status": "ahead",
    "today": [
-    "Move Josh Hart to IR",
-    "Add Tari Eason"
+    "Drop Damian Lillard, then move Josh Hart off IR",
+    "Add Santi Aldama for Tari Eason",
+    "Add Walter Clayton Jr. for Kel'el Ware"
    ]
   },
   {
@@ -98,8 +103,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 8.5,
-    "days": 2
+    "cats_won": 6.5,
+    "days": 3
    },
    "season": {
     "weeks": 2,
@@ -110,11 +115,12 @@
     "smooth_edge": 0.358,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.29,
+   "adds_per_day": 1.27,
    "status": "ahead",
    "today": [
-    "Move Josh Hart to IR",
-    "Add Daniel Gafford"
+    "Drop Damian Lillard, then move Josh Hart off IR",
+    "Add Ausar Thompson for Daniel Gafford",
+    "Spot B: add Jamal Shead for Kel'el Ware"
    ]
   },
   {
@@ -125,7 +131,7 @@
    "is_control": false,
    "week": {
     "cats_won": 6.0,
-    "days": 2
+    "days": 3
    },
    "season": {
     "weeks": 2,
@@ -136,7 +142,7 @@
     "smooth_edge": -0.988,
     "worst_week": -5.0
    },
-   "adds_per_day": 0.43,
+   "adds_per_day": 0.41,
    "status": "behind",
    "today": []
   },
@@ -147,8 +153,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 8.5,
-    "days": 2
+    "cats_won": 7.0,
+    "days": 3
    },
    "season": {
     "weeks": 2,
