@@ -91,10 +91,6 @@ def week_doc(wp, teams=None, plan="daily"):
     """The brief's 'week ahead' block: coverage by day, streaming plan, trade ideas.
     `plan_used` names the stream plan the actions follow; the page's week card draws that same plan."""
     teams = teams or {}
-    trades = []
-    for t in (wp.get("trades") or {}).get("top", [])[:5]:
-        pid = str(t["partner_team_id"])
-        trades.append(dict(t, partner=(teams.get(pid) or {}).get("name") or f"Team {pid}"))
     return {
         "coverage": [{k: d[k] for k in ("date", "nba_games", "my_starters", "my_open_slots", "my_no_slot",
                                          "opp_starters", "opp_open_slots")} for d in wp.get("days", [])],
@@ -103,8 +99,29 @@ def week_doc(wp, teams=None, plan="daily"):
         "banked_past_days_at_projection": wp.get("banked_past_days_at_projection"),
         "plan_used": plan,
         "stream_plan": wp["stream_plan"],
-        "trades": trades,
     }
+
+
+def trades_doc(wp, teams=None):
+    """The brief's Trades card (relay/weekplan.py trade_search): deals that clearly help Mike and the partner.
+    `ideas` passed both bars; `near` are the closest deals that missed one, shown only when there are no ideas."""
+    teams = teams or {}
+    tr = wp.get("trades") or {}
+    if not isinstance(tr, dict) or tr.get("error"):
+        return {"error": (tr or {}).get("error") if isinstance(tr, dict) else "no trade search", "ideas": [], "near": []}
+    name = lambda pid: (teams.get(str(pid)) or {}).get("name") or f"Team {pid}"  # noqa: E731
+    named = lambda xs: [dict(t, partner=name(t["partner_team_id"])) for t in xs]  # noqa: E731
+    return {"ideas": named(tr.get("top") or []), "near": named(tr.get("near") or []),
+            "bar": tr.get("bar"), "horizon": tr.get("horizon"), "n_checked": tr.get("n_checked"),
+            "n_candidates": tr.get("n_candidates"), "protected_keepers": tr.get("protected_keepers") or []}
+
+
+def _keep_trades(wp, old):
+    """Trade ideas score the next matchups, not today, so a same-snapshot rebuild reuses the data job's search
+    (it takes several seconds) instead of running it again."""
+    if wp is not None and (old or {}).get("trades") is not None:
+        wp["trades"] = old["trades"]
+    return wp
 
 
 def fresh_week_plan(snap, bd):
@@ -121,7 +138,7 @@ def fresh_week_plan(snap, bd):
         from relay import matchup, weekplan
         D = matchup.Data(snap)
         _acts, D, _ctx = matchup.plan_activations(D, snap, _date.fromisoformat(today))
-        wp = weekplan.plan(snap, today, D)
+        wp = _keep_trades(weekplan.plan(snap, today, D, with_trades=False), bd.get("week_plan"))
         if wp.get("stream_plan") and not wp.get("error"):
             return wp, today
     except Exception:  # noqa: BLE001
@@ -274,9 +291,11 @@ def fresh_brief_data(snap, bd):
         import sys
         sys.path.insert(0, str(ROOT))
         from relay import matchup
-        nb = matchup.build(snap, today)
+        nb = matchup.build(snap, today, with_trades=False)
         if nb.get("lineup") and not nb.get("error"):
             old = bd.get("week_plan") or {}
+            if isinstance(nb.get("week_plan"), dict) and not nb["week_plan"].get("error"):
+                _keep_trades(nb["week_plan"], old)
             if (nb.get("week_plan") or {}).get("error") and old.get("stream_plan") and not old.get("error"):
                 # planner failed on the rebuild: keep the stored plan, minus the days already played
                 nb["week_plan"], nb["week_plan_date"] = _drop_past_days(old, today.isoformat()), bd["date"]
@@ -706,6 +725,7 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
         "week": dict(week_doc(wp_doc, teams, plan), plan_date=replanned or bd.get("week_plan_date") or bd["date"],
                      strategy=cfg["active"]) if wp_ok else None,
         "next_opponent": next_opp_doc(wp_doc, teams, plan) if wp_ok else None,
+        "trades": trades_doc(wp or {}, teams),
         "strategy": {"active": cfg["active"], "name": strategy_name(cfg["active"]), "since": cfg["since"],
                      "previous": cfg["previous"], "followed": cfg["active"] if (strat or cfg["active"] == "current")
                      else "current"},

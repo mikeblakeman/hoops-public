@@ -13,10 +13,13 @@ Follow `playbook/common.md` first.
    brief.py rebuilds EVERY section (lineup, odds, moves, week plan) for today from that data and adds a "Data warning"
    note; do not add your own notes about stale cards. A planned swap that adds nothing on its first day is moved to
    the day it starts paying off.
-1b. Week plan: `out/brief.json` has a `week` block (day-by-day slot coverage, the streaming-spot plan, trade ideas) built
+1b. Week plan: `out/brief.json` has a `week` block (day-by-day slot coverage, the streaming-spot plan) built
    by `relay/weekplan.py`. The action marked "Week plan" is today's call for the streaming spot; the "Plan ahead"
    action lists the later adds and the light days. The plan replaces the engine's single-day swap moves. Plan adds are
-   made in the morning, before the day's first tip. Do not invent trades: only report `week.trades`.
+   made in the morning, before the day's first tip. Trade ideas live in their own `trades` block (the page's Trades
+   card): `trades.ideas` passed both bars (clearly helps Mike and clearly helps the partner), `trades.near` are the
+   closest misses. Do not invent trades and do not edit this block; if news rules out a player in an idea for weeks
+   (new long injury), add one note saying that idea is off until he returns.
 1c. Next opponent (last 3 days of a matchup only): `out/brief.json` has a `next_opponent` block (forecast vs next
    week's opponent, games by day, how they have played, their key players and injuries) and the page shows it as the
    "Next opponent" card. Rule (Mike, 2026-10-24): this week comes first. The only next-week move is the streaming
@@ -64,8 +67,9 @@ Follow `playbook/common.md` first.
    - `headline`: one sentence on what matters most today (mention any game that tips before 6 PM Central).
    - `summary`: two or three sentences on the matchup state and the plan, including any light day ahead (a day with 4+
      empty slots) and the next planned add.
-   - Mondays and the first day of a matchup: add one note with the best `week.trades` idea (partner, who goes, who comes,
-     cats per week for each side, ages). Trades are Mike's call; never imply they are urgent.
+   - Mondays and the first day of a matchup: if `trades.ideas` is not empty, mention the best idea in one summary
+     sentence (partner, who goes, who comes). The Trades card has the details. Trades are Mike's call; never imply
+     they are urgent.
    - `news`: `[{player, text, source, url}]`, only items that affect a decision.
    - `notes`: keep any line that starts with "Data warning" (the data run behind the brief is old); say so in the summary too.
 4b. Strategy lab: `out/brief.json` already has `lab` from the data job, and `strategy` says which strategy the actions

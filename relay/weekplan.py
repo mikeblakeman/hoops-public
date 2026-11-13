@@ -9,8 +9,8 @@ today's lineup. This module adds the day-by-day view:
   (dynamic program over days; a swap costs SWAP_COST categories; a dropped player
   is not re-added). Two plans: "daily" (chase every gain) and "low_effort".
   A second streaming spot is evaluated by freeing the cheapest rank 60+ non-keeper.
-- trades: league-wide 1-for-1 and 2-for-1 search, scored as each side's expected
-  category wins per week over the next two matchup periods.
+- trades: league-wide 1-for-1, 2-for-1, 1-for-2 and 2-for-2 search, scored as each side's expected
+  category wins per week over the next three matchup periods; only deals that clearly help both sides reach `top`.
 
 Differences from matchup.py: availability is by day (injury return dates from
 injuries.csv) instead of one flat factor, and days of the current matchup that
@@ -186,17 +186,47 @@ def dp_path(sps, gain, top, occ_id, swap_cost):
 
 
 # ------------------------------------------------------------------ trades
-def trade_search(D, X, top_n=12):
+# Trade ideas for the brief's Trades card. Every 1-for-1, 2-for-1, 1-for-2 and 2-for-2 deal with each other team is
+# scored as each side's expected categories won per week against the rest of the league over the next
+# TRADE_PERIODS matchups. Only deals that clearly help Mike (TRADE_SHOW_MIN) AND clearly help the partner
+# (TRADE_PARTNER_MIN) reach `top`; everything else that helps both a little is counted and the best of it is kept
+# in `near` so the card can say how close the search came.
+TRADE_PERIODS = 3          # matchups scored (the ones after this one)
+TRADE_TARGETS = 14         # each partner's best players considered
+TRADE_SHOW_MIN = 0.25      # cats per week for Mike before an idea counts as significant
+TRADE_PARTNER_MIN = 0.10   # cats per week for the partner: the offer must clearly help them too
+TRADE_FAIR = 0.85          # the partner gets at least this share of the value over replacement they give up ...
+TRADE_OVERPAY = (1.6, 1.5) # ... and Mike never gives more than 1.6x + 1.5 of the value he gets
+TRADE_YOUNG = 24           # age at or under which a player carries keeper value (4 keepers in 2027 and 2028)
+
+
+def _vorp(D, p):
+    """Value over replacement per game, floored at 0: with unlimited adds a replacement-level player is free."""
+    return max(MU._num((D.vals.get(p["id"]) or {}).get("vorp_pg"), 0.0), 0.0)
+
+
+def _age(p):
+    try:
+        return int(float(p.get("age") or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def trade_search(D, X, top_n=6, periods=TRADE_PERIODS):
     rows = sorted(D.cal, key=lambda r: int(r["matchup_period"]))
     cur = int(D.status.get("current_matchup_period") or 1)
-    future = [r for r in rows if int(r["matchup_period"]) > cur][:2]
+    future = [r for r in rows if int(r["matchup_period"]) > cur][:periods]
     hz = [sp for r in future for sp in range(int(r["first_sp"]), int(r["last_sp"]) + 1) if sp in D.sp_dates]
     teams = {r["team_id"]: [] for r in D.roster}
     me = D.my_tid
+    empty = {"baseline_cats_per_week": {}, "protected_keepers": [], "n_checked": 0, "n_candidates": 0,
+             "top": [], "near": [], "bar": {"mine": TRADE_SHOW_MIN, "theirs": TRADE_PARTNER_MIN},
+             "horizon": {"matchups": [], "days": 0}}
     if not hz or me not in teams or len(teams) < 3:
-        return {"baseline_cats_per_week": {}, "protected_keepers": [], "n_candidates": 0, "top": []}
+        return empty
     for t in teams:
         teams[t] = team_players(D, X, t)
+    pending = {r["player_id"] for r in D.roster if (r.get("pending_tx") or "").strip() not in ("", "[]")}
     gen = lambda p, d: p["value"]  # noqa: E731
     zero = {c: 0.0 for c in MU.COMPONENTS}
 
@@ -206,72 +236,136 @@ def trade_search(D, X, top_n=12):
 
     T = {t: totals(pl) for t, pl in teams.items()}
 
-    def strength(t, tt):
-        s = 0.0
+    def by_cat(t, tt):
+        """Average chance to win each category against every other team."""
+        acc = {}
         for o in tt:
             if o != t:
                 O = MU.odds(D.cats, zero, zero, tt[t][0], tt[t][1], tt[o][0], tt[o][1])
-                s += sum(x["p"] for x in O.values())
-        return s / (len(tt) - 1)
+                for c, x in O.items():
+                    acc[c] = acc.get(c, 0.0) + x["p"]
+        return {c: v / (len(tt) - 1) for c, v in acc.items()}
+
+    def strength(t, tt):
+        return sum(by_cat(t, tt).values())
 
     base = {t: strength(t, T) for t in T}
     protected = {p["id"] for p in teams[me] if p["id"] in X.keepers}
-    my_pool = [p for p in teams[me] if p["slot"] != "IR" and p["id"] not in protected]
-    fa_best = None
-    for pid, v in D.vals.items():
-        if v.get("status") in ("FREEAGENT", "WAIVERS"):
-            p = mk(D, X, pid)
-            if p and not p["inj"] and (fa_best is None or p["value"] > fa_best["value"]):
-                fa_best = p
-    res = []
+    my_pool = [p for p in teams[me] if p["slot"] != "IR" and p["id"] not in protected and p["id"] not in pending]
+    fas = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")
+           for p in [mk(D, X, pid)] if p and not p["inj"]]
+    fa_best = max(fas, key=lambda p: p["value"]) if fas else None
+    pv = lambda ps: sum(_vorp(D, p) for p in ps)  # noqa: E731
+
+    def worst(players, keep):
+        c = [p for p in players if p["slot"] != "IR" and p["id"] not in keep]
+        return min(c, key=lambda p: p["value"]) if c else None
+
+    res, n = [], 0
     for ot in sorted(teams):
         if ot == me:
             continue
-        theirs = [p for p in teams[ot] if p["slot"] != "IR"]
-        targets = sorted([p for p in theirs if p["rank"] <= 160], key=lambda p: p["rank"])[:16]
+        theirs = [p for p in teams[ot] if p["slot"] != "IR" and p["id"] not in pending]
+        targets = sorted([p for p in theirs if p["rank"] <= 160], key=lambda p: p["rank"])[:TRADE_TARGETS]
         for k_out in (1, 2):
             for outs in itertools.combinations(my_pool, k_out):
-                vout = sum(p["value"] for p in outs)
                 out_ids = {p["id"] for p in outs}
-                for tgt in targets:
-                    if vout < 0.8 * tgt["value"]:      # the partner must see roughly fair value
-                        continue
-                    new_mine = [p for p in teams[me] if p["id"] not in out_ids] + [tgt]
-                    if k_out == 2 and fa_best:
-                        new_mine.append(fa_best)       # the freed spot gets the best free agent
-                    their_new = [p for p in teams[ot] if p["id"] != tgt["id"]] + list(outs)
-                    if k_out == 2:
-                        worst = next((p for p in sorted([p for p in their_new if p["slot"] != "IR"],
-                                                        key=lambda p: p["value"]) if p["id"] not in out_ids), None)
-                        if worst:
-                            their_new = [p for p in their_new if p["id"] != worst["id"]]
-                    T2 = dict(T)
-                    T2[me], T2[ot] = totals(new_mine), totals(their_new)
-                    mine_gain = strength(me, T2) - base[me]
-                    their_gain = strength(ot, T2) - base[ot]
-                    if mine_gain > TRADE_MIN_GAIN and their_gain > 0.0:
-                        res.append({
-                            "partner_team_id": ot,
-                            "give": [{"id": p["id"], "name": p["name"], "pos": p["eligible"], "team": p["team"],
-                                      "rank": p["rank"], "age": p["age"]} for p in outs],
-                            "get": {"id": tgt["id"], "name": tgt["name"], "pos": tgt["eligible"], "team": tgt["team"],
-                                    "rank": tgt["rank"], "age": tgt["age"]},
-                            "my_cats_per_week": round(mine_gain, 3),
-                            "their_cats_per_week": round(their_gain, 3),
-                            "value_given": round(vout, 1), "value_got": round(tgt["value"], 1),
-                            "gets_extra_spot": k_out == 2})
-    res.sort(key=lambda r: -(r["my_cats_per_week"] + 0.5 * min(r["their_cats_per_week"], 0.3)))
-    seen, out = {}, []
+                give_v = pv(outs)
+                for k_in in (1, 2):
+                    for ins in itertools.combinations(targets, k_in):
+                        get_v = pv(ins)
+                        if give_v < TRADE_FAIR * get_v or give_v > TRADE_OVERPAY[0] * get_v + TRADE_OVERPAY[1]:
+                            continue
+                        in_ids = {p["id"] for p in ins}
+                        new_mine = [p for p in teams[me] if p["id"] not in out_ids] + list(ins)
+                        their_new = [p for p in teams[ot] if p["id"] not in in_ids] + list(outs)
+                        my_drop = their_drop = None
+                        if k_in > k_out:      # Mike gets the extra player: he drops his weakest, they add a free agent
+                            my_drop = worst(new_mine, protected | in_ids)
+                            if not my_drop:
+                                continue
+                            new_mine = [p for p in new_mine if p["id"] != my_drop["id"]]
+                            if fa_best:
+                                their_new.append(fa_best)
+                        elif k_out > k_in:    # they get the extra player: they drop their weakest, Mike adds one
+                            their_drop = worst(their_new, out_ids)
+                            if their_drop:
+                                their_new = [p for p in their_new if p["id"] != their_drop["id"]]
+                            if fa_best:
+                                new_mine.append(fa_best)
+                        n += 1
+                        T2 = dict(T)
+                        T2[me], T2[ot] = totals(new_mine), totals(their_new)
+                        mine_gain = strength(me, T2) - base[me]
+                        their_gain = strength(ot, T2) - base[ot]
+                        if mine_gain > TRADE_MIN_GAIN and their_gain > 0.0:
+                            res.append({"ot": ot, "outs": outs, "ins": ins, "my_drop": my_drop,
+                                        "their_drop": their_drop, "mine": mine_gain, "theirs": their_gain,
+                                        "give_v": give_v, "get_v": get_v, "T2": (T2[me], T2[ot])})
+
+    score = lambda r: r["mine"] + 0.5 * min(r["theirs"], 0.3)  # noqa: E731
+    res.sort(key=lambda r: -score(r))
+    base_cat = {t: by_cat(t, T) for t in (me,)}
+
+    def pl(p):
+        return {"id": p["id"], "name": p["name"], "pos": p["eligible"], "team": p["team"], "rank": p["rank"],
+                "age": p["age"], "inj": p["inj"], "young": 0 < _age(p) <= TRADE_YOUNG}
+
+    def cat_moves(t, before, after):
+        d = [{"cat": c, "delta": round(after[c] - before[c], 3)} for c in after]
+        d = [x for x in d if abs(x["delta"]) >= 0.03]
+        return sorted(d, key=lambda x: -x["delta"])
+
+    def describe(r):
+        T2 = dict(T)
+        T2[me], T2[r["ot"]] = r["T2"]
+        mine_b, mine_a = base_cat[me], by_cat(me, T2)
+        th_b, th_a = by_cat(r["ot"], T), by_cat(r["ot"], T2)
+        ratio = r["get_v"] and r["give_v"] / r["get_v"]
+        fair = "even" if not r["get_v"] or ratio <= 1.15 else "they get more"
+        out = {
+            "partner_team_id": r["ot"],
+            "give": [pl(p) for p in r["outs"]],
+            "gets": [pl(p) for p in r["ins"]],
+            "get": pl(r["ins"][0]),   # older readers (one incoming player)
+            "shape": f"{len(r['outs'])}-for-{len(r['ins'])}",
+            "my_cats_per_week": round(r["mine"], 3),
+            "their_cats_per_week": round(r["theirs"], 3),
+            "my_categories": cat_moves(me, mine_b, mine_a),
+            "their_categories": cat_moves(r["ot"], th_b, th_a),
+            "value_given": round(r["give_v"], 1), "value_got": round(r["get_v"], 1), "value_label": fair,
+            "my_drop": r["my_drop"] and pl(r["my_drop"]),
+            "their_drop": r["their_drop"] and pl(r["their_drop"]),
+            "my_add": fa_best and len(r["outs"]) > len(r["ins"]) and pl(fa_best) or None,
+            "gets_extra_spot": len(r["outs"]) > len(r["ins"]),
+        }
+        return out
+
+    top, near, seen_team, seen_in, seen_sets = [], [], {}, {}, set()
     for r in res:
-        if seen.get(r["partner_team_id"], 0) >= 3:
+        sig = r["mine"] >= TRADE_SHOW_MIN and r["theirs"] >= TRADE_PARTNER_MIN
+        key = (r["ot"], frozenset(p["id"] for p in r["outs"]), frozenset(p["id"] for p in r["ins"]))
+        if key in seen_sets:
             continue
-        seen[r["partner_team_id"]] = seen.get(r["partner_team_id"], 0) + 1
-        out.append(r)
-        if len(out) >= top_n:
-            break
+        if sig and len(top) < top_n:
+            # variety: at most 2 ideas per partner, one per incoming package, and the same star in at most 2
+            star = max(r["ins"], key=lambda p: p["value"])["id"]
+            pkg = frozenset(p["id"] for p in r["ins"])
+            if seen_team.get(r["ot"], 0) >= 2 or seen_in.get(star, 0) >= 2 or pkg in seen_in:
+                continue
+            seen_team[r["ot"]] = seen_team.get(r["ot"], 0) + 1
+            seen_in[star] = seen_in.get(star, 0) + 1
+            seen_in[pkg] = 1
+            seen_sets.add(key)
+            top.append(describe(r))
+        elif not sig and len(near) < 3 and r["theirs"] >= TRADE_PARTNER_MIN / 2:
+            seen_sets.add(key)
+            near.append(describe(r))
     return {"baseline_cats_per_week": {t: round(v, 2) for t, v in base.items()},
             "protected_keepers": sorted(p["name"] for p in teams[me] if p["id"] in protected),
-            "n_candidates": len(res), "top": out}
+            "bar": {"mine": TRADE_SHOW_MIN, "theirs": TRADE_PARTNER_MIN},
+            "horizon": {"matchups": [int(r["matchup_period"]) for r in future], "days": len(hz)},
+            "n_checked": n, "n_candidates": len(res), "top": top, "near": near}
 
 
 # ------------------------------------------------------------------ main
