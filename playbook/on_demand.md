@@ -20,8 +20,9 @@ Follow `playbook/common.md` first.
   from it and never recommend a next-week move that costs this week more than `carry.max_cost`.
 - Pickups: `snapshots/brief_data.json` `week_plan` first, then moves and alternatives, plus `snapshots/valuations.csv` (free agents by
   `vorp_pg`, `team_games_this_matchup`). Explain in categories.
-- Trades: start from `week_plan.trades.top` (ideas that clearly help both sides: Mike +0.25 and the partner +0.10
-  categories a week or more over the next 3 matchups; 1-for-1 up to 2-for-2) and `week_plan.trades.near`, then check rest-of-season value (`vorp_season`), category fit, games during fantasy playoff weeks
+- Trades: start from `week_plan.trades.top` (ideas that clearly help both sides: Mike +0.20 and the partner +0.10
+  categories a week or more, rest of season from the first week a trade agreed today could count, playoff weeks
+  double; 1-for-1 up to 2-for-2) and `week_plan.trades.near`, then check rest-of-season value (`vorp_season`), category fit, games during fantasy playoff weeks
   (`schedule_grid.csv`), next-season keeper value (age in `player_bio.csv`).
 - Strategy questions ("how is fill every slot doing?"): read `ledger/lab/summary.json` (and `ledger/lab/weeks.csv` in
   hoops-relay); explain edge, weeks, live weeks and confidence in plain words. The paper teams are simulated; say so.
