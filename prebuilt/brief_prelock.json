@@ -1,8 +1,8 @@
 {
  "date": "2026-11-13",
  "kind": "prelock",
- "generated_ct": "2026-11-13T11:35-06:00",
- "data_run_ct": "2026-11-13T11:34-06:00",
+ "generated_ct": "2026-11-13T11:50-06:00",
+ "data_run_ct": "2026-11-13T11:50-06:00",
  "headline": "",
  "summary": "",
  "matchup": {
@@ -1102,6 +1102,11 @@
       "end_holder_id": "3135045",
       "end_holder": "Grayson Allen",
       "changed": false,
+      "best_rejected": {
+       "player": "Jakob Poeltl",
+       "net": -0.04,
+       "this_week_cost": 0.04
+      },
       "monday_holder": {
        "id": "3135045",
        "name": "Grayson Allen",
@@ -1109,9 +1114,9 @@
        "pos": "PG/SG",
        "games_next_week": 2,
        "helps_next_week": [
+        "3PM",
         "STL",
-        "AST",
-        "3PM"
+        "AST"
        ]
       }
      }
@@ -1421,6 +1426,11 @@
       "end_holder_id": "3135045",
       "end_holder": "Grayson Allen",
       "changed": false,
+      "best_rejected": {
+       "player": "Jakob Poeltl",
+       "net": -0.04,
+       "this_week_cost": 0.04
+      },
       "monday_holder": {
        "id": "3135045",
        "name": "Grayson Allen",
@@ -1428,9 +1438,9 @@
        "pos": "PG/SG",
        "games_next_week": 2,
        "helps_next_week": [
+        "3PM",
         "STL",
-        "AST",
-        "3PM"
+        "AST"
        ]
       }
      }
@@ -1488,7 +1498,7 @@
      "age": "30"
     },
     "my_cats_per_week": 0.122,
-    "their_cats_per_week": 0.321,
+    "their_cats_per_week": 0.289,
     "value_given": 2.2,
     "value_got": 2.0,
     "gets_extra_spot": false,
@@ -1514,39 +1524,12 @@
      "rank": 118,
      "age": "31"
     },
-    "my_cats_per_week": 0.121,
-    "their_cats_per_week": 0.3,
+    "my_cats_per_week": 0.115,
+    "their_cats_per_week": 0.278,
     "value_given": -1.1,
     "value_got": -6.3,
     "gets_extra_spot": false,
     "partner": "Team 3"
-   },
-   {
-    "partner_team_id": "1",
-    "give": [
-     {
-      "id": "6606",
-      "name": "Damian Lillard",
-      "pos": "PG",
-      "team": "POR",
-      "rank": 65,
-      "age": "36"
-     }
-    ],
-    "get": {
-     "id": "5105565",
-     "name": "Donovan Clingan",
-     "pos": "C",
-     "team": "POR",
-     "rank": 76,
-     "age": "22"
-    },
-    "my_cats_per_week": 0.089,
-    "their_cats_per_week": 0.21,
-    "value_given": -1.9,
-    "value_got": -3.0,
-    "gets_extra_spot": false,
-    "partner": "Team 1"
    },
    {
     "partner_team_id": "6",
@@ -1568,39 +1551,66 @@
      "rank": 103,
      "age": "23"
     },
-    "my_cats_per_week": 0.097,
-    "their_cats_per_week": 0.187,
+    "my_cats_per_week": 0.08,
+    "their_cats_per_week": 0.2,
     "value_given": -1.1,
     "value_got": -5.1,
     "gets_extra_spot": false,
     "partner": "Team 6"
    },
    {
-    "partner_team_id": "3",
+    "partner_team_id": "7",
     "give": [
      {
-      "id": "4065733",
-      "name": "Ty Jerome",
-      "pos": "PG/SG",
-      "team": "MEM",
-      "rank": 23,
-      "age": "29"
+      "id": "3064440",
+      "name": "Zach LaVine",
+      "pos": "SG/SF",
+      "team": "SAC",
+      "rank": 60,
+      "age": "31"
      }
     ],
     "get": {
-     "id": "4871145",
-     "name": "Josh Giddey",
-     "pos": "PG/SG",
+     "id": "4397189",
+     "name": "Jalen Smith",
+     "pos": "PF/C",
      "team": "CHI",
-     "rank": 64,
-     "age": "23"
+     "rank": 156,
+     "age": "26"
     },
-    "my_cats_per_week": 0.056,
-    "their_cats_per_week": 0.253,
-    "value_given": 3.2,
-    "value_got": -1.9,
+    "my_cats_per_week": 0.08,
+    "their_cats_per_week": 0.159,
+    "value_given": -1.1,
+    "value_got": -8.4,
     "gets_extra_spot": false,
-    "partner": "Team 3"
+    "partner": "Team 7"
+   },
+   {
+    "partner_team_id": "5",
+    "give": [
+     {
+      "id": "3064440",
+      "name": "Zach LaVine",
+      "pos": "SG/SF",
+      "team": "SAC",
+      "rank": 60,
+      "age": "31"
+     }
+    ],
+    "get": {
+     "id": "4277847",
+     "name": "Wendell Carter Jr.",
+     "pos": "C",
+     "team": "ORL",
+     "rank": 114,
+     "age": "27"
+    },
+    "my_cats_per_week": 0.109,
+    "their_cats_per_week": 0.081,
+    "value_given": -1.1,
+    "value_got": -6.0,
+    "gets_extra_spot": false,
+    "partner": "Team 5"
    }
   ],
   "plan_date": "2026-11-13",
@@ -1614,95 +1624,95 @@
   },
   "opponent_team_id": "1",
   "forecast": {
-   "expected_cats": 7.77,
+   "expected_cats": 7.75,
    "player_games": {
     "mine": 48.0,
-    "theirs": 46.0
+    "theirs": 47.0
    },
    "categories": [
     {
      "cat": "FT%",
      "mine": 0.834,
-     "theirs": 0.79,
-     "p": 0.815,
+     "theirs": 0.799,
+     "p": 0.767,
      "label": "favored"
     },
     {
      "cat": "3PT%",
      "mine": 0.356,
-     "theirs": 0.357,
-     "p": 0.491,
+     "theirs": 0.356,
+     "p": 0.496,
      "label": "toss-up"
     },
     {
      "cat": "DD",
      "mine": 9.7,
-     "theirs": 11.7,
-     "p": 0.282,
+     "theirs": 11.2,
+     "p": 0.334,
      "label": "underdog"
     },
     {
      "cat": "REB",
      "mine": 243.1,
-     "theirs": 325.5,
-     "p": 0.002,
+     "theirs": 319.0,
+     "p": 0.004,
      "label": "likely loss"
     },
     {
      "cat": "FGM",
      "mine": 324.9,
-     "theirs": 278.5,
-     "p": 0.944,
+     "theirs": 284.2,
+     "p": 0.918,
      "label": "safe"
     },
     {
      "cat": "FTM",
      "mine": 204.0,
-     "theirs": 150.7,
-     "p": 0.97,
+     "theirs": 159.3,
+     "p": 0.941,
      "label": "safe"
     },
     {
      "cat": "PTS",
      "mine": 940.4,
-     "theirs": 772.2,
-     "p": 0.978,
+     "theirs": 798.6,
+     "p": 0.954,
      "label": "safe"
     },
     {
      "cat": "BLK",
      "mine": 31.4,
-     "theirs": 31.5,
-     "p": 0.496,
+     "theirs": 29.1,
+     "p": 0.597,
      "label": "toss-up"
     },
     {
      "cat": "3PM",
      "mine": 94.5,
-     "theirs": 70.8,
-     "p": 0.942,
+     "theirs": 77.8,
+     "p": 0.864,
      "label": "safe"
     },
     {
      "cat": "STL",
      "mine": 48.9,
-     "theirs": 46.4,
-     "p": 0.608,
-     "label": "favored"
+     "theirs": 46.8,
+     "p": 0.589,
+     "label": "toss-up"
     },
     {
      "cat": "AST",
      "mine": 208.2,
-     "theirs": 182.7,
-     "p": 0.85,
+     "theirs": 185.7,
+     "p": 0.819,
      "label": "favored"
     },
     {
      "cat": "FG%",
      "mine": 0.477,
-     "theirs": 0.487,
-     "p": 0.39,
-     "label": "underdog"
+     "theirs": 0.479,
+     "p": 0.473,
+     "label": "toss-up"
     }
    ],
    "basis": "Both rosters as they stand entering Monday (your streaming spot included), each team starting its best players every day. Next week's streaming is not counted."
@@ -1712,17 +1722,17 @@
     "date": "2026-11-16",
     "nba_games": 8,
     "my_expected_games": 8.0,
-    "opp_expected_games": 5.0,
+    "opp_expected_games": 6.0,
     "my_open_slots": 2,
-    "opp_open_slots": 5
+    "opp_open_slots": 4
    },
    {
     "date": "2026-11-17",
     "nba_games": 5,
     "my_expected_games": 5.0,
-    "opp_expected_games": 7.0,
+    "opp_expected_games": 6.0,
     "my_open_slots": 5,
-    "opp_open_slots": 3
+    "opp_open_slots": 4
    },
    {
     "date": "2026-11-18",
@@ -1752,9 +1762,9 @@
     "date": "2026-11-21",
     "nba_games": 6,
     "my_expected_games": 9.0,
-    "opp_expected_games": 5.0,
+    "opp_expected_games": 6.0,
     "my_open_slots": 1,
-    "opp_open_slots": 5
+    "opp_open_slots": 4
    },
    {
     "date": "2026-11-22",
@@ -1851,80 +1861,80 @@
     ]
    },
    "vs_projection": {
-    "games": 168,
+    "games": 170,
     "through": "2026-11-13",
     "categories": [
      {
       "cat": "PTS",
-      "actual": 2920.0,
-      "projected": 2985.2,
-      "pct_of_projection": 0.98
+      "actual": 3022.0,
+      "projected": 3041.6,
+      "pct_of_projection": 0.99
      },
      {
       "cat": "REB",
-      "actual": 1277.0,
-      "projected": 1263.5,
+      "actual": 1252.0,
+      "projected": 1238.3,
       "pct_of_projection": 1.01
      },
      {
       "cat": "AST",
-      "actual": 621.0,
-      "projected": 676.4,
-      "pct_of_projection": 0.92
-     },
-     {
-      "cat": "3PM",
-      "actual": 286.0,
-      "projected": 243.6,
-      "pct_of_projection": 1.17
-     },
-     {
-      "cat": "STL",
-      "actual": 175.0,
-      "projected": 171.7,
-      "pct_of_projection": 1.02
-     },
-     {
-      "cat": "BLK",
-      "actual": 119.0,
-      "projected": 128.4,
-      "pct_of_projection": 0.93
-     },
-     {
-      "cat": "FGM",
-      "actual": 1039.0,
-      "projected": 1100.4,
+      "actual": 635.0,
+      "projected": 677.6,
       "pct_of_projection": 0.94
      },
      {
+      "cat": "3PM",
+      "actual": 308.0,
+      "projected": 265.2,
+      "pct_of_projection": 1.16
+     },
+     {
+      "cat": "STL",
+      "actual": 177.0,
+      "projected": 172.3,
+      "pct_of_projection": 1.03
+     },
+     {
+      "cat": "BLK",
+      "actual": 113.0,
+      "projected": 118.6,
+      "pct_of_projection": 0.95
+     },
+     {
+      "cat": "FGM",
+      "actual": 1064.0,
+      "projected": 1108.0,
+      "pct_of_projection": 0.96
+     },
+     {
       "cat": "FTM",
-      "actual": 556.0,
-      "projected": 543.1,
-      "pct_of_projection": 1.02
+      "actual": 586.0,
+      "projected": 563.3,
+      "pct_of_projection": 1.04
      },
      {
       "cat": "DD",
-      "actual": 43.0,
-      "projected": 42.7,
-      "pct_of_projection": 1.01
+      "actual": 41.0,
+      "projected": 41.3,
+      "pct_of_projection": 0.99
      },
      {
       "cat": "FG%",
-      "actual": 0.484,
-      "projected": 0.496,
-      "diff": -0.012
+      "actual": 0.479,
+      "projected": 0.488,
+      "diff": -0.009
      },
      {
       "cat": "FT%",
-      "actual": 0.784,
-      "projected": 0.772,
+      "actual": 0.793,
+      "projected": 0.781,
       "diff": 0.012
      },
      {
       "cat": "3PT%",
-      "actual": 0.362,
-      "projected": 0.359,
-      "diff": 0.003
+      "actual": 0.361,
+      "projected": 0.36,
+      "diff": 0.001
      }
     ],
     "hot": [
@@ -1933,7 +1943,7 @@
       "name": "Yves Missi",
       "team": "NOP",
       "games": 2,
-      "delta": 0.118,
+      "delta": 0.128,
       "actual": {
        "PTS": 9.5,
        "REB": 7.5,
@@ -1956,7 +1966,7 @@
       "name": "Luka Doncic",
       "team": "LAL",
       "games": 11,
-      "delta": 0.051,
+      "delta": 0.068,
       "actual": {
        "PTS": 38.6,
        "REB": 7.5,
@@ -1979,7 +1989,7 @@
       "name": "Franz Wagner",
       "team": "ORL",
       "games": 11,
-      "delta": 0.05,
+      "delta": 0.058,
       "actual": {
        "PTS": 23.5,
        "REB": 6.5,
@@ -2004,7 +2014,7 @@
       "name": "Jalen Duren",
       "team": "DET",
       "games": 2,
-      "delta": -0.078,
+      "delta": -0.093,
       "actual": {
        "PTS": 13.0,
        "REB": 7.5,
@@ -2046,26 +2056,26 @@
       }
      },
      {
-      "id": "3134908",
-      "name": "Jakob Poeltl",
-      "team": "TOR",
-      "games": 10,
-      "delta": -0.042,
+      "id": "4066336",
+      "name": "Lauri Markkanen",
+      "team": "UTA",
+      "games": 8,
+      "delta": -0.041,
       "actual": {
-       "PTS": 8.3,
-       "REB": 6.6,
-       "AST": 1.4,
-       "3PM": 0.0,
-       "STL": 0.8,
-       "BLK": 0.8
+       "PTS": 18.0,
+       "REB": 6.8,
+       "AST": 2.0,
+       "3PM": 3.6,
+       "STL": 0.6,
+       "BLK": 0.6
       },
       "projected": {
-       "PTS": 12.0,
-       "REB": 8.4,
-       "AST": 2.4,
-       "3PM": 0.0,
+       "PTS": 23.8,
+       "REB": 7.2,
+       "AST": 1.9,
+       "3PM": 3.0,
        "STL": 0.9,
-       "BLK": 1.1
+       "BLK": 0.5
       }
      }
     ]
@@ -2192,6 +2202,11 @@
    "end_holder_id": "3135045",
    "end_holder": "Grayson Allen",
    "changed": false,
+   "best_rejected": {
+    "player": "Jakob Poeltl",
+    "net": -0.04,
+    "this_week_cost": 0.04
+   },
    "monday_holder": {
     "id": "3135045",
     "name": "Grayson Allen",
@@ -2199,9 +2214,9 @@
     "pos": "PG/SG",
     "games_next_week": 2,
     "helps_next_week": [
+     "3PM",
      "STL",
-     "AST",
-     "3PM"
+     "AST"
     ]
    }
   },
@@ -2723,9 +2738,9 @@
  "prebuilt": {
   "for_date": "2026-11-13",
   "kind": "prelock",
-  "built_ct": "2026-11-13T11:35-06:00",
-  "clock_ct": "2026-11-13T11:35-06:00",
-  "data_run_ct": "2026-11-13T11:34-06:00",
+  "built_ct": "2026-11-13T11:50-06:00",
+  "clock_ct": "2026-11-13T11:50-06:00",
+  "data_run_ct": "2026-11-13T11:50-06:00",
   "error": null
  }
 }
