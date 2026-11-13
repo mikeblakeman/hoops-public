@@ -1,8 +1,8 @@
 {
  "date": "2026-11-13",
  "kind": "prelock",
- "generated_ct": "2026-11-13T07:27-06:00",
- "data_run_ct": "2026-11-13T07:27-06:00",
+ "generated_ct": "2026-11-13T09:20-06:00",
+ "data_run_ct": "2026-11-13T09:19-06:00",
  "headline": "",
  "summary": "",
  "matchup": {
@@ -270,12 +270,64 @@
   {
    "kind": "add",
    "text": "Add Trey Murphy III (NOP), drop Jamal Shead.",
-   "why": "Week plan: tips 19:00 CT vs MEM; helps 3PM, AST, STL. +0.16 expected categories today."
+   "why": "Week plan: tips 19:00 CT vs MEM; helps 3PM, AST, STL. +0.16 expected categories today. If he is taken: Aaron Wiggins (ATL), Max Strus (LAC), Julian Champagnie (SAS).",
+   "player_id": "4397688",
+   "backups": [
+    {
+     "id": "4397183",
+     "name": "Aaron Wiggins",
+     "team": "ATL",
+     "gain": 0.16
+    },
+    {
+     "id": "4065778",
+     "name": "Max Strus",
+     "team": "LAC",
+     "gain": 0.156
+    },
+    {
+     "id": "4592479",
+     "name": "Julian Champagnie",
+     "team": "SAS",
+     "gain": 0.155
+    }
+   ]
   },
   {
    "kind": "watch",
    "text": "Plan ahead: Sun 11/15: add Grayson Allen (CHA) for Trey Murphy III.",
-   "why": "Light days: Sat 11/14 (5 games, 5 slots empty). Make each add in the morning, before the day's first tip."
+   "why": "Light days: Sat 11/14 (5 games, 5 slots empty). Make each add in the morning, before the day's first tip. Each day has backups in case another manager takes the planned player first.",
+   "plan": [
+    {
+     "date": "2026-11-15",
+     "add": {
+      "id": "3135045",
+      "name": "Grayson Allen",
+      "team": "CHA"
+     },
+     "drop": "Trey Murphy III",
+     "backups": [
+      {
+       "id": "4432241",
+       "name": "Jamal Shead",
+       "team": "TOR",
+       "gain": 0.204
+      },
+      {
+       "id": "4591725",
+       "name": "Ryan Rollins",
+       "team": "MIL",
+       "gain": 0.193
+      },
+      {
+       "id": "4066354",
+       "name": "Payton Pritchard",
+       "team": "BOS",
+       "gain": 0.185
+      }
+     ]
+    }
+   ]
   }
  ],
  "lineup": {
@@ -1606,8 +1658,8 @@
      "rank": 118,
      "age": "31"
     },
-    "my_cats_per_week": 0.173,
-    "their_cats_per_week": 0.285,
+    "my_cats_per_week": 0.17,
+    "their_cats_per_week": 0.297,
     "value_given": -1.1,
     "value_got": -6.3,
     "gets_extra_spot": false,
@@ -1633,8 +1685,8 @@
      "rank": 118,
      "age": "31"
     },
-    "my_cats_per_week": 0.146,
-    "their_cats_per_week": 0.32,
+    "my_cats_per_week": 0.145,
+    "their_cats_per_week": 0.331,
     "value_given": -3.1,
     "value_got": -6.3,
     "gets_extra_spot": false,
@@ -1660,8 +1712,8 @@
      "rank": 118,
      "age": "31"
     },
-    "my_cats_per_week": 0.139,
-    "their_cats_per_week": 0.52,
+    "my_cats_per_week": 0.142,
+    "their_cats_per_week": 0.536,
     "value_given": -1.9,
     "value_got": -6.3,
     "gets_extra_spot": false,
@@ -1687,8 +1739,8 @@
      "rank": 20,
      "age": "36"
     },
-    "my_cats_per_week": 0.151,
-    "their_cats_per_week": 0.257,
+    "my_cats_per_week": 0.158,
+    "their_cats_per_week": 0.239,
     "value_given": 3.2,
     "value_got": 3.7,
     "gets_extra_spot": false,
@@ -1714,8 +1766,8 @@
      "rank": 103,
      "age": "23"
     },
-    "my_cats_per_week": 0.171,
-    "their_cats_per_week": 0.215,
+    "my_cats_per_week": 0.183,
+    "their_cats_per_week": 0.149,
     "value_given": -3.1,
     "value_got": -5.1,
     "gets_extra_spot": false,
@@ -4464,9 +4516,9 @@
  "prebuilt": {
   "for_date": "2026-11-13",
   "kind": "prelock",
-  "built_ct": "2026-11-13T07:27-06:00",
-  "clock_ct": "2026-11-13T07:27-06:00",
-  "data_run_ct": "2026-11-13T07:27-06:00",
+  "built_ct": "2026-11-13T09:20-06:00",
+  "clock_ct": "2026-11-13T09:20-06:00",
+  "data_run_ct": "2026-11-13T09:19-06:00",
   "error": null
  }
 }

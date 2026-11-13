@@ -158,6 +158,34 @@ def _first_name(name):
     return (name or "").split(" ")[0] or name
 
 
+BACKUPS = 3   # backup players shown with every add: another manager can take a free agent at any time
+
+
+def backups_of(alts, exclude=()):
+    """Up to BACKUPS alternatives for an add, best first: [{id, name, team, gain}]. Accepts plan alternatives
+    ({id, name, team, gain}) and engine moves ({add: {...}, gain}). Skips players in `exclude` (ids already
+    planned today), so a backup never repeats another action."""
+    out, skip = [], {str(x) for x in exclude}
+    for a in alts or []:
+        p = a.get("add", a)
+        pid = str(p.get("id"))
+        if not pid or pid in skip or any(o["id"] == pid for o in out):
+            continue
+        g = a.get("gain")
+        out.append({"id": pid, "name": p.get("name"), "team": p.get("team"),
+                    "gain": round(float(g), 3) if g is not None else None})
+        if len(out) == BACKUPS:
+            break
+    return out
+
+
+def backup_text(bk, who="he"):
+    """' If he is taken: A (TEAM), B (TEAM).' or ''."""
+    if not bk:
+        return ""
+    return f" If {who} is taken: " + ", ".join(f"{b['name']} ({b['team']})" for b in bk) + "."
+
+
 def activation_actions(acts):
     """The first actions of the day: move healthy players off IR (ESPN blocks every add until then)."""
     out = []
@@ -521,6 +549,9 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
     wp_ok, plan_days, carry, step, top = sel["wp_ok"], sel["plan_days"], sel["carry"], sel["step"], sel["top"]
     act_first = activation_actions(sel["activations"])
     actions = []
+    # players already planned for today: a backup never repeats one of them
+    planned_ids = {str(f["add"]["id"]) for f in sel["fills"]} | {str(m["add"]["id"]) for m in sel["top"]} | (
+        {str(sel["step"]["id"])} if sel.get("step") else set())
     stash = {p["name"]: p for p in sel["ir"] if p.get("return")}
     for p in sel["ir"]:
         actions.append({"kind": "ir", "text": ir_text(p), "why": ir_why(p, inj.get(p["id"]))})
@@ -535,7 +566,9 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
         held = stash.get(f.get("after_ir_move"))
         if held:
             why += f" Temporary: {held['name']} is due back {_dow(held['return']['date'])}."
-        actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"), "why": why})
+        bk = backups_of(bd.get("fill_alternatives"), planned_ids)
+        actions.append({"kind": "add", "text": sentence(f"{where}; no drop needed"), "why": why + backup_text(bk),
+                        "player_id": str(a["id"]), "backups": bk})
     # Phase 3: relay/strategy.json names the strategy Mike approved. `current` is the logic above; any other
     # strategy decides today's moves itself (relay.strategies.real_decision) and replaces the actions so far.
     cfg = load_strategy()
@@ -558,9 +591,12 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
         where = (f"Add {step['occupant']} ({step['team']}), drop {step['drop']}" if step.get("drop")
                  else f"Add {step['occupant']} ({step['team']}) to your open roster spot")
         helps = ", ".join(step["helps"]) or "several categories"
+        bk = backups_of(step.get("alternatives"), planned_ids)
         actions.append({"kind": "add", "text": sentence(where),
                         "why": f"Week plan: tips {step['tip_ct']} CT vs {step['plays_vs']}; helps {helps}. "
-                               f"+{step['day_gain']:.2f} expected categories today." + carry_note(step, carry)})
+                               f"+{step['day_gain']:.2f} expected categories today." + carry_note(step, carry)
+                               + backup_text(bk),
+                        "player_id": str(step["id"]), "backups": bk})
     if wp_ok and plan_days and not strat:
         # Week ahead coverage on the roster the brief recommends (today's IR moves and fills, the streaming
         # spot's planned player each day), so its "You start" column agrees with the lineup card and the plan.
@@ -579,19 +615,25 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
         parts = [f"{_dow(d['date'])}: add {d['occupant']} ({d['team']})" + (f" for {d['drop']}" if d.get("drop") else "")
                  + (" (also sets up next week)" if d.get("carry") else "") for d in later]
         thin = [f"{_dow(d['date'])} ({d['nba_games']} games, {len(d['my_open_slots'])} slots empty)" for d in light]
+        plan_rows = [{"date": d["date"], "add": {"id": str(d["id"]), "name": d["occupant"], "team": d["team"]},
+                 "drop": d.get("drop"), "backups": backups_of(d.get("alternatives"))} for d in later]
         actions.append({"kind": "watch",
                         "text": "Plan ahead: " + ("; ".join(parts) if parts else "no more streaming moves") + ".",
                         "why": ("Light days: " + ", ".join(thin) + ". " if thin else "") +
-                               "Make each add in the morning, before the day's first tip."})
+                               "Make each add in the morning, before the day's first tip. Each day has backups "
+                               "in case another manager takes the planned player first.",
+                        "plan": plan_rows})
     if not strat:
         actions += return_actions(bd)
     for m in top:
         a, d = m["add"], m["drop"]
         today = "plays today, " if m["plays_today"] else ""
         helps = ", ".join(m["helps"]) or "several categories"
+        bk = backups_of([x for x in bd.get("alternatives", []) if x["drop"]["id"] == d["id"]], planned_ids)
         actions.append({"kind": "add", "text": sentence(f"Add {a['name']} ({a['team']}), drop {d['name']}"),
                         "why": f"{today}{m['games_left']} games left this matchup; helps {helps}. "
-                               f"+{m['gain']:.2f} expected categories."})
+                               f"+{m['gain']:.2f} expected categories." + backup_text(bk),
+                        "player_id": str(a["id"]), "backups": bk})
     # The lineup card shows today's lineup AFTER the moves above, so it names the same players as the actions.
     ir_ids, add_ids, drop_ids, moves_txt = sel["ir_ids"], sel["add_ids"], sel["drop_ids"], sel["text"]
     act_ids, act_drop_ids = sel["activate_ids"], sel["activate_drop_ids"]

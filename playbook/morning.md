@@ -34,6 +34,10 @@ Follow `playbook/common.md` first.
    why. Edit BOTH the action and that day in `week.stream_plan.plans[<plan_used>].days` (`occupant`, `team`, `drop`,
    `swap`) so the Week ahead card shows the same players; never leave a note explaining a mismatch. If news changes
    any other recommendation (a starter ruled out), edit `actions` and `lineup` together and say why.
+   Backups: every add action carries `backups` (up to 3 players, best first; the page shows them as chips) and
+   the "Plan ahead" action carries `plan` with backups for each day. Free-agent status is only as fresh as the
+   data run, and another manager can take a player at any time. Never drop the backups when you edit an action,
+   and if news rules out a planned add, promote the first healthy backup (its lineup card is in lineup_options).
    IR activations come first. A healthy player in an IR slot makes ESPN refuse EVERY add, so when
    `ir_activations` is not empty the brief's first action is "Drop X, then move Y off IR" (marked `activate`).
    Never put an add ahead of it, and never write an add that needs a roster spot while a healthy player sits on IR.
