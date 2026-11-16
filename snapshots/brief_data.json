@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-11-16T12:56-06:00",
- "data_run_ct": "2026-11-16T12:56-06:00",
+ "generated_ct": "2026-11-16T14:33-06:00",
+ "data_run_ct": "2026-11-16T14:32-06:00",
  "date": "2026-11-16",
  "matchup_period": 5,
  "period": {
@@ -669,39 +669,6 @@
   },
   {
    "add": {
-    "id": "4397136",
-    "name": "Saddiq Bey",
-    "team": "NOP",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 110,
-    "matchup_value": 0.2981,
-    "line": {
-     "PTS": 15.09,
-     "REB": 4.15,
-     "AST": 2.17,
-     "STL": 0.66,
-     "BLK": 0.19,
-     "3PM": 2.03,
-     "DD": 0.08
-    },
-    "helps": [
-     "PTS",
-     "FGM",
-     "3PM"
-    ]
-   },
-   "gain": 1.067,
-   "games_left": 4,
-   "plays_today": true,
-   "helps": [
-    "PTS",
-    "FGM",
-    "3PM"
-   ]
-  },
-  {
-   "add": {
     "id": "2991070",
     "name": "Jerami Grant",
     "team": "MEM",
@@ -762,6 +729,39 @@
    "plays_today": false,
    "helps": [
     "AST",
+    "PTS",
+    "FGM"
+   ]
+  },
+  {
+   "add": {
+    "id": "3157465",
+    "name": "Duncan Robinson",
+    "team": "DET",
+    "pos": "SG/SF",
+    "inj": "DAY_TO_DAY",
+    "rank": 101,
+    "matchup_value": 0.2335,
+    "line": {
+     "PTS": 14.25,
+     "REB": 1.98,
+     "AST": 1.98,
+     "STL": 0.85,
+     "BLK": 0.09,
+     "3PM": 3.39,
+     "DD": 0.0
+    },
+    "helps": [
+     "3PM",
+     "PTS",
+     "FGM"
+    ]
+   },
+   "gain": 1.017,
+   "games_left": 4,
+   "plays_today": false,
+   "helps": [
+    "3PM",
     "PTS",
     "FGM"
    ]
@@ -826,62 +826,6 @@
   }
  ],
  "alternatives": [
-  {
-   "add": {
-    "id": "4397136",
-    "name": "Saddiq Bey",
-    "team": "NOP",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 110,
-    "matchup_value": 0.2981,
-    "line": {
-     "PTS": 15.09,
-     "REB": 4.15,
-     "AST": 2.17,
-     "STL": 0.66,
-     "BLK": 0.19,
-     "3PM": 2.03,
-     "DD": 0.08
-    },
-    "helps": [
-     "PTS",
-     "FGM",
-     "3PM"
-    ]
-   },
-   "gain": 0.523,
-   "games_left": 4,
-   "plays_today": true,
-   "helps": [
-    "PTS",
-    "FGM",
-    "3PM"
-   ],
-   "drop": {
-    "id": "5105623",
-    "name": "Kel'el Ware",
-    "team": "MIL",
-    "pos": "C",
-    "inj": "",
-    "rank": 195,
-    "matchup_value": 0.2054,
-    "line": {
-     "PTS": 8.38,
-     "REB": 7.07,
-     "AST": 0.85,
-     "STL": 0.57,
-     "BLK": 1.3,
-     "3PM": 0.77,
-     "DD": 0.19
-    },
-    "helps": [
-     "BLK",
-     "FGM",
-     "PTS"
-    ]
-   }
-  },
   {
    "add": {
     "id": "4432165",
@@ -1081,6 +1025,62 @@
     "3PM",
     "PTS",
     "FGM"
+   ],
+   "drop": {
+    "id": "5105623",
+    "name": "Kel'el Ware",
+    "team": "MIL",
+    "pos": "C",
+    "inj": "",
+    "rank": 195,
+    "matchup_value": 0.2054,
+    "line": {
+     "PTS": 8.38,
+     "REB": 7.07,
+     "AST": 0.85,
+     "STL": 0.57,
+     "BLK": 1.3,
+     "3PM": 0.77,
+     "DD": 0.19
+    },
+    "helps": [
+     "BLK",
+     "FGM",
+     "PTS"
+    ]
+   }
+  },
+  {
+   "add": {
+    "id": "3138196",
+    "name": "Cameron Johnson",
+    "team": "DEN",
+    "pos": "SF/PF",
+    "inj": "",
+    "rank": 126,
+    "matchup_value": 0.2674,
+    "line": {
+     "PTS": 12.02,
+     "REB": 3.68,
+     "AST": 2.07,
+     "STL": 0.94,
+     "BLK": 0.19,
+     "3PM": 2.13,
+     "DD": 0.01
+    },
+    "helps": [
+     "FGM",
+     "PTS",
+     "3PM"
+    ]
+   },
+   "gain": 0.424,
+   "games_left": 4,
+   "plays_today": true,
+   "helps": [
+    "FGM",
+    "PTS",
+    "3PM"
    ],
    "drop": {
     "id": "5105623",
@@ -1742,25 +1742,25 @@
          ]
         },
         {
-         "id": "4397136",
-         "name": "Saddiq Bey",
-         "team": "NOP",
-         "pos": "SF/PF",
-         "gain": 0.298,
-         "rank": 110,
+         "id": "5175643",
+         "name": "Egor Demin",
+         "team": "BKN",
+         "pos": "PG/SG",
+         "gain": 0.295,
+         "rank": 122,
          "line": {
-          "PTS": 15.09,
-          "REB": 4.15,
-          "AST": 2.17,
-          "STL": 0.66,
-          "BLK": 0.19,
-          "3PM": 2.03,
-          "DD": 0.08
+          "PTS": 12.3,
+          "REB": 3.2,
+          "AST": 3.49,
+          "STL": 0.85,
+          "BLK": 0.28,
+          "3PM": 2.71,
+          "DD": 0.01
          },
          "helps": [
+          "3PM",
           "PTS",
-          "FGM",
-          "3PM"
+          "FGM"
          ]
         }
        ]
@@ -2108,28 +2108,6 @@
          ]
         },
         {
-         "id": "4397136",
-         "name": "Saddiq Bey",
-         "team": "NOP",
-         "pos": "SF/PF",
-         "gain": 0.298,
-         "rank": 110,
-         "line": {
-          "PTS": 15.09,
-          "REB": 4.15,
-          "AST": 2.17,
-          "STL": 0.66,
-          "BLK": 0.19,
-          "3PM": 2.03,
-          "DD": 0.08
-         },
-         "helps": [
-          "PTS",
-          "FGM",
-          "3PM"
-         ]
-        },
-        {
          "id": "5175643",
          "name": "Egor Demin",
          "team": "BKN",
@@ -2149,6 +2127,28 @@
           "3PM",
           "PTS",
           "FGM"
+         ]
+        },
+        {
+         "id": "4432165",
+         "name": "Jalen Suggs",
+         "team": "ORL",
+         "pos": "PG/SG",
+         "gain": 0.288,
+         "rank": 136,
+         "line": {
+          "PTS": 11.08,
+          "REB": 3.39,
+          "AST": 3.96,
+          "STL": 1.42,
+          "BLK": 0.56,
+          "3PM": 1.64,
+          "DD": 0.03
+         },
+         "helps": [
+          "AST",
+          "FGM",
+          "STL"
          ]
         }
        ]
@@ -2227,20 +2227,20 @@
          ]
         },
         {
-         "id": "4397136",
-         "name": "Saddiq Bey",
-         "team": "NOP",
-         "pos": "SF/PF",
-         "gain": 0.298,
-         "rank": 110,
+         "id": "2991070",
+         "name": "Jerami Grant",
+         "team": "MEM",
+         "pos": "PF",
+         "gain": 0.289,
+         "rank": 117,
          "line": {
-          "PTS": 15.09,
-          "REB": 4.15,
-          "AST": 2.17,
-          "STL": 0.66,
-          "BLK": 0.19,
+          "PTS": 13.6,
+          "REB": 2.36,
+          "AST": 1.89,
+          "STL": 0.47,
+          "BLK": 0.65,
           "3PM": 2.03,
-          "DD": 0.08
+          "DD": 0.0
          },
          "helps": [
           "PTS",
@@ -2428,25 +2428,25 @@
          ]
         },
         {
-         "id": "4397136",
-         "name": "Saddiq Bey",
-         "team": "NOP",
-         "pos": "SF/PF",
-         "gain": 0.298,
-         "rank": 110,
+         "id": "5175643",
+         "name": "Egor Demin",
+         "team": "BKN",
+         "pos": "PG/SG",
+         "gain": 0.295,
+         "rank": 122,
          "line": {
-          "PTS": 15.09,
-          "REB": 4.15,
-          "AST": 2.17,
-          "STL": 0.66,
-          "BLK": 0.19,
-          "3PM": 2.03,
-          "DD": 0.08
+          "PTS": 12.3,
+          "REB": 3.2,
+          "AST": 3.49,
+          "STL": 0.85,
+          "BLK": 0.28,
+          "3PM": 2.71,
+          "DD": 0.01
          },
          "helps": [
+          "3PM",
           "PTS",
-          "FGM",
-          "3PM"
+          "FGM"
          ]
         }
        ]
@@ -2794,28 +2794,6 @@
          ]
         },
         {
-         "id": "4397136",
-         "name": "Saddiq Bey",
-         "team": "NOP",
-         "pos": "SF/PF",
-         "gain": 0.298,
-         "rank": 110,
-         "line": {
-          "PTS": 15.09,
-          "REB": 4.15,
-          "AST": 2.17,
-          "STL": 0.66,
-          "BLK": 0.19,
-          "3PM": 2.03,
-          "DD": 0.08
-         },
-         "helps": [
-          "PTS",
-          "FGM",
-          "3PM"
-         ]
-        },
-        {
          "id": "5175643",
          "name": "Egor Demin",
          "team": "BKN",
@@ -2835,6 +2813,28 @@
           "3PM",
           "PTS",
           "FGM"
+         ]
+        },
+        {
+         "id": "4432165",
+         "name": "Jalen Suggs",
+         "team": "ORL",
+         "pos": "PG/SG",
+         "gain": 0.288,
+         "rank": 136,
+         "line": {
+          "PTS": 11.08,
+          "REB": 3.39,
+          "AST": 3.96,
+          "STL": 1.42,
+          "BLK": 0.56,
+          "3PM": 1.64,
+          "DD": 0.03
+         },
+         "helps": [
+          "AST",
+          "FGM",
+          "STL"
          ]
         }
        ]
@@ -2913,20 +2913,20 @@
          ]
         },
         {
-         "id": "4397136",
-         "name": "Saddiq Bey",
-         "team": "NOP",
-         "pos": "SF/PF",
-         "gain": 0.298,
-         "rank": 110,
+         "id": "2991070",
+         "name": "Jerami Grant",
+         "team": "MEM",
+         "pos": "PF",
+         "gain": 0.289,
+         "rank": 117,
          "line": {
-          "PTS": 15.09,
-          "REB": 4.15,
-          "AST": 2.17,
-          "STL": 0.66,
-          "BLK": 0.19,
+          "PTS": 13.6,
+          "REB": 2.36,
+          "AST": 1.89,
+          "STL": 0.47,
+          "BLK": 0.65,
           "3PM": 2.03,
-          "DD": 0.08
+          "DD": 0.0
          },
          "helps": [
           "PTS",
@@ -3039,8 +3039,8 @@
    "second_spot": {
     "drop": "Kel'el Ware",
     "drop_weekly_cost_cats": 0.526,
-    "expected_cats_with_two_spots": 7.55,
-    "net_gain_vs_one_spot": 0.685,
+    "expected_cats_with_two_spots": 7.56,
+    "net_gain_vs_one_spot": 0.693,
     "days": [
      {
       "date": "2026-11-16",
@@ -3072,17 +3072,17 @@
      },
      {
       "date": "2026-11-20",
-      "occupant": "Saddiq Bey",
-      "team": "NOP",
-      "pos": "SF/PF",
-      "day_gain": 0.298
+      "occupant": "Egor Demin",
+      "team": "BKN",
+      "pos": "PG/SG",
+      "day_gain": 0.295
      },
      {
       "date": "2026-11-21",
-      "occupant": "Saddiq Bey",
-      "team": "NOP",
-      "pos": "SF/PF",
-      "day_gain": 0.298
+      "occupant": "Jerami Grant",
+      "team": "MEM",
+      "pos": "PF",
+      "day_gain": 0.289
      },
      {
       "date": "2026-11-22",
@@ -3097,14 +3097,14 @@
   "next_opponent": null,
   "trades": {
    "baseline_cats_per_week": {
-    "1": 7.72,
-    "2": 4.31,
-    "3": 6.05,
-    "5": 6.68,
-    "6": 5.52,
-    "7": 6.46,
-    "8": 4.23,
-    "4": 7.03
+    "1": 7.75,
+    "2": 4.32,
+    "3": 5.88,
+    "5": 6.71,
+    "6": 5.53,
+    "7": 6.5,
+    "8": 4.25,
+    "4": 7.06
    },
    "protected_keepers": [
     "Anthony Davis",
@@ -3156,8 +3156,8 @@
     ],
     "days": 126
    },
-   "n_checked": 6512,
-   "n_candidates": 310,
+   "n_checked": 6399,
+   "n_candidates": 278,
    "n_rescored": 80,
    "top": [],
    "near": [
@@ -3224,13 +3224,13 @@
      },
      "shape": "2-for-2",
      "my_cats_per_week": 0.123,
-     "their_cats_per_week": 0.109,
-     "my_playoff_cats_per_week": 0.543,
-     "their_playoff_cats_per_week": 0.035,
+     "their_cats_per_week": 0.119,
+     "my_playoff_cats_per_week": 0.541,
+     "their_playoff_cats_per_week": 0.037,
      "my_categories": [
       {
        "cat": "REB",
-       "delta": 0.249
+       "delta": 0.253
       },
       {
        "cat": "FG%",
@@ -3238,11 +3238,11 @@
       },
       {
        "cat": "DD",
-       "delta": 0.104
+       "delta": 0.105
       },
       {
        "cat": "STL",
-       "delta": 0.078
+       "delta": 0.077
       },
       {
        "cat": "FGM",
@@ -3258,21 +3258,21 @@
       },
       {
        "cat": "FT%",
-       "delta": -0.151
+       "delta": -0.152
       },
       {
        "cat": "3PM",
-       "delta": -0.304
+       "delta": -0.307
       }
      ],
      "their_categories": [
       {
        "cat": "3PM",
-       "delta": 0.3
+       "delta": 0.302
       },
       {
        "cat": "FT%",
-       "delta": 0.142
+       "delta": 0.143
       },
       {
        "cat": "PTS",
@@ -3283,16 +3283,16 @@
        "delta": 0.039
       },
       {
+       "cat": "REB",
+       "delta": -0.07
+      },
+      {
        "cat": "STL",
        "delta": -0.072
       },
       {
-       "cat": "REB",
-       "delta": -0.075
-      },
-      {
        "cat": "DD",
-       "delta": -0.087
+       "delta": -0.086
       },
       {
        "cat": "FG%",
@@ -3370,17 +3370,17 @@
      },
      "shape": "2-for-2",
      "my_cats_per_week": 0.139,
-     "their_cats_per_week": 0.059,
-     "my_playoff_cats_per_week": 0.416,
+     "their_cats_per_week": 0.062,
+     "my_playoff_cats_per_week": 0.413,
      "their_playoff_cats_per_week": -0.056,
      "my_categories": [
       {
        "cat": "REB",
-       "delta": 0.167
+       "delta": 0.169
       },
       {
        "cat": "BLK",
-       "delta": 0.111
+       "delta": 0.11
       },
       {
        "cat": "DD",
@@ -3404,13 +3404,13 @@
       },
       {
        "cat": "3PM",
-       "delta": -0.127
+       "delta": -0.129
       }
      ],
      "their_categories": [
       {
        "cat": "3PM",
-       "delta": 0.131
+       "delta": 0.13
       },
       {
        "cat": "PTS",
@@ -3418,23 +3418,23 @@
       },
       {
        "cat": "FGM",
-       "delta": 0.066
+       "delta": 0.065
       },
       {
        "cat": "REB",
-       "delta": -0.034
+       "delta": -0.032
       },
       {
        "cat": "STL",
-       "delta": -0.049
+       "delta": -0.048
       },
       {
        "cat": "DD",
-       "delta": -0.054
+       "delta": -0.053
       },
       {
        "cat": "BLK",
-       "delta": -0.1
+       "delta": -0.099
       }
      ],
      "value_given": 5.7,
@@ -3446,158 +3446,134 @@
      "gets_extra_spot": false
     },
     {
-     "partner_team_id": "1",
+     "partner_team_id": "2",
      "give": [
       {
-       "id": "6606",
-       "name": "Damian Lillard",
-       "pos": "PG",
-       "team": "POR",
-       "rank": 54,
-       "age": "36",
-       "inj": "",
-       "ret": "",
+       "id": "3064440",
+       "name": "Zach LaVine",
+       "pos": "SG/SF",
+       "team": "SAC",
+       "rank": 52,
+       "age": "31",
+       "inj": "DAY_TO_DAY",
+       "ret": "2026-11-18",
        "young": false
       },
       {
-       "id": "4397183",
-       "name": "Aaron Wiggins",
-       "pos": "SG/SF",
-       "team": "ATL",
-       "rank": 185,
-       "age": "27",
+       "id": "5105623",
+       "name": "Kel'el Ware",
+       "pos": "C",
+       "team": "MIL",
+       "rank": 195,
+       "age": "22",
        "inj": "",
        "ret": "",
-       "young": false
+       "young": true
       }
      ],
      "gets": [
       {
-       "id": "4066320",
-       "name": "Desmond Bane",
-       "pos": "SG/SF",
-       "team": "ORL",
-       "rank": 51,
-       "age": "28",
+       "id": "5142620",
+       "name": "Darius Acuff Jr.",
+       "pos": "PG",
+       "team": "SAC",
+       "rank": 63,
+       "age": "19",
        "inj": "",
        "ret": "",
-       "young": false
+       "young": true
       },
       {
-       "id": "4222252",
-       "name": "Isaiah Hartenstein",
-       "pos": "C",
-       "team": "OKC",
-       "rank": 112,
-       "age": "28",
+       "id": "3062679",
+       "name": "Josh Hart",
+       "pos": "SG/SF",
+       "team": "NYK",
+       "rank": 160,
+       "age": "31",
        "inj": "",
        "ret": "",
        "young": false
       }
      ],
      "get": {
-      "id": "4066320",
-      "name": "Desmond Bane",
-      "pos": "SG/SF",
-      "team": "ORL",
-      "rank": 51,
-      "age": "28",
+      "id": "5142620",
+      "name": "Darius Acuff Jr.",
+      "pos": "PG",
+      "team": "SAC",
+      "rank": 63,
+      "age": "19",
       "inj": "",
       "ret": "",
-      "young": false
+      "young": true
      },
      "shape": "2-for-2",
-     "my_cats_per_week": 0.093,
-     "their_cats_per_week": 0.097,
-     "my_playoff_cats_per_week": 0.523,
-     "their_playoff_cats_per_week": -0.048,
+     "my_cats_per_week": 0.087,
+     "their_cats_per_week": 0.116,
+     "my_playoff_cats_per_week": 0.151,
+     "their_playoff_cats_per_week": 0.093,
      "my_categories": [
       {
-       "cat": "REB",
-       "delta": 0.198
+       "cat": "AST",
+       "delta": 0.222
       },
       {
        "cat": "STL",
-       "delta": 0.078
+       "delta": 0.159
       },
       {
        "cat": "DD",
-       "delta": 0.07
-      },
-      {
-       "cat": "FG%",
-       "delta": 0.063
-      },
-      {
-       "cat": "BLK",
-       "delta": 0.06
-      },
-      {
-       "cat": "3PT%",
        "delta": 0.041
       },
       {
-       "cat": "PTS",
-       "delta": -0.072
+       "cat": "FGM",
+       "delta": 0.037
       },
       {
-       "cat": "FT%",
-       "delta": -0.085
+       "cat": "3PT%",
+       "delta": -0.062
       },
       {
-       "cat": "FTM",
-       "delta": -0.1
+       "cat": "FG%",
+       "delta": -0.077
       },
       {
-       "cat": "3PM",
-       "delta": -0.134
+       "cat": "BLK",
+       "delta": -0.182
       }
      ],
      "their_categories": [
       {
-       "cat": "3PM",
-       "delta": 0.142
-      },
-      {
-       "cat": "FTM",
-       "delta": 0.12
-      },
-      {
-       "cat": "FT%",
-       "delta": 0.081
-      },
-      {
-       "cat": "PTS",
-       "delta": 0.074
+       "cat": "BLK",
+       "delta": 0.216
       },
       {
        "cat": "3PT%",
-       "delta": -0.043
-      },
-      {
-       "cat": "BLK",
-       "delta": -0.05
-      },
-      {
-       "cat": "REB",
-       "delta": -0.055
-      },
-      {
-       "cat": "DD",
-       "delta": -0.057
+       "delta": 0.066
       },
       {
        "cat": "FG%",
-       "delta": -0.064
+       "delta": 0.065
+      },
+      {
+       "cat": "3PM",
+       "delta": 0.055
+      },
+      {
+       "cat": "DD",
+       "delta": -0.043
+      },
+      {
+       "cat": "AST",
+       "delta": -0.134
       },
       {
        "cat": "STL",
-       "delta": -0.079
+       "delta": -0.14
       }
      ],
-     "value_given": 5.6,
-     "value_got": 6.0,
-     "value_label": "even",
+     "value_given": 5.7,
+     "value_got": 4.7,
+     "value_label": "they get more",
      "my_drop": null,
      "their_drop": null,
      "my_add": null,
