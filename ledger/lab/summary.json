@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-16T05:32-06:00",
+ "updated_ct": "2026-11-17T05:32-06:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 5,
-  "days_scored": 0,
+  "days_scored": 1,
   "opponent_team_id": "1",
   "opponent": "Team 1"
  },
- "decided": "2026-11-16",
+ "decided": "2026-11-17",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.0,
+    "days": 1
    },
    "season": {
     "weeks": 3,
@@ -32,11 +32,12 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.73,
+   "adds_per_day": 0.78,
    "status": "control",
    "today": [
-    "Add Jrue Holiday",
-    "Add Saddiq Bey"
+    "Drop Miles Bridges, then move Ty Jerome off IR",
+    "Drop Aaron Wiggins, then move Zach LaVine off IR",
+    "Add Matisse Thybulle for Saddiq Bey"
    ]
   },
   {
@@ -46,8 +47,8 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.0,
+    "days": 1
    },
    "season": {
     "weeks": 3,
@@ -58,13 +59,15 @@
     "smooth_edge": 1.493,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.15,
+   "adds_per_day": 3.19,
    "status": "ahead",
    "today": [
-    "Add Klay Thompson",
-    "Add Jrue Holiday",
-    "Add Cam Spencer for Jamal Shead",
-    "Add Egor Demin for Kel'el Ware"
+    "Drop Egor Demin, then move Ty Jerome off IR",
+    "Drop Klay Thompson, then move Zach LaVine off IR",
+    "Add Matisse Thybulle for Miles Bridges",
+    "Add Jakob Poeltl for Aaron Wiggins",
+    "Add Collin Murray-Boyles for Cam Spencer",
+    "Add Derrick Jones Jr. for Zach LaVine"
    ]
   },
   {
@@ -74,8 +77,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.0,
+    "days": 1
    },
    "season": {
     "weeks": 3,
@@ -86,13 +89,14 @@
     "smooth_edge": 0.044,
     "worst_week": -5.0
    },
-   "adds_per_day": 1.65,
+   "adds_per_day": 1.74,
    "status": "behind",
    "today": [
-    "Add Jrue Holiday",
-    "Add Saddiq Bey",
-    "Add Cam Spencer for Jamal Shead",
-    "Add Jalen Suggs for Kel'el Ware"
+    "Drop Miles Bridges, then move Ty Jerome off IR",
+    "Drop Aaron Wiggins, then move Zach LaVine off IR",
+    "Add Kevin Huerter for Jalen Suggs",
+    "Add Paul Reed for Cam Spencer",
+    "Add Matisse Thybulle for Saddiq Bey"
    ]
   },
   {
@@ -102,8 +106,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 8.0,
+    "days": 1
    },
    "season": {
     "weeks": 3,
@@ -114,12 +118,13 @@
     "smooth_edge": 0.331,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.38,
+   "adds_per_day": 1.44,
    "status": "ahead",
    "today": [
-    "Add Jrue Holiday",
-    "Add Saddiq Bey",
-    "Spot B: add Klay Thompson for Kel'el Ware"
+    "Drop Klay Thompson, then move Ty Jerome off IR",
+    "Drop Miles Bridges, then move Zach LaVine off IR",
+    "Add Matisse Thybulle for Saddiq Bey",
+    "Spot B: add Jakob Poeltl"
    ]
   },
   {
@@ -129,8 +134,8 @@
    "effort": "1 to 3 adds a week",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.5,
+    "days": 1
    },
    "season": {
     "weeks": 3,
@@ -141,15 +146,11 @@
     "smooth_edge": -1.191,
     "worst_week": -5.0
    },
-   "adds_per_day": 0.42,
+   "adds_per_day": 0.63,
    "status": "behind",
    "today": [
-    "Add Jrue Holiday",
-    "Add Saddiq Bey",
-    "Add Cam Spencer for Kel'el Ware (4 games vs 3)",
-    "Add Jerami Grant for Aaron Wiggins (4 games vs 3)",
-    "Add Daniss Jenkins for Jamal Shead (4 games vs 3)",
-    "Add Jalen Suggs for Miles Bridges (4 games vs 3)"
+    "Drop Cam Spencer, then move Ty Jerome off IR",
+    "Drop Saddiq Bey, then move Zach LaVine off IR"
    ]
   },
   {
@@ -159,8 +160,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": null,
-    "days": 0
+    "cats_won": 7.0,
+    "days": 1
    },
    "season": {
     "weeks": 3,
@@ -171,11 +172,11 @@
     "smooth_edge": -1.167,
     "worst_week": -3.5
    },
-   "adds_per_day": 0.12,
+   "adds_per_day": 0.19,
    "status": "reference",
    "today": [
-    "Add Jrue Holiday",
-    "Add Saddiq Bey"
+    "Drop Miles Bridges, then move Ty Jerome off IR",
+    "Drop Aaron Wiggins, then move Zach LaVine off IR"
    ]
   }
  ],
