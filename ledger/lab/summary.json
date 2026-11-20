@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-19T05:32-06:00",
+ "updated_ct": "2026-11-20T05:32-06:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 5,
-  "days_scored": 3,
+  "days_scored": 4,
   "opponent_team_id": "1",
   "opponent": "Team 1"
  },
- "decided": "2026-11-19",
+ "decided": "2026-11-20",
  "decision_mode": "live",
  "strategies": [
   {
@@ -21,7 +21,7 @@
    "is_control": true,
    "week": {
     "cats_won": 8.0,
-    "days": 3
+    "days": 4
    },
    "season": {
     "weeks": 3,
@@ -32,13 +32,10 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.83,
+   "adds_per_day": 0.87,
    "status": "control",
    "today": [
-    "Drop Jamal Shead, then move Ty Jerome off IR",
-    "Move Ty Jerome to IR",
-    "Add Mo Bamba",
-    "Add Draymond Green for Jerami Grant"
+    "Add Day'Ron Sharpe for Draymond Green"
    ]
   },
   {
@@ -49,7 +46,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.5,
-    "days": 3
+    "days": 4
    },
    "season": {
     "weeks": 3,
@@ -60,16 +57,15 @@
     "smooth_edge": 1.493,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.21,
+   "adds_per_day": 3.27,
    "status": "ahead",
    "today": [
-    "Drop Miles Bridges, then move Ty Jerome off IR",
-    "Move Ty Jerome to IR",
-    "Add Derrick Jones Jr.",
-    "Add Jerami Grant for Collin Murray-Boyles",
-    "Add Draymond Green for Matisse Thybulle",
-    "Add Isaiah Jackson for Jakob Poeltl",
-    "Add Jrue Holiday for Zach LaVine"
+    "Add Ryan Kalkbrenner for Draymond Green",
+    "Add Day'Ron Sharpe for Isaiah Jackson",
+    "Add Nic Claxton for Derrick Jones Jr.",
+    "Add Jakob Poeltl for Jerami Grant",
+    "Add Zach LaVine for Jrue Holiday",
+    "Add Leaky Black for Cam Spencer"
    ]
   },
   {
@@ -80,7 +76,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.5,
-    "days": 3
+    "days": 4
    },
    "season": {
     "weeks": 3,
@@ -91,13 +87,12 @@
     "smooth_edge": 0.044,
     "worst_week": -5.0
    },
-   "adds_per_day": 1.79,
+   "adds_per_day": 1.8,
    "status": "behind",
    "today": [
-    "Drop Matisse Thybulle, then move Ty Jerome off IR",
-    "Move Ty Jerome to IR",
-    "Add Derrick Jones Jr.",
-    "Add Isaiah Jackson for Kevin Huerter"
+    "Add Nic Claxton for Isaiah Jackson",
+    "Add Dylan Cardwell for Derrick Jones Jr.",
+    "Add Leaky Black for Cam Spencer"
    ]
   },
   {
@@ -108,7 +103,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.0,
-    "days": 3
+    "days": 4
    },
    "season": {
     "weeks": 3,
@@ -119,13 +114,11 @@
     "smooth_edge": 0.331,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.45,
+   "adds_per_day": 1.43,
    "status": "ahead",
    "today": [
-    "Drop Jamal Shead, then move Ty Jerome off IR",
-    "Move Ty Jerome to IR",
-    "Add Mo Bamba",
-    "Spot B: add Draymond Green"
+    "Add Matisse Thybulle for Mo Bamba",
+    "Spot B: add Leaky Black"
    ]
   },
   {
@@ -136,7 +129,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.0,
-    "days": 3
+    "days": 4
    },
    "season": {
     "weeks": 3,
@@ -147,13 +140,9 @@
     "smooth_edge": -1.191,
     "worst_week": -5.0
    },
-   "adds_per_day": 0.62,
+   "adds_per_day": 0.63,
    "status": "behind",
-   "today": [
-    "Drop Jrue Holiday, then move Ty Jerome off IR",
-    "Move Ty Jerome to IR",
-    "Add Mo Bamba"
-   ]
+   "today": []
   },
   {
    "id": "hold",
@@ -162,8 +151,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 7.5,
-    "days": 3
+    "cats_won": 8.0,
+    "days": 4
    },
    "season": {
     "weeks": 3,
@@ -174,13 +163,9 @@
     "smooth_edge": -1.167,
     "worst_week": -3.5
    },
-   "adds_per_day": 0.21,
+   "adds_per_day": 0.23,
    "status": "reference",
-   "today": [
-    "Drop Jamal Shead, then move Ty Jerome off IR",
-    "Move Ty Jerome to IR",
-    "Add Mo Bamba"
-   ]
+   "today": []
   }
  ],
  "ready": null,
