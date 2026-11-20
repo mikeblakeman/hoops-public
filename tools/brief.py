@@ -113,7 +113,8 @@ def trades_doc(wp, teams=None):
     named = lambda xs: [dict(t, partner=name(t["partner_team_id"])) for t in xs]  # noqa: E731
     return {"ideas": named(tr.get("top") or []), "near": named(tr.get("near") or []),
             "bar": tr.get("bar"), "horizon": tr.get("horizon"), "n_checked": tr.get("n_checked"),
-            "n_candidates": tr.get("n_candidates"), "protected_keepers": tr.get("protected_keepers") or []}
+            "n_candidates": tr.get("n_candidates"), "protected_keepers": tr.get("protected_keepers") or [],
+            "my_returns": tr.get("my_returns")}
 
 
 def _keep_trades(wp, old):

@@ -207,6 +207,35 @@ TRADE_OVERPAY = (1.6, 1.5) # ... and Mike never gives more than 1.6x + 1.5 of th
 TRADE_YOUNG = 24           # age at or under which a player carries keeper value (4 keepers in 2027 and 2028)
 
 
+def active_cap(D):
+    """Active roster spots (every lineup slot except IR, bench included)."""
+    ls = D.settings.get("lineup_slots") or {}
+    return sum(int(v) for k, v in ls.items() if k != "IR")
+
+
+def post_return(players, until, cap, keep=frozenset()):
+    """A team's roster for the trade horizon once its IR players come back (found 2026-11-17: day_players skips the
+    IR slot, so Kawhi and Murray, due back within a week, counted for nothing all season).
+    An IR player returns when he is healthy or his return date is on or before `until` (the horizon's last day); his
+    return date still holds him out until then (avail_on). One with no return date, or a later one, stays on IR.
+    If returns push the active roster past `cap`, the lowest-value players outside `keep` (keepers) are cut, the way
+    a manager would drop his weakest streamers. Returns (players, {"activated": [...], "cut": [...]})."""
+    out, back = [], []
+    for p in players:
+        if p.get("slot") == "IR" and (not p.get("inj") or (p.get("ret") and p["ret"] <= until)):
+            p = dict(p, slot="BE")
+            back.append(p)
+        out.append(p)
+    active = [p for p in out if p.get("slot") != "IR"]
+    cut = []
+    if back and len(active) > cap:
+        cand = sorted((p for p in active if p["id"] not in keep), key=lambda p: p["value"])
+        cut = cand[:len(active) - cap]
+        ids = {p["id"] for p in cut}
+        out = [p for p in out if p["id"] not in ids]
+    return out, {"activated": [p["name"] for p in back], "cut": [p["name"] for p in cut]}
+
+
 def _vorp(D, p):
     """Value over replacement per game, floored at 0: with unlimited adds a replacement-level player is free."""
     return max(MU._num((D.vals.get(p["id"]) or {}).get("vorp_pg"), 0.0), 0.0)
@@ -271,9 +300,10 @@ def trade_search(D, X, top_n=6, today=None):
              "horizon": hinfo}
     if not periods or me not in teams or len(teams) < 3:
         return empty
+    until, cap, returns = periods[-1]["end"] or "", active_cap(D), {}
     for t in teams:
-        teams[t] = team_players(D, X, t)
-    pending = {r["player_id"] for r in D.roster if (r.get("pending_tx") or "").strip() not in ("", "[]")}
+        teams[t], returns[t] = post_return(team_players(D, X, t), until, cap, X.keepers)
+    pending ={r["player_id"] for r in D.roster if (r.get("pending_tx") or "").strip() not in ("", "[]")}
     gen = lambda p, d: p["value"]  # noqa: E731
     zero = {c: 0.0 for c in MU.COMPONENTS}
 
@@ -450,6 +480,7 @@ def trade_search(D, X, top_n=6, today=None):
             "protected_keepers": sorted(p["name"] for p in teams[me] if p["id"] in protected),
             "bar": {"mine": TRADE_SHOW_MIN, "theirs": TRADE_PARTNER_MIN},
             "horizon": hinfo, "n_checked": n, "n_candidates": len(screened), "n_rescored": min(len(screened), TRADE_SCREEN),
+            "my_returns": returns.get(me) or {"activated": [], "cut": []},
             "top": top, "near": near}
 
 
