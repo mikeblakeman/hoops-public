@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-20T05:32-06:00",
+ "updated_ct": "2026-11-21T05:32-06:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 5,
-  "days_scored": 4,
+  "days_scored": 5,
   "opponent_team_id": "1",
   "opponent": "Team 1"
  },
- "decided": "2026-11-20",
+ "decided": "2026-11-21",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 8.0,
-    "days": 4
+    "cats_won": 8.5,
+    "days": 5
    },
    "season": {
     "weeks": 3,
@@ -35,7 +35,10 @@
    "adds_per_day": 0.87,
    "status": "control",
    "today": [
-    "Add Day'Ron Sharpe for Draymond Green"
+    "Drop Day'Ron Sharpe, then move Ty Jerome off IR",
+    "Move Ty Jerome to IR",
+    "Add Naji Marshall",
+    "Add Devin Vassell for Mo Bamba"
    ]
   },
   {
@@ -46,7 +49,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.5,
-    "days": 4
+    "days": 5
    },
    "season": {
     "weeks": 3,
@@ -57,15 +60,14 @@
     "smooth_edge": 1.493,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.27,
+   "adds_per_day": 3.35,
    "status": "ahead",
    "today": [
-    "Add Ryan Kalkbrenner for Draymond Green",
-    "Add Day'Ron Sharpe for Isaiah Jackson",
-    "Add Nic Claxton for Derrick Jones Jr.",
-    "Add Jakob Poeltl for Jerami Grant",
-    "Add Zach LaVine for Jrue Holiday",
-    "Add Leaky Black for Cam Spencer"
+    "Drop Ryan Kalkbrenner, then move Ty Jerome off IR",
+    "Move Ty Jerome to IR",
+    "Add Daniel Gafford",
+    "Add Robert Williams III for Jakob Poeltl",
+    "Add Isaiah Jackson for Day'Ron Sharpe"
    ]
   },
   {
@@ -75,8 +77,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 8.5,
-    "days": 4
+    "cats_won": 9.0,
+    "days": 5
    },
    "season": {
     "weeks": 3,
@@ -87,12 +89,13 @@
     "smooth_edge": 0.044,
     "worst_week": -5.0
    },
-   "adds_per_day": 1.8,
+   "adds_per_day": 1.84,
    "status": "behind",
    "today": [
-    "Add Nic Claxton for Isaiah Jackson",
-    "Add Dylan Cardwell for Derrick Jones Jr.",
-    "Add Leaky Black for Cam Spencer"
+    "Drop Leaky Black, then move Ty Jerome off IR",
+    "Move Ty Jerome to IR",
+    "Add Daniel Gafford",
+    "Add Sam Hauser for Nic Claxton"
    ]
   },
   {
@@ -103,7 +106,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.0,
-    "days": 4
+    "days": 5
    },
    "season": {
     "weeks": 3,
@@ -114,11 +117,14 @@
     "smooth_edge": 0.331,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.43,
+   "adds_per_day": 1.42,
    "status": "ahead",
    "today": [
-    "Add Matisse Thybulle for Mo Bamba",
-    "Spot B: add Leaky Black"
+    "Drop Matisse Thybulle, then move Ty Jerome off IR",
+    "Move Ty Jerome to IR",
+    "Add Naji Marshall",
+    "Add Kris Dunn for Cam Spencer",
+    "Spot B: add Devin Vassell"
    ]
   },
   {
@@ -129,7 +135,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.0,
-    "days": 4
+    "days": 5
    },
    "season": {
     "weeks": 3,
@@ -140,9 +146,13 @@
     "smooth_edge": -1.191,
     "worst_week": -5.0
    },
-   "adds_per_day": 0.63,
+   "adds_per_day": 0.61,
    "status": "behind",
-   "today": []
+   "today": [
+    "Drop Jerami Grant, then move Ty Jerome off IR",
+    "Move Ty Jerome to IR",
+    "Add Daniel Gafford"
+   ]
   },
   {
    "id": "hold",
@@ -152,7 +162,7 @@
    "is_control": false,
    "week": {
     "cats_won": 8.0,
-    "days": 4
+    "days": 5
    },
    "season": {
     "weeks": 3,
@@ -165,7 +175,11 @@
    },
    "adds_per_day": 0.23,
    "status": "reference",
-   "today": []
+   "today": [
+    "Drop Kel'el Ware, then move Ty Jerome off IR",
+    "Move Ty Jerome to IR",
+    "Add Naji Marshall"
+   ]
   }
  ],
  "ready": null,
