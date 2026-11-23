@@ -8,6 +8,11 @@ Follow `playbook/common.md` first.
    `week.plan_used`, keep the morning's actions and week card and use the pre-lock build only for injuries and the
    lineup. (Interactive sessions: `python tools/brief.py snapshots out/prelock.json --kind prelock --no-log
    --teams ~/teams.json --plan <plan_used>`.)
+2b. Active strategy other than `current` (`strategy.followed`, for example `fill_all` since 2026-11-23): the
+   pre-lock build re-runs the strategy on the afternoon data, so a starter ruled out since the morning already has
+   his slot filled there. Use its `actions` and `lineup` for tonight, keep every add's `backups`, and say which adds
+   are new since the morning. If a recommended add has been taken by another team, swap in his first backup and take
+   that backup's lineup card from `lineup_options` (key = backup's player id). There is no stream plan to edit.
 3. Search for late news on the user's starters with games tonight (ruled out, minutes limit, rest) and on the
    recommended pickups.
 3b. Check the week plan in the rebuilt brief: if tomorrow has a planned add, confirm the player is healthy and note it

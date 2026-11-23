@@ -79,8 +79,11 @@ def lineup_options(snap, doc):
     for alt in doc.get("alternatives") or []:
         a_id = str((alt.get("add") or {}).get("id") or "")
         a_drop = str((alt.get("drop") or {}).get("id") or "")
-        base = next((m for m in primary if str((m.get("drop") or {}).get("id") or "") == a_drop
-                     and str(m["add"]["id"]) in adds), None)
+        # an active strategy's backups name the add they replace (`for_add`); otherwise match on the drop
+        base = next((m for m in primary if str(m["add"]["id"]) == str(alt.get("for_add") or "")
+                     and str(m["add"]["id"]) in adds), None) or (None if alt.get("for_add") else next(
+            (m for m in primary if str((m.get("drop") or {}).get("id") or "") == a_drop
+             and str(m["add"]["id"]) in adds), None))
         if not a_id or not base or a_id in out:
             continue
         new_adds = [a_id if x == str(base["add"]["id"]) else x for x in adds]

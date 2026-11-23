@@ -404,12 +404,35 @@ def strategy_actions(dec, inj, cfg):
     who = f"{strategy_name(dec['strategy'])} strategy" + (f" (approved {cfg['since']})" if cfg.get("since") else "")
     acts = [{"kind": "ir", "text": sentence(f"Move {p['name']} to IR"), "why": ir_why(p, inj.get(p["id"]))}
             for p in dec.get("ir_players", []) if p]
+    planned = [m["add"]["id"] for m in dec.get("moves", [])]
     for m in dec.get("moves", []):
         a, d = m["add"], m.get("drop")
         text = (f"Add {a['name']} ({a['team']}), drop {d['name']}" if d
                 else f"Add {a['name']} ({a['team']}) to your open roster spot; no drop needed")
-        acts.append({"kind": "add", "text": sentence(text), "why": f"{who}."})
+        bk = backups_of(m.get("backups"), planned)
+        acts.append({"kind": "add", "text": sentence(text), "why": f"{who}: fills an empty lineup slot today."
+                     + backup_text(bk), "player_id": str(a["id"]), "backups": bk})
     return acts
+
+
+def strategy_move_cards(dec):
+    """The page's Pickups cards (and prebuild's lineup options) for an active strategy's adds: each add, then its
+    backups as alternatives with the same drop. `for_add` ties an alternative to the add it replaces."""
+    planned = [m["add"]["id"] for m in dec.get("moves", [])]
+    moves, alts = [], []
+
+    def card(p, drop, for_add=None):
+        c = {"add": {"id": p["id"], "name": p["name"], "team": p.get("team", ""), "pos": p.get("pos", ""), "inj": "",
+                     "line": {}, "helps": []},
+             "gain": None, "games_left": 0, "plays_today": True, "helps": [],
+             "drop": ({"id": drop["id"], "name": drop["name"], "team": drop.get("team", ""), "pos": drop.get("pos", ""),
+                       "inj": "", "line": {}, "helps": []} if drop else OPEN_SPOT)}
+        return dict(c, for_add=str(for_add)) if for_add else c
+    for m in dec.get("moves", []):
+        moves.append(card(m["add"], m.get("drop")))
+        for b in backups_of(m.get("backups"), planned):
+            alts.append(card(b, m.get("drop"), m["add"]["id"]))
+    return moves, alts
 
 
 def strategy_text(dec):
@@ -601,7 +624,19 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                           "follow the current plan.")
         else:
             actions = strategy_actions(strat, inj, cfg)
-            act_first = activation_actions(strat.get("activations"))
+            # a player the strategy activates and then drops the same morning is simply dropped from IR (Nov 24
+            # build: "Move Aday Mara off IR", then "Add Jalen Suggs, drop Aday Mara"); the add's text already says it
+            gone = set(strat.get("drops") or [])
+            act_first = activation_actions([a for a in strat.get("activations") or []
+                                            if a.get("drop") or a.get("blocked")
+                                            or str((a.get("player") or {}).get("id")) not in gone])
+            for a in actions:
+                if a["kind"] == "add" and any(f"drop {x['player']['name']}" in a["text"]
+                                              for x in strat.get("activations") or []
+                                              if str((x.get("player") or {}).get("id")) in gone):
+                    a["text"] = a["text"][:-1] + " (straight from IR)."
+            # ESPN blocks every add while a healthy player sits on IR, so the move that drops him goes first
+            actions.sort(key=lambda a: 0 if a["text"].endswith("(straight from IR).") else 1)
             step, top, carry, plan_days = None, [], {}, []
             bd["strategy_moves"] = strat      # the ledger logs these moves
             if wp_ok:
@@ -720,9 +755,9 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                                        "expected_cats", "player_games_left", "categories")},
         "actions": actions,
         "lineup": lu,
-        "moves": [] if strat else [as_move(f) for f in bd.get("fills", [])] + ([plan_move(step)] if step else (
-            [] if wp_ok else bd["moves"])),
-        "alternatives": [] if strat else [as_move(f) for f in bd.get("fill_alternatives", [])] + (
+        "moves": strategy_move_cards(strat)[0] if strat else [as_move(f) for f in bd.get("fills", [])] + (
+            [plan_move(step)] if step else ([] if wp_ok else bd["moves"])),
+        "alternatives": strategy_move_cards(strat)[1] if strat else [as_move(f) for f in bd.get("fill_alternatives", [])] + (
             [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
         "ir_activations": strat.get("activations", []) if strat else bd.get("ir_activations", []),

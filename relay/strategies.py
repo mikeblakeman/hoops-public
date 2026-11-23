@@ -35,6 +35,7 @@ INFO = {
     "hold": ("Hold (reference)", "IR moves and open-spot fills only, no swaps", "Under 1 add a week"),
 }
 SMART_MIN_GAIN = 0.02
+BACKUPS = 3        # next-best free agents kept with every fill add (the brief shows them as backups)
 STACK_EDGE = 0.15
 VOLUME = {"FG%": 10.0, "FT%": 4.0, "3PT%": 5.0}   # attempts per game that make a "volume shooter"
 B_STAMP = "0000-00-00T00:00"                     # spot B adds never look like the newest pickup (spot A)
@@ -156,6 +157,7 @@ def _fill(ctx, protected, smart):
     roster = list(mine)
     pool = sorted([p for p in free_agents(D) if p["avail"] > 0 and MU.plays(D, p, sp0)], key=key, reverse=True)
     adds, pairs, notes = [], [], [f"{p['name']} to IR" for p in ir]
+    backups = {}   # add id -> next-best free agents for the same open slot (another manager can take the add first)
 
     def playing(r):
         return [p for p in r if p["slot"] != "IR" and p["avail"] > 0 and MU.plays(D, p, sp0)]
@@ -177,7 +179,7 @@ def _fill(ctx, protected, smart):
             st2, _, _ = MU.assign(playing(roster) + [x], D.slots, key, True)
             if len(st2) > len(st):
                 fits.append(x)
-                if len(fits) >= (8 if smart else 1):
+                if len(fits) >= (8 if smart else 1 + 4 * BACKUPS):   # spares: later adds and other adds' backups use some
                     break
         if not fits:
             break
@@ -196,8 +198,10 @@ def _fill(ctx, protected, smart):
                 notes.append(f"no add gains {SMART_MIN_GAIN:.2f}+ (best {x['name']} {gain:+.3f})")
                 break
             base += gain
+            alts = [y for _g, y in scored[1:]]
         else:
-            x = fits[0]
+            x, alts = fits[0], fits[1:]
+        backups[_id(x)] = [_id(y) for y in alts]
         roster = r0 + [x]
         adds.append(x)
         pairs.append((x, drop))
@@ -207,7 +211,13 @@ def _fill(ctx, protected, smart):
     if smart and len(sps) <= 2:
         bench, why = protect_percentages(D, c["O"], [p for p, _ in MU.assign(playing(roster), D.slots, key, True)[0]])
         notes += why
-    return result(ir, bench=bench, notes=notes, pairs=pairs)
+    # each add gets its own backups (best first, never another add or another add's backup), so every backup has
+    # exactly one lineup card to swap in
+    used = {_id(x) for x in adds}
+    for a in [_id(x) for x in adds]:
+        backups[a] = [b for b in backups.get(a, []) if b not in used][:BACKUPS]
+        used |= set(backups[a])
+    return result(ir, bench=bench, notes=notes, pairs=pairs, backups=backups)
 
 
 def protect_percentages(D, O, starters):
@@ -398,7 +408,9 @@ def real_decision(snap, day, sid):
         return {"id": str(pid), "name": p["name"], "team": p["team"], "pos": p["eligible"]} if p else \
             {"id": str(pid), "name": str(pid), "team": "", "pos": ""}
 
-    out["moves"] = [{"add": info(a), "drop": info(d)} for a, d in out.get("pairs", [])]
+    bk = out.get("backups") or {}
+    out["moves"] = [{"add": info(a), "drop": info(d), "backups": [info(b) for b in bk.get(str(a), [])]}
+                    for a, d in out.get("pairs", [])]
     out["ir_players"] = [info(i) for i in out["ir"]]
     out["bench_players"] = [info(i) for i in out["bench"]]
     out["strategy"] = sid
