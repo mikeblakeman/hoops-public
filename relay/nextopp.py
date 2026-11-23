@@ -44,11 +44,13 @@ def next_period(D, mp):
 
 
 # ------------------------------------------------------------------ forecast
-def forecast(WP, D, mine, theirs, nsps):
-    """Next matchup odds from zero. Returns (odds, key_fn, my expected games, their expected games)."""
+def forecast(WP, D, mine, theirs, nsps, opp_tid=None):
+    """Next matchup odds from zero. Returns (odds, key_fn, my expected games, their expected games).
+    opp_tid: the next opponent, so his streaming into empty slots is counted (MU.streaming)."""
     gen = lambda p, d: p["value"]  # noqa: E731
     zero = {c: 0.0 for c in MU.COMPONENTS}
-    ro, vo, go = WP.simulate_days(D, lambda sp: theirs, nsps, gen)
+    ro, vo, go = WP.simulate_days(D, lambda sp: theirs, nsps, gen,
+                                  stream=MU.streaming(D, opp_tid, nsps) if opp_tid else None)
 
     def outlook(key_fn, bn=False):
         rm, vm, gm = WP.simulate_days(D, lambda sp: mine, nsps, key_fn, bn)

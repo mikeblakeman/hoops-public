@@ -9,6 +9,11 @@ import json
 from pathlib import Path
 
 IDLE_GAIN = 0.02
+# Fill strategies refill every empty lineup slot each morning; only keepers plus the FILL_PROTECT_TOP highest season
+# value are held. Shared by relay.strategies (protected_set), relay.weekplan (trade search) and relay.matchup (Mike's
+# own future fills in the forecast).
+FILL_STRATEGIES = {"fill_all"}
+FILL_PROTECT_TOP = 10
 STRATEGY_FILE = Path(__file__).with_name("strategy.json")
 DEFAULT_STRATEGY = "current"
 

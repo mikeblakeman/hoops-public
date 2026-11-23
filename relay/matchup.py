@@ -87,6 +87,14 @@ class Data:
 
     def __init__(self, snap, my_roster=None, my_scores=None, free_ids=()):
         snap = Path(snap)
+        self.snap = snap
+        # Mike's own future adds count in his forecast when he follows a fill strategy (relay/strategy.json). A
+        # paper team's D starts False; relay.strategies.decide sets it for the strategy being decided.
+        if my_roster is None:
+            from . import moves as MV
+            self.self_fill = MV.load_strategy()["active"] in MV.FILL_STRATEGIES
+        else:
+            self.self_fill = False
         self.settings = json.loads((snap / "league_settings.json").read_text())
         self.status = json.loads((snap / "status.json").read_text())
         self.vals = {r["player_id"]: r for r in _rows(snap / "valuations.csv")}
@@ -285,8 +293,149 @@ def plays(D, p, sp):
     return (sp, p["team"]) in D.games
 
 
-def simulate(D, players, sps, key, bench_negative=False):
-    """Expected remaining totals and variances for one team."""
+# Other managers stream too. A team's forecast adds a same-day free agent into a share of the lineup slots its
+# roster leaves empty. The share is measured, not guessed (2026-11-23): over the last weeks of saved lineups, the
+# extra starts a team got from roster changes during each week, over the empty slots its Monday roster would have
+# left. Add counts mislead: the league's busiest adder (70 adds by Nov 23) filled only 12% of its empty slots, while
+# three teams with about 45 adds each filled 23 to 29%.
+STREAM_FILL_CAP = 0.9     # the most of its empty slots a team is assumed to fill (late scratches, adds taken first)
+STREAM_FA_DEPTH = 8       # a stream add's line: the average of the best this many healthy free agents
+STREAM_WEEKS = 3          # completed matchup weeks of lineup history to measure on
+STREAM_MIN_DAYS = 7       # fewer measured days than this: no streaming assumed
+
+
+def stream_add(D):
+    """The typical same-day add: the average per-game line of the best STREAM_FA_DEPTH healthy free agents,
+    eligible at every slot (cached on D)."""
+    if "_stream_add" in D.__dict__:
+        return D._stream_add
+    fas = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")
+           for p in [make_player(D, pid)] if p and not p["inj"]]
+    top = sorted(fas, key=lambda p: -p["value"])[:STREAM_FA_DEPTH]
+    D._stream_add = None if not top else {
+        "id": "stream", "name": "Stream add", "team": "*", "pos": set().union(*SLOT_ELIG.values()), "eligible": "",
+        "line": {c: sum(p["line"].get(c, 0.0) for p in top) / len(top) for c in top[0]["line"]},
+        "avail": 1.0, "inj": "", "ret": "", "slot": "BE", "rank": 999, "status": "FREEAGENT",
+        "value": sum(p["value"] for p in top) / len(top)}
+    return D._stream_add
+
+
+def measured_shares(D, before=None):
+    """{team id: share of empty lineup slots filled by in-week roster changes} over the last STREAM_WEEKS completed
+    matchup weeks that end before `before` (ISO date; default the data run's date), from
+    snapshots/history/lineups/<date>.csv (all teams, saved before each day's games). Teams with too few measured
+    days are left out (cached on D)."""
+    cache = D.__dict__.setdefault("_measured", {})
+    run = str((D.status or {}).get("run_ct") or "")[:10] or today_ct().isoformat()
+    before = min(before or run, run)      # only weeks the saved lineups can cover (the trade horizon is later)
+    if before in cache:
+        return cache[before]
+    hist = Path(getattr(D, "snap", "")) / "history" / "lineups"
+    weeks = sorted((r for r in D.cal if r.get("end") and r["end"] < before), key=lambda r: r["start"])[-STREAM_WEEKS:]
+    players, rosters = {}, {}
+
+    def roster(day):
+        if day not in rosters:
+            rows = _rows(hist / f"{day}.csv")
+            out = {}
+            for r in rows:
+                if r.get("slot") != "IR":
+                    out.setdefault(r["team_id"], []).append(r["player_id"])
+            rosters[day] = out if rows else None
+        return rosters[day]
+
+    def starts(ids, sp):
+        ps = []
+        for i in ids:
+            if i not in players:
+                players[i] = make_player(D, i)
+            if players[i] and plays(D, players[i], sp):
+                ps.append(players[i])
+        return len(assign(ps, D.slots, lambda p: p["value"])[0])
+
+    tot = {}
+    for w in weeks:
+        base = roster(w["start"])
+        if not base:
+            continue
+        for sp in range(int(w["first_sp"]), int(w["last_sp"]) + 1):
+            cur = roster(D.sp_dates.get(sp, ""))
+            if not cur:
+                continue
+            for t, ids in base.items():
+                b = starts(ids, sp)
+                g = tot.setdefault(t, [0, 0, 0])
+                g[0] += starts(cur.get(t, []), sp) - b
+                g[1] += len(D.slots) - b
+                g[2] += 1
+    cache[before] = {t: max(0.0, min(STREAM_FILL_CAP, g / e)) if e else 0.0
+                     for t, (g, e, n) in tot.items() if n >= STREAM_MIN_DAYS}
+    return cache[before]
+
+
+def stream_share(D, tid, sps=None):
+    """Share of the lineup slots team `tid` leaves empty that it fills with same-day adds (measured_shares). Mike
+    is not measured here: his own adds are planned explicitly, or follow self_fill under a fill strategy."""
+    tid = str(tid or "")
+    if not tid or tid == str(D.my_tid):
+        return 0.0
+    first = D.sp_dates.get(sps[0]) if sps else None
+    return measured_shares(D, first).get(tid, 0.0)
+
+
+def streaming(D, tid, sps):
+    """(stream add, share) for team `tid` in `sps`, or None when it does not stream (or is Mike)."""
+    share = stream_share(D, tid, sps)
+    add = stream_add(D) if share > 0 else None
+    return (add, share) if add else None
+
+
+def self_fill(D, sps):
+    """Mike's own future adds under a fill strategy (D.self_fill): from the second remaining day on, his empty
+    lineup slots get same-day adds at STREAM_FILL_CAP, at most D.fill_spots a day (his unprotected active spots;
+    keepers and the top FILL_PROTECT_TOP are never dropped). Today's adds are explicit moves, so today is left out.
+    Returns (stream, from_sp, max_per_day) or None."""
+    if not getattr(D, "self_fill", False) or len(sps) < 2:
+        return None
+    add = stream_add(D)
+    n = fill_spots(D)
+    return ((add, STREAM_FILL_CAP), sps[1], n) if add and n > 0 else None
+
+
+def fill_spots(D):
+    """Mike's active roster spots outside keepers plus his FILL_PROTECT_TOP by season value."""
+    from . import moves as MV
+    keepers = {r["player_id"] for r in _rows(Path(getattr(D, "snap", "")) / "draft_picks.csv")
+               if r.get("keeper") == "True" and str(r.get("team_id")) == D.my_tid}
+    rows = [r for r in D.roster if r["team_id"] == D.my_tid]
+    ids = [r["player_id"] for r in rows]
+    top = sorted(ids, key=lambda i: -_num((D.vals.get(i) or {}).get("vorp_season"), -999))[:MV.FILL_PROTECT_TOP]
+    keep = (keepers & set(ids)) | set(top)
+    cap = sum(int(v) for k, v in (D.settings.get("lineup_slots") or {}).items() if k != "IR")
+    return max(0, cap - sum(1 for r in rows if r["player_id"] in keep and r.get("slot") != "IR"))
+
+
+def game_day(D, sp):
+    """True when any NBA game is on scoring period sp."""
+    days = D.__dict__.get("_game_days")
+    if days is None:
+        days = D._game_days = {s for s, _t in D.games}
+    return sp in days
+
+
+def with_stream(D, starters, stream, most=None):
+    """Fill the slots `starters` leave empty (at most `most`) with the team's stream add at its share."""
+    if not stream:
+        return starters
+    empty = len(D.slots) - len(starters)
+    if most is not None:
+        empty = min(empty, most)
+    return list(starters) + [(dict(stream[0], share=stream[1]), "UT")] * max(0, empty)
+
+
+def simulate(D, players, sps, key, bench_negative=False, stream=None, own=None):
+    """Expected remaining totals and variances for one team. stream: (stream add, share) from streaming(), for an
+    opponent; own: (stream, from_sp, most a day) from self_fill(), for Mike under a fill strategy."""
     mean = {c: 0.0 for c in COMPONENTS}
     var = {c: 0.0 for c in COMPONENTS}
     games = 0.0
@@ -294,8 +443,12 @@ def simulate(D, players, sps, key, bench_negative=False):
         d = D.sp_dates.get(sp, "")
         today = [p for p in players if p["slot"] != "IR" and avail_on(p, d) > 0 and plays(D, p, sp)]
         starters, _, _ = assign(today, D.slots, key, bench_negative)
+        if stream and game_day(D, sp):
+            starters = with_stream(D, starters, stream)
+        if own and sp >= own[1] and game_day(D, sp):
+            starters = with_stream(D, starters, own[0], own[2])
         for p, _slot in starters:
-            a = avail_on(p, d)
+            a = avail_on(p, d) * p.get("share", 1.0)
             games += a
             for c in COMPONENTS:
                 mean[c] += a * p["line"][c]
@@ -395,7 +548,7 @@ def roster_room(D, ir_moves):
 
 
 def outlook(D, mine, opp_sim, sps, key_m, cur_m, cur_o, bench_negative=False):
-    rm, vm, gm = simulate(D, mine, sps, key_m, bench_negative)
+    rm, vm, gm = simulate(D, mine, sps, key_m, bench_negative, own=self_fill(D, sps))
     ro, vo, go = opp_sim
     return odds(D.cats, cur_m, cur_o, rm, vm, ro, vo), gm, go
 
@@ -583,8 +736,8 @@ def _context(D, today):
     mine = team_players(D, D.my_tid)
     theirs = team_players(D, opp) if opp else []
     cur_m, cur_o = current_totals(D, D.my_tid), current_totals(D, opp)
-    # opponent: starts its best players by generic value every day
-    opp_sim = simulate(D, theirs, sps, lambda p: p["value"])
+    # opponent: starts its best players by generic value every day, and streams into empty slots at its measured share
+    opp_sim = simulate(D, theirs, sps, lambda p: p["value"], stream=streaming(D, opp, sps))
     # pass 1: generic ordering -> odds -> weights; pass 2: matchup ordering
     O, gm, go = outlook(D, mine, opp_sim, sps, lambda p: p["value"], cur_m, cur_o)
     key = lambda p: matchup_value(p, O)  # noqa: E731

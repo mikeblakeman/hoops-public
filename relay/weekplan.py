@@ -78,7 +78,7 @@ def blank():
 def add_day(mean, var, starters, d):
     games = 0.0
     for p, _ in starters:
-        a = avail_on(p, d)
+        a = avail_on(p, d) * p.get("share", 1.0)   # a stream add counts at its team's share (MU.with_stream)
         games += a
         for c in MU.COMPONENTS:
             mean[c] += a * p["line"][c]
@@ -93,12 +93,15 @@ def add_day(mean, var, starters, d):
     return games
 
 
-def simulate_days(D, roster_for_day, sps, key_fn, bench_negative=False):
+def simulate_days(D, roster_for_day, sps, key_fn, bench_negative=False, stream=None):
+    """stream: (stream add, share) from MU.streaming() for a team that streams into its empty slots."""
     mean, var = blank()
     games = 0.0
     for sp in sps:
         d = D.sp_dates[sp]
         st, _, _ = MU.assign(day_players(D, roster_for_day(sp), sp), D.slots, lambda p: key_fn(p, d), bench_negative)
+        if stream and MU.game_day(D, sp):
+            st = MU.with_stream(D, st, stream)
         games += add_day(mean, var, st, d)
     return mean, var, games
 
@@ -242,8 +245,8 @@ def post_return(players, until, cap, keep=frozenset()):
 # active roster spot is refilled each morning with a free agent who plays that day. The trade search models those
 # spots as daily fills, so a 2-for-1 that frees a spot, or one that sends out players fill_all would churn anyway,
 # is scored the way the brief will actually play it.
-FILL_STRATEGIES = {"fill_all"}
-FILL_PROTECT_TOP = 10      # keepers plus this many by season value are never dropped (relay.strategies.protected_set)
+FILL_STRATEGIES = MV.FILL_STRATEGIES
+FILL_PROTECT_TOP = MV.FILL_PROTECT_TOP   # keepers plus this many by season value are never dropped
 STREAM_AVAIL = 0.9         # share of a daily fill's games that count (late scratches, the add taken first)
 ALL_POS = set().union(*MU.SLOT_ELIG.values())
 
@@ -281,6 +284,28 @@ def _age(p):
     except (TypeError, ValueError):
         return 0
 
+
+
+# Keepers: 4 per team in 2028 (league settings), so a manager values a young player he would keep beyond this season.
+# The fairness filter counts each side's projected 2028 keeper four (found 2026-11-23: ideas asked for Derik Queen, 21,
+# and Caleb Wilson, 20, as if their owners valued them like veterans).
+KEEPER_COUNT = 4
+KEEPER_WEIGHT = 0.5        # one point of keeper-four value is worth half a point of this season's value per game
+AGE_FACTOR = ((22, 1.4), (24, 1.25), (27, 1.1), (30, 1.0), (33, 0.75))   # age at or under -> factor; older: 0.5
+
+
+def keeper_score(D, p):
+    """Projected 2028 keeper value: value over replacement per game, scaled by age (young players improve and
+    stay keepable; players past 30 decline before the 2027-28 season)."""
+    age = _age(p)
+    f = next((x for a, x in AGE_FACTOR if age and age <= a), 0.5 if age else 1.0)
+    return _vorp(D, p) * f
+
+
+def keeper_four(D, players):
+    """(total keeper score of the best KEEPER_COUNT, their ids) for a roster."""
+    best = sorted(players, key=lambda p: -keeper_score(D, p))[:KEEPER_COUNT]
+    return sum(keeper_score(D, p) for p in best), {p["id"] for p in best}
 
 def trade_horizon(D, today):
     """The matchups a trade agreed today would count in: full matchups starting on or after today +
@@ -350,12 +375,16 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
     game_sps = {sp for sp, _t in D.games}
     streams = {}
 
+    # other managers stream into their empty slots at their add pace (MU.streaming); the share is measured on the
+    # first horizon week and kept for the whole horizon
+    team_stream = {t: MU.streaming(D, t, periods[0]["sps"]) for t in teams if t != me}
+
     def totals(players, pers, t=None):
         if fill and t == me:
             return fill_totals(players, pers)
         out = []
         for x in pers:
-            m, v, _g = simulate_days(D, lambda sp: players, x["sps"], gen)
+            m, v, _g = simulate_days(D, lambda sp: players, x["sps"], gen, stream=team_stream.get(t))
             out.append((m, v))
         return out
 
@@ -430,6 +459,18 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
                 new_mine.append(fa_best)
         return new_mine, their_new, my_drop, their_drop
 
+    k4 = {t: keeper_four(D, pl) for t, pl in teams.items()}
+
+    def keeper_info(ot, new_mine, their_new):
+        """Change in each side's projected 2028 keeper four (keeper-score units, value per game)."""
+        km, kt = keeper_four(D, new_mine), keeper_four(D, their_new)
+        names = {p["id"]: p["name"] for p in teams[me] + teams[ot] + new_mine + their_new}
+        return {"mine": round(km[0] - k4[me][0], 2), "theirs": round(kt[0] - k4[ot][0], 2),
+                "my_four_in": sorted(names[i] for i in km[1] - k4[me][1]),
+                "my_four_out": sorted(names[i] for i in k4[me][1] - km[1]),
+                "their_four_in": sorted(names[i] for i in kt[1] - k4[ot][1]),
+                "their_four_out": sorted(names[i] for i in k4[ot][1] - kt[1])}
+
     # ---- quick screen on three sample weeks
     scr = _screen_periods(periods)
     Ts = {t: totals(pl, scr, t) for t, pl in teams.items()}
@@ -450,6 +491,10 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
                             continue
                         ra = rosters_after(ot, outs, ins)
                         if not ra:
+                            continue
+                        # the partner also weighs his 2028 keeper four: losing a young keeper costs him extra
+                        dk = keeper_four(D, ra[1])[0] - k4[ot][0]
+                        if give_v + KEEPER_WEIGHT * dk < TRADE_FAIR * get_v:
                             continue
                         n += 1
                         T2 = dict(Ts)
@@ -477,6 +522,7 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
                         "mine": mine_gain, "theirs": their_gain, "give_v": give_v, "get_v": get_v,
                         "mine_po": None if smp is None else smp - base[me][1],
                         "theirs_po": None if stp is None else stp - base[ot][1],
+                        "keeper": keeper_info(ot, new_mine, their_new),
                         "T2": (T2[me], T2[ot])})
 
     score = lambda r: r["mine"] + 0.5 * min(r["theirs"], 0.3)  # noqa: E731
@@ -516,16 +562,20 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
             "my_add": (not fill) and fa_best and len(r["outs"]) > len(r["ins"]) and pl(fa_best) or None,
             "gets_extra_spot": len(r["outs"]) > len(r["ins"]),
             "fill_spot": bool(fill and len(r["outs"]) > len(r["ins"])),   # the open spot becomes a daily fill
+            "keeper": r["keeper"],
         }
+
+    def stream_shares():
+        return {t: round(v[1], 2) if v else 0.0 for t, v in sorted(team_stream.items())}
 
     def model_info():
         """How Mike's side was scored: held players only, or held players plus daily fills (fill strategies)."""
         if not fill:
-            return {"fill": False}
+            return {"fill": False, "stream_share": stream_shares()}
         held, k = fill_split(D, teams[me], X.keepers, cap)
         sp_ = streams.get(k) or stream_player(fas, k)
         return {"fill": True, "held": sorted(p["name"] for p in held), "fill_spots": k,
-                "fill_line": brief_line(sp_) if sp_ else None}
+                "fill_line": brief_line(sp_) if sp_ else None, "stream_share": stream_shares()}
 
     top, near, seen_team, seen_in, seen_sets = [], [], {}, {}, set()
     for r in res:
@@ -573,7 +623,7 @@ def next_opponent(D, X, snap, today, mp, prow, sps, base, occ_id, names, fa_pool
         return base + ([names[pid]] if pid in names else [])
 
     end0 = (plans["daily"]["days"][-1]["id"] if plans["daily"]["days"] else occ_id)
-    O_n, key_n, _gm, _go = NO.forecast(sys.modules[__name__], D, roster_with(end0), theirs, nsps)
+    O_n, key_n, _gm, _go = NO.forecast(sys.modules[__name__], D, roster_with(end0), theirs, nsps, opp_n)
     # next-week streaming candidates: the best free agents with a game next week, plus this week's plan players
     fa_n = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")
             for p in [mk(D, X, pid)] if p and any(WP_avail(p, D, sp) for sp in nsps)]
@@ -606,7 +656,7 @@ def next_opponent(D, X, snap, today, mp, prow, sps, base, occ_id, names, fa_pool
 
     end1 = plans["daily"]["days"][-1]["id"] if plans["daily"]["days"] else occ_id
     if end1 != end0:   # the forecast uses the roster Mike will actually have on Monday
-        O_n, key_n, _gm, _go = NO.forecast(sys.modules[__name__], D, roster_with(end1), theirs, nsps)
+        O_n, key_n, _gm, _go = NO.forecast(sys.modules[__name__], D, roster_with(end1), theirs, nsps, opp_n)
     out = NO.report(sys.modules[__name__], D, X, snap, mp, opp_n, nprow, nsps, roster_with(end1), theirs,
                     O_n, key_n, _gm, _go)
     out["window_days"] = NO.WINDOW_DAYS
@@ -642,7 +692,7 @@ def setup(D, X, today):
         banked = True
 
     active = [p for p in mine if p["slot"] != "IR"]
-    ro, vo, _go = simulate_days(D, lambda sp: theirs, sps, gen)
+    ro, vo, _go = simulate_days(D, lambda sp: theirs, sps, gen, stream=MU.streaming(D, opp, sps))
 
     def outlook(roster_for_day, key_fn, bn=False):
         rm, vm, gm = simulate_days(D, roster_for_day, sps, key_fn, bn)

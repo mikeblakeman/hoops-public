@@ -340,6 +340,9 @@ DECIDE = {"current": current, "fill_all": fill_all, "smart_fill": smart_fill, "t
 def decide(sid, ctx, roster, protected, day):
     """Run one strategy and enforce the protected rule on its output (a refused drop also cancels its add, which
     would have no roster room)."""
+    # a fill strategy's forecast counts its own future adds (relay.matchup.self_fill); every other strategy's does not
+    if isinstance(ctx, Ctx) and ctx._c is None and ctx._bd is None:
+        ctx.data().self_fill = sid in MV.FILL_STRATEGIES
     out = DECIDE[sid](ctx, roster, protected, day)
     bad = [i for i in out["drops"] if i in protected]
     if bad:
@@ -358,7 +361,7 @@ def protected_set(snap, D, rows):
     keepers = {r["player_id"] for r in MU._rows(Path(snap) / "draft_picks.csv")
                if r.get("keeper") == "True" and str(r.get("team_id")) == D.my_tid}
     ids = [str(r["player_id"]) for r in rows]
-    top = sorted(ids, key=lambda i: -MU._num((D.vals.get(i) or {}).get("vorp_season"), -999))[:WP.FILL_PROTECT_TOP]
+    top = sorted(ids, key=lambda i: -MU._num((D.vals.get(i) or {}).get("vorp_season"), -999))[:MV.FILL_PROTECT_TOP]
     return sorted((keepers & set(ids)) | set(top))
 
 
