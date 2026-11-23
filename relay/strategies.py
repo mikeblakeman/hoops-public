@@ -147,7 +147,10 @@ def _fill(ctx, protected, smart):
     cap_active, cap_ir = caps(D)
     mine = [dict(p) for p in c["mine"]]
     n_ir = sum(1 for p in mine if p["slot"] == "IR")
-    ir = ir_candidates(D, mine)[:max(0, cap_ir - n_ir)]
+    # a player the activation rule just brought off IR (relay.matchup.ir_returns: return date today) stays active,
+    # even while ESPN still lists him out; otherwise the brief says "off IR" and "to IR" for the same player
+    keep = {str(i) for i in ctx.state.get("keep_active", ())}
+    ir = [p for p in ir_candidates(D, mine) if str(p["id"]) not in keep][:max(0, cap_ir - n_ir)]
     for p in ir:
         p["slot"] = "IR"
     roster = list(mine)
@@ -376,7 +379,7 @@ def real_decision(snap, day, sid):
     if am["activate_ids"]:
         D, rows = D_act, real_rows(D_act)
     mp, sps, prow = MU.current_period(D, day)
-    state = {}
+    state = {"keep_active": list(am["activate_ids"])}
     if sid == "two_spots":
         state["spot_b"] = spot_b_of(D, protected)
     if sid == "schedule_stack" and prow and day.isoformat() != prow["start"]:

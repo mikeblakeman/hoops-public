@@ -387,7 +387,8 @@ def decide_day(snap, day, lab=None, mode="live", run=None, missed=False):
             if missed:
                 out = S.result(notes=["no data run before first tip: no moves"])
             else:
-                ctx = S.Ctx(view, date.fromisoformat(day), st["roster"], st["dropped"], scores, st)
+                keep = (am or {}).get("activate_ids") or []   # just activated: never straight back to IR
+                ctx = S.Ctx(view, date.fromisoformat(day), st["roster"], st["dropped"], scores, dict(st, keep_active=keep))
                 try:
                     out = S.decide(sid, ctx, st["roster"], set(st["protected"]), date.fromisoformat(day))
                 except Exception as e:  # noqa: BLE001  one strategy failing never stops the others
@@ -783,6 +784,13 @@ def summary(hist, lab=None, now=None):
                       "status": status, "today": today})
         if status == "ready" and sid != active and (best is None or season["edge"] > best[1]["edge"]):
             best = (sid, season)
+    # After a switch every edge is measured against the previous plan (the control), so a Ready strategy must also
+    # beat the active one by MIN_EDGE. Otherwise a test that only beats the old plan is offered as a "switch" to a
+    # worse strategy (Nov 23: two_spots +0.5 flagged while fill_all, in use, was +1.75).
+    if best and control != active:
+        act_edge = next(((x["season"] or {}).get("edge") for x in out_s if x["id"] == active), None)
+        if act_edge is not None and best[1]["edge"] < act_edge + MIN_EDGE:
+            best = None
     ready = None
     if best:
         sid, se = best

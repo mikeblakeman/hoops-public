@@ -1,8 +1,8 @@
 {
  "date": "2026-11-23",
  "kind": "prelock",
- "generated_ct": "2026-11-23T07:47-06:00",
- "data_run_ct": "2026-11-23T07:46-06:00",
+ "generated_ct": "2026-11-23T07:54-06:00",
+ "data_run_ct": "2026-11-23T07:53-06:00",
  "headline": "",
  "summary": "",
  "matchup": {
@@ -174,11 +174,6 @@
   },
   {
    "kind": "watch",
-   "text": "Ready to switch to Two streaming spots: +0.5 more categories a week over 4 weeks (2 live), 100% sure.",
-   "why": "Reply 'switch to two_spots' to approve. Nothing changes until you do."
-  },
-  {
-   "kind": "watch",
    "text": "Check Victor Wembanyama before tip (day to day).",
    "why": "If he is ruled out, start your best bench player with a game instead."
   },
@@ -188,14 +183,9 @@
    "why": "If he is ruled out, start your best bench player with a game instead."
   },
   {
-   "kind": "ir",
-   "text": "Move Aday Mara to IR.",
-   "why": "Short-term designation (back about 2026-11-23); these often switch to day-to-day before lock, so check ESPN first. He is listed out; this frees a roster spot for a streamer. ESPN allows IR only while he shows Out. If ESPN shows him day-to-day, skip this and the add that depends on it."
-  },
-  {
    "kind": "watch",
    "text": "Plan ahead: Fill every slot picks each day's adds that morning.",
-   "why": "Light days: Tue 11/24 (3 games, 8 slots empty), Thu 11/26 (0 games, 10 slots empty), Sat 11/28 (5 games, 8 slots empty). Expect adds into the empty slots on those days. Make each add in the morning, before the day's first tip. Each day has backups in case another manager takes the planned player first.",
+   "why": "Light days: Tue 11/24 (3 games, 8 slots empty), Thu 11/26 (0 games, 10 slots empty), Sat 11/28 (5 games, 7 slots empty). Expect adds into the empty slots on those days. Make each add in the morning, before the day's first tip. Each day has backups in case another manager takes the planned player first.",
    "plan": []
   }
  ],
@@ -544,6 +534,29 @@
      "PTS",
      "DD"
     ]
+   },
+   {
+    "id": "5174983",
+    "name": "Aday Mara",
+    "team": "OKC",
+    "pos": "C",
+    "inj": "OUT",
+    "rank": 116,
+    "why": "out",
+    "line": {
+     "PTS": 10.6,
+     "REB": 7.39,
+     "AST": 2.18,
+     "STL": 0.0,
+     "BLK": 1.38,
+     "3PM": 0.0,
+     "DD": 0.32
+    },
+    "helps": [
+     "FGM",
+     "BLK",
+     "PTS"
+    ]
    }
   ],
   "ir": [
@@ -590,34 +603,11 @@
      "FGM",
      "PTS"
     ]
-   },
-   {
-    "id": "5174983",
-    "name": "Aday Mara",
-    "team": "OKC",
-    "pos": "C",
-    "inj": "OUT",
-    "rank": 116,
-    "line": {
-     "PTS": 10.6,
-     "REB": 7.39,
-     "AST": 2.18,
-     "STL": 0.0,
-     "BLK": 1.38,
-     "3PM": 0.0,
-     "DD": 0.32
-    },
-    "helps": [
-     "FGM",
-     "BLK",
-     "PTS"
-    ]
    }
   ],
   "open_slots": 0,
   "after_moves": [
-   "Aday Mara off IR",
-   "Aday Mara to IR"
+   "Aday Mara off IR"
   ]
  },
  "moves": [],
@@ -765,7 +755,8 @@
      "PF"
     ],
     "my_no_slot": [
-     "Jrue Holiday"
+     "Jrue Holiday",
+     "Aday Mara"
     ],
     "opp_starters": 10,
     "opp_open_slots": []
@@ -818,11 +809,10 @@
    {
     "date": "2026-11-28",
     "nba_games": 5,
-    "my_starters": 2,
+    "my_starters": 3,
     "my_open_slots": [
      "SG",
      "SF",
-     "C",
      "G",
      "F",
      "UT",
@@ -1574,19 +1564,14 @@
  ],
  "injury_notes": [
   {
-   "name": "Kawhi Leonard",
-   "status": "Out",
-   "comment": "Leonard (knee) could return in the next few weeks, per Shams Charania of ESPN."
+   "name": "Victor Wembanyama",
+   "status": "Day-To-Day",
+   "comment": "Wembanyama (back) is questionable for Monday's game against the Kings, Jared Weiss of The Athletic reports."
   },
   {
    "name": "Dejounte Murray",
    "status": "Out",
    "comment": "Murray (ankle) is out for Friday's game against Memphis."
-  },
-  {
-   "name": "Victor Wembanyama",
-   "status": "Day-To-Day",
-   "comment": "Wembanyama (back) is questionable for Monday's game against the Kings, Jared Weiss of The Athletic reports."
   },
   {
    "name": "Aday Mara",
@@ -1597,6 +1582,11 @@
    "name": "Zion Williamson",
    "status": "Day-To-Day",
    "comment": "Williamson (thigh) is probable for Monday's game against Phoenix."
+  },
+  {
+   "name": "Kawhi Leonard",
+   "status": "Out",
+   "comment": "Leonard (knee) could return in the next few weeks, per Shams Charania of ESPN."
   }
  ],
  "news": [],
@@ -1611,7 +1601,7 @@
   "warnings": []
  },
  "lab": {
-  "updated_ct": "2026-11-23T07:47-06:00",
+  "updated_ct": "2026-11-23T07:54-06:00",
   "control": "current",
   "active": "fill_all",
   "since": "2026-11-23",
@@ -1784,15 +1774,7 @@
     ]
    }
   ],
-  "ready": {
-   "id": "two_spots",
-   "name": "Two streaming spots",
-   "edge": 0.5,
-   "weeks": 4,
-   "live_weeks": 2,
-   "confidence": 0.997,
-   "summary": "Two streaming spots wins +0.5 categories a week over Current: one streaming spot across 4 weeks (2 live), 100% sure."
-  },
+  "ready": null,
   "switch_back": null,
   "notes": [
    "Weeks 1, 2, 3 were replayed from saved data (backtest). At most 2 backtest weeks count as evidence.",
@@ -1802,9 +1784,7 @@
  "move_ids": {
   "add": [],
   "drop": [],
-  "ir": [
-   "5174983"
-  ],
+  "ir": [],
   "bench": [],
   "activate": [
    "5174983"
@@ -1815,9 +1795,9 @@
  "prebuilt": {
   "for_date": "2026-11-23",
   "kind": "prelock",
-  "built_ct": "2026-11-23T07:47-06:00",
-  "clock_ct": "2026-11-23T07:47-06:00",
-  "data_run_ct": "2026-11-23T07:46-06:00",
+  "built_ct": "2026-11-23T07:54-06:00",
+  "clock_ct": "2026-11-23T07:54-06:00",
+  "data_run_ct": "2026-11-23T07:53-06:00",
   "error": null
  }
 }
