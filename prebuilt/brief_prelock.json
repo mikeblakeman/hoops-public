@@ -1,8 +1,8 @@
 {
  "date": "2026-11-23",
  "kind": "prelock",
- "generated_ct": "2026-11-23T14:35-06:00",
- "data_run_ct": "2026-11-23T14:34-06:00",
+ "generated_ct": "2026-11-23T16:07-06:00",
+ "data_run_ct": "2026-11-23T16:05-06:00",
  "headline": "",
  "summary": "",
  "matchup": {
@@ -821,9 +821,10 @@
  },
  "next_opponent": null,
  "trades": {
-  "ideas": [
+  "ideas": [],
+  "near": [
    {
-    "partner_team_id": "6",
+    "partner_team_id": "1",
     "give": [
      {
       "id": "6606",
@@ -837,136 +838,136 @@
       "young": false
      },
      {
-      "id": "4395628",
-      "name": "Zion Williamson",
-      "pos": "PF/C",
-      "team": "NOP",
-      "rank": 38,
-      "age": "26",
-      "inj": "DAY_TO_DAY",
-      "ret": "2026-11-23",
-      "young": false
-     }
-    ],
-    "gets": [
-     {
-      "id": "3059318",
-      "name": "Joel Embiid",
-      "pos": "C",
-      "team": "PHL",
-      "rank": 24,
-      "age": "32",
-      "inj": "DAY_TO_DAY",
-      "ret": "2026-11-23",
-      "young": false
-     },
-     {
-      "id": "4432848",
-      "name": "Jaime Jaquez Jr.",
+      "id": "3064440",
+      "name": "Zach LaVine",
       "pos": "SG/SF",
-      "team": "MIL",
-      "rank": 137,
-      "age": "25",
+      "team": "SAC",
+      "rank": 57,
+      "age": "31",
       "inj": "",
       "ret": "",
       "young": false
      }
     ],
+    "gets": [
+     {
+      "id": "5105565",
+      "name": "Donovan Clingan",
+      "pos": "C",
+      "team": "POR",
+      "rank": 66,
+      "age": "22",
+      "inj": "",
+      "ret": "",
+      "young": true
+     },
+     {
+      "id": "4433249",
+      "name": "Moussa Diabate",
+      "pos": "PF/C",
+      "team": "CHA",
+      "rank": 113,
+      "age": "24",
+      "inj": "",
+      "ret": "",
+      "young": true
+     }
+    ],
     "get": {
-     "id": "3059318",
-     "name": "Joel Embiid",
+     "id": "5105565",
+     "name": "Donovan Clingan",
      "pos": "C",
-     "team": "PHL",
-     "rank": 24,
-     "age": "32",
-     "inj": "DAY_TO_DAY",
-     "ret": "2026-11-23",
-     "young": false
+     "team": "POR",
+     "rank": 66,
+     "age": "22",
+     "inj": "",
+     "ret": "",
+     "young": true
     },
     "shape": "2-for-2",
-    "my_cats_per_week": 0.202,
-    "their_cats_per_week": 0.13,
-    "my_playoff_cats_per_week": 0.128,
-    "their_playoff_cats_per_week": 0.006,
+    "my_cats_per_week": 0.287,
+    "their_cats_per_week": 0.074,
+    "my_playoff_cats_per_week": 0.223,
+    "their_playoff_cats_per_week": 0.031,
     "my_categories": [
      {
-      "cat": "FT%",
-      "delta": 0.1
+      "cat": "REB",
+      "delta": 0.259
      },
      {
       "cat": "DD",
-      "delta": 0.097
-     },
-     {
-      "cat": "REB",
-      "delta": 0.081
+      "delta": 0.18
      },
      {
       "cat": "BLK",
-      "delta": 0.052
-     },
-     {
-      "cat": "FTM",
-      "delta": 0.041
-     },
-     {
-      "cat": "3PT%",
-      "delta": -0.043
-     },
-     {
-      "cat": "STL",
-      "delta": -0.051
+      "delta": 0.162
      },
      {
       "cat": "FG%",
-      "delta": -0.098
+      "delta": 0.035
+     },
+     {
+      "cat": "PTS",
+      "delta": -0.039
+     },
+     {
+      "cat": "FT%",
+      "delta": -0.067
+     },
+     {
+      "cat": "3PM",
+      "delta": -0.089
+     },
+     {
+      "cat": "FTM",
+      "delta": -0.091
      }
     ],
     "their_categories": [
      {
       "cat": "3PM",
-      "delta": 0.076
-     },
-     {
-      "cat": "PTS",
-      "delta": 0.068
-     },
-     {
-      "cat": "FGM",
-      "delta": 0.064
-     },
-     {
-      "cat": "STL",
-      "delta": 0.063
-     },
-     {
-      "cat": "FG%",
-      "delta": 0.055
+      "delta": 0.275
      },
      {
       "cat": "FTM",
-      "delta": 0.034
+      "delta": 0.216
      },
      {
-      "cat": "BLK",
-      "delta": -0.049
+      "cat": "PTS",
+      "delta": 0.188
      },
      {
       "cat": "FT%",
-      "delta": -0.056
+      "delta": 0.143
+     },
+     {
+      "cat": "FGM",
+      "delta": 0.123
+     },
+     {
+      "cat": "AST",
+      "delta": 0.081
+     },
+     {
+      "cat": "FG%",
+      "delta": -0.112
      },
      {
       "cat": "DD",
-      "delta": -0.071
+      "delta": -0.227
      },
      {
       "cat": "REB",
-      "delta": -0.082
+      "delta": -0.283
+     },
+     {
+      "cat": "BLK",
+      "delta": -0.348
      }
     ],
-    "value_given": 10.1,
-    "value_got": 8.9,
-    "value_label": "even",
+    "value_given": 8.3,
+    "value_got": 4.4,
+    "value_label": "they get more",
     "my_drop": null,
     "their_drop": null,
     "my_add": null,
@@ -974,187 +975,14 @@
     "fill_spot": false,
     "keeper": {
      "mine": 0.0,
-     "theirs": 0.72,
+     "theirs": 0.0,
      "my_four_in": [],
      "my_four_out": [],
-     "their_four_in": [
-      "Zion Williamson"
-     ],
-     "their_four_out": [
-      "Joel Embiid"
-     ]
+     "their_four_in": [],
+     "their_four_out": []
     },
-    "partner": "Team 6"
+    "partner": "Team 1"
    },
-   {
-    "partner_team_id": "6",
-    "give": [
-     {
-      "id": "6606",
-      "name": "Damian Lillard",
-      "pos": "PG",
-      "team": "POR",
-      "rank": 72,
-      "age": "36",
-      "inj": "",
-      "ret": "",
-      "young": false
-     },
-     {
-      "id": "4395628",
-      "name": "Zion Williamson",
-      "pos": "PF/C",
-      "team": "NOP",
-      "rank": 38,
-      "age": "26",
-      "inj": "DAY_TO_DAY",
-      "ret": "2026-11-23",
-      "young": false
-     }
-    ],
-    "gets": [
-     {
-      "id": "3059318",
-      "name": "Joel Embiid",
-      "pos": "C",
-      "team": "PHL",
-      "rank": 24,
-      "age": "32",
-      "inj": "DAY_TO_DAY",
-      "ret": "2026-11-23",
-      "young": false
-     }
-    ],
-    "get": {
-     "id": "3059318",
-     "name": "Joel Embiid",
-     "pos": "C",
-     "team": "PHL",
-     "rank": 24,
-     "age": "32",
-     "inj": "DAY_TO_DAY",
-     "ret": "2026-11-23",
-     "young": false
-    },
-    "shape": "2-for-1",
-    "my_cats_per_week": 0.204,
-    "their_cats_per_week": 0.103,
-    "my_playoff_cats_per_week": 0.124,
-    "their_playoff_cats_per_week": 0.059,
-    "my_categories": [
-     {
-      "cat": "FT%",
-      "delta": 0.099
-     },
-     {
-      "cat": "DD",
-      "delta": 0.097
-     },
-     {
-      "cat": "REB",
-      "delta": 0.081
-     },
-     {
-      "cat": "BLK",
-      "delta": 0.053
-     },
-     {
-      "cat": "FTM",
-      "delta": 0.042
-     },
-     {
-      "cat": "3PT%",
-      "delta": -0.045
-     },
-     {
-      "cat": "STL",
-      "delta": -0.047
-     },
-     {
-      "cat": "FG%",
-      "delta": -0.101
-     }
-    ],
-    "their_categories": [
-     {
-      "cat": "FG%",
-      "delta": 0.071
-     },
-     {
-      "cat": "3PM",
-      "delta": 0.069
-     },
-     {
-      "cat": "PTS",
-      "delta": 0.057
-     },
-     {
-      "cat": "FGM",
-      "delta": 0.049
-     },
-     {
-      "cat": "3PT%",
-      "delta": 0.043
-     },
-     {
-      "cat": "STL",
-      "delta": 0.036
-     },
-     {
-      "cat": "FTM",
-      "delta": 0.031
-     },
-     {
-      "cat": "FT%",
-      "delta": -0.045
-     },
-     {
-      "cat": "BLK",
-      "delta": -0.059
-     },
-     {
-      "cat": "DD",
-      "delta": -0.066
-     },
-     {
-      "cat": "REB",
-      "delta": -0.084
-     }
-    ],
-    "value_given": 10.1,
-    "value_got": 8.9,
-    "value_label": "even",
-    "my_drop": null,
-    "their_drop": {
-     "id": "4437244",
-     "name": "Jalen Green",
-     "pos": "SG/SF",
-     "team": "PHO",
-     "rank": 161,
-     "age": "24",
-     "inj": "",
-     "ret": "",
-     "young": true
-    },
-    "my_add": null,
-    "gets_extra_spot": true,
-    "fill_spot": true,
-    "keeper": {
-     "mine": 0.0,
-     "theirs": 0.72,
-     "my_four_in": [],
-     "my_four_out": [],
-     "their_four_in": [
-      "Zion Williamson"
-     ],
-     "their_four_out": [
-      "Joel Embiid"
-     ]
-    },
-    "partner": "Team 6"
-   }
-  ],
-  "near": [
    {
     "partner_team_id": "1",
     "give": [
@@ -1217,26 +1045,30 @@
      "young": true
     },
     "shape": "2-for-2",
-    "my_cats_per_week": 0.263,
-    "their_cats_per_week": 0.073,
-    "my_playoff_cats_per_week": 0.194,
-    "their_playoff_cats_per_week": 0.06,
+    "my_cats_per_week": 0.285,
+    "their_cats_per_week": 0.067,
+    "my_playoff_cats_per_week": 0.218,
+    "their_playoff_cats_per_week": 0.05,
     "my_categories": [
      {
       "cat": "REB",
-      "delta": 0.236
+      "delta": 0.243
      },
      {
       "cat": "DD",
-      "delta": 0.175
+      "delta": 0.176
      },
      {
       "cat": "BLK",
-      "delta": 0.164
+      "delta": 0.162
+     },
+     {
+      "cat": "FG%",
+      "delta": 0.03
      },
      {
       "cat": "PTS",
-      "delta": -0.041
+      "delta": -0.036
      },
      {
       "cat": "FT%",
@@ -1244,53 +1076,53 @@
      },
      {
       "cat": "FTM",
-      "delta": -0.085
+      "delta": -0.083
      },
      {
       "cat": "3PM",
-      "delta": -0.087
+      "delta": -0.084
      }
     ],
     "their_categories": [
      {
       "cat": "3PM",
-      "delta": 0.246
+      "delta": 0.249
      },
      {
       "cat": "FTM",
-      "delta": 0.167
+      "delta": 0.174
      },
      {
       "cat": "PTS",
-      "delta": 0.157
+      "delta": 0.168
      },
      {
       "cat": "FT%",
-      "delta": 0.12
+      "delta": 0.123
      },
      {
       "cat": "FGM",
-      "delta": 0.108
+      "delta": 0.116
      },
      {
       "cat": "AST",
-      "delta": 0.082
+      "delta": 0.074
      },
      {
       "cat": "FG%",
-      "delta": -0.078
-     },
-     {
-      "cat": "REB",
-      "delta": -0.196
+      "delta": -0.08
      },
      {
       "cat": "DD",
-      "delta": -0.199
+      "delta": -0.206
+     },
+     {
+      "cat": "REB",
+      "delta": -0.213
      },
      {
       "cat": "BLK",
-      "delta": -0.337
+      "delta": -0.341
      }
     ],
     "value_given": 8.3,
@@ -1310,162 +1142,6 @@
      "their_four_out": []
     },
     "partner": "Team 1"
-   },
-   {
-    "partner_team_id": "2",
-    "give": [
-     {
-      "id": "6606",
-      "name": "Damian Lillard",
-      "pos": "PG",
-      "team": "POR",
-      "rank": 72,
-      "age": "36",
-      "inj": "",
-      "ret": "",
-      "young": false
-     },
-     {
-      "id": "3064440",
-      "name": "Zach LaVine",
-      "pos": "SG/SF",
-      "team": "SAC",
-      "rank": 57,
-      "age": "31",
-      "inj": "",
-      "ret": "",
-      "young": false
-     }
-    ],
-    "gets": [
-     {
-      "id": "3202",
-      "name": "Kevin Durant",
-      "pos": "SF/PF",
-      "team": "HOU",
-      "rank": 26,
-      "age": "38",
-      "inj": "",
-      "ret": "",
-      "young": false
-     },
-     {
-      "id": "4600663",
-      "name": "Zach Edey",
-      "pos": "C",
-      "team": "MEM",
-      "rank": 107,
-      "age": "24",
-      "inj": "",
-      "ret": "",
-      "young": true
-     }
-    ],
-    "get": {
-     "id": "3202",
-     "name": "Kevin Durant",
-     "pos": "SF/PF",
-     "team": "HOU",
-     "rank": 26,
-     "age": "38",
-     "inj": "",
-     "ret": "",
-     "young": false
-    },
-    "shape": "2-for-2",
-    "my_cats_per_week": 0.182,
-    "their_cats_per_week": 0.129,
-    "my_playoff_cats_per_week": 0.158,
-    "their_playoff_cats_per_week": 0.103,
-    "my_categories": [
-     {
-      "cat": "FTM",
-      "delta": 0.053
-     },
-     {
-      "cat": "DD",
-      "delta": 0.049
-     },
-     {
-      "cat": "REB",
-      "delta": 0.048
-     },
-     {
-      "cat": "BLK",
-      "delta": 0.045
-     },
-     {
-      "cat": "FT%",
-      "delta": 0.041
-     },
-     {
-      "cat": "AST",
-      "delta": 0.038
-     },
-     {
-      "cat": "STL",
-      "delta": -0.044
-     },
-     {
-      "cat": "3PM",
-      "delta": -0.062
-     }
-    ],
-    "their_categories": [
-     {
-      "cat": "3PM",
-      "delta": 0.26
-     },
-     {
-      "cat": "PTS",
-      "delta": 0.094
-     },
-     {
-      "cat": "STL",
-      "delta": 0.061
-     },
-     {
-      "cat": "FGM",
-      "delta": 0.052
-     },
-     {
-      "cat": "AST",
-      "delta": 0.036
-     },
-     {
-      "cat": "REB",
-      "delta": -0.079
-     },
-     {
-      "cat": "DD",
-      "delta": -0.082
-     },
-     {
-      "cat": "FG%",
-      "delta": -0.088
-     },
-     {
-      "cat": "BLK",
-      "delta": -0.145
-     }
-    ],
-    "value_given": 8.3,
-    "value_got": 8.3,
-    "value_label": "even",
-    "my_drop": null,
-    "their_drop": null,
-    "my_add": null,
-    "gets_extra_spot": false,
-    "fill_spot": false,
-    "keeper": {
-     "mine": 0.0,
-     "theirs": 0.0,
-     "my_four_in": [],
-     "my_four_out": [],
-     "their_four_in": [],
-     "their_four_out": []
-    },
-    "partner": "Team 2"
    },
    {
     "partner_team_id": "1",
@@ -1529,14 +1205,14 @@
      "young": true
     },
     "shape": "2-for-2",
-    "my_cats_per_week": 0.15,
-    "their_cats_per_week": 0.189,
-    "my_playoff_cats_per_week": 0.068,
-    "their_playoff_cats_per_week": 0.098,
+    "my_cats_per_week": 0.173,
+    "their_cats_per_week": 0.174,
+    "my_playoff_cats_per_week": 0.097,
+    "their_playoff_cats_per_week": 0.078,
     "my_categories": [
      {
       "cat": "REB",
-      "delta": 0.19
+      "delta": 0.196
      },
      {
       "cat": "DD",
@@ -1544,23 +1220,23 @@
      },
      {
       "cat": "BLK",
-      "delta": 0.085
+      "delta": 0.084
      },
      {
       "cat": "FTM",
-      "delta": 0.059
+      "delta": 0.057
      },
      {
       "cat": "FG%",
-      "delta": 0.031
+      "delta": 0.032
      },
      {
       "cat": "FT%",
-      "delta": -0.034
+      "delta": -0.035
      },
      {
       "cat": "STL",
-      "delta": -0.049
+      "delta": -0.048
      },
      {
       "cat": "3PT%",
@@ -1568,57 +1244,57 @@
      },
      {
       "cat": "AST",
-      "delta": -0.071
+      "delta": -0.064
      },
      {
       "cat": "3PM",
-      "delta": -0.13
+      "delta": -0.127
      }
     ],
     "their_categories": [
      {
       "cat": "3PM",
-      "delta": 0.289
+      "delta": 0.295
      },
      {
       "cat": "AST",
-      "delta": 0.156
+      "delta": 0.144
      },
      {
       "cat": "PTS",
-      "delta": 0.119
+      "delta": 0.127
      },
      {
       "cat": "FGM",
-      "delta": 0.106
+      "delta": 0.114
      },
      {
       "cat": "FT%",
-      "delta": 0.098
+      "delta": 0.1
      },
      {
       "cat": "STL",
-      "delta": 0.046
+      "delta": 0.045
      },
      {
       "cat": "3PT%",
-      "delta": 0.039
+      "delta": 0.038
      },
      {
       "cat": "FG%",
-      "delta": -0.085
+      "delta": -0.087
      },
      {
       "cat": "REB",
-      "delta": -0.168
+      "delta": -0.184
      },
      {
       "cat": "BLK",
-      "delta": -0.198
+      "delta": -0.202
      },
      {
       "cat": "DD",
-      "delta": -0.201
+      "delta": -0.208
      }
     ],
     "value_given": 12.2,
@@ -1691,7 +1367,7 @@
    "days": 119
   },
   "n_checked": 9366,
-  "n_candidates": 1100,
+  "n_candidates": 1135,
   "protected_keepers": [
    "Anthony Davis",
    "Donovan Mitchell",
@@ -1923,14 +1599,9 @@
  ],
  "injury_notes": [
   {
-   "name": "Zion Williamson",
-   "status": "Day-To-Day",
-   "comment": "Williamson (thigh) is probable for Monday's game against Phoenix."
-  },
-  {
-   "name": "Dejounte Murray",
+   "name": "Kawhi Leonard",
    "status": "Out",
-   "comment": "Murray (ankle) is out for Friday's game against Memphis."
+   "comment": "Leonard (knee) could return in the next few weeks, per Shams Charania of ESPN."
   },
   {
    "name": "Aday Mara",
@@ -1943,9 +1614,14 @@
    "comment": "Wembanyama (back) is questionable for Monday's game against the Kings, Jared Weiss of The Athletic reports."
   },
   {
-   "name": "Kawhi Leonard",
+   "name": "Zion Williamson",
+   "status": "Day-To-Day",
+   "comment": "Williamson (thigh) is probable for Monday's game against Phoenix."
+  },
+  {
+   "name": "Dejounte Murray",
    "status": "Out",
-   "comment": "Leonard (knee) could return in the next few weeks, per Shams Charania of ESPN."
+   "comment": "Murray (ankle) is out for Friday's game against Memphis."
   }
  ],
  "news": [],
@@ -2154,9 +1830,9 @@
  "prebuilt": {
   "for_date": "2026-11-23",
   "kind": "prelock",
-  "built_ct": "2026-11-23T14:35-06:00",
-  "clock_ct": "2026-11-23T14:35-06:00",
-  "data_run_ct": "2026-11-23T14:34-06:00",
+  "built_ct": "2026-11-23T16:07-06:00",
+  "clock_ct": "2026-11-23T16:07-06:00",
+  "data_run_ct": "2026-11-23T16:05-06:00",
   "error": null
  }
 }
