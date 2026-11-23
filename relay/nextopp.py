@@ -52,8 +52,10 @@ def forecast(WP, D, mine, theirs, nsps, opp_tid=None):
     ro, vo, go = WP.simulate_days(D, lambda sp: theirs, nsps, gen,
                                   stream=MU.streaming(D, opp_tid, nsps) if opp_tid else None)
 
+    own = MU.self_fill(D, nsps, include_first=True)   # Mike's own fills next week under a fill strategy
+
     def outlook(key_fn, bn=False):
-        rm, vm, gm = WP.simulate_days(D, lambda sp: mine, nsps, key_fn, bn)
+        rm, vm, gm = WP.simulate_days(D, lambda sp: mine, nsps, key_fn, bn, own=own)
         return MU.odds(D.cats, zero, zero, rm, vm, ro, vo), gm
 
     O, gm = outlook(gen)

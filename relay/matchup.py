@@ -390,16 +390,17 @@ def streaming(D, tid, sps):
     return (add, share) if add else None
 
 
-def self_fill(D, sps):
-    """Mike's own future adds under a fill strategy (D.self_fill): from the second remaining day on, his empty
-    lineup slots get same-day adds at STREAM_FILL_CAP, at most D.fill_spots a day (his unprotected active spots;
-    keepers and the top FILL_PROTECT_TOP are never dropped). Today's adds are explicit moves, so today is left out.
+def self_fill(D, sps, include_first=False):
+    """Mike's own future adds under a fill strategy (D.self_fill): his empty lineup slots get same-day adds at
+    STREAM_FILL_CAP, at most fill_spots(D) a day (his unprotected active spots; keepers and the top
+    FILL_PROTECT_TOP are never dropped). This week, today's adds are explicit moves, so the fills start on the
+    second remaining day; a later week (the Next opponent forecast) passes include_first=True.
     Returns (stream, from_sp, max_per_day) or None."""
-    if not getattr(D, "self_fill", False) or len(sps) < 2:
+    if not getattr(D, "self_fill", False) or not sps or (len(sps) < 2 and not include_first):
         return None
     add = stream_add(D)
     n = fill_spots(D)
-    return ((add, STREAM_FILL_CAP), sps[1], n) if add and n > 0 else None
+    return ((add, STREAM_FILL_CAP), sps[0] if include_first else sps[1], n) if add and n > 0 else None
 
 
 def fill_spots(D):

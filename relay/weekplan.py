@@ -93,8 +93,9 @@ def add_day(mean, var, starters, d):
     return games
 
 
-def simulate_days(D, roster_for_day, sps, key_fn, bench_negative=False, stream=None):
-    """stream: (stream add, share) from MU.streaming() for a team that streams into its empty slots."""
+def simulate_days(D, roster_for_day, sps, key_fn, bench_negative=False, stream=None, own=None):
+    """stream: (stream add, share) from MU.streaming() for a team that streams into its empty slots; own: (stream,
+    from_sp, most a day) from MU.self_fill() for Mike under a fill strategy."""
     mean, var = blank()
     games = 0.0
     for sp in sps:
@@ -102,6 +103,8 @@ def simulate_days(D, roster_for_day, sps, key_fn, bench_negative=False, stream=N
         st, _, _ = MU.assign(day_players(D, roster_for_day(sp), sp), D.slots, lambda p: key_fn(p, d), bench_negative)
         if stream and MU.game_day(D, sp):
             st = MU.with_stream(D, st, stream)
+        if own and sp >= own[1] and MU.game_day(D, sp):
+            st = MU.with_stream(D, st, own[0], own[2])
         games += add_day(mean, var, st, d)
     return mean, var, games
 
@@ -291,7 +294,10 @@ def _age(p):
 # and Caleb Wilson, 20, as if their owners valued them like veterans).
 KEEPER_COUNT = 4
 KEEPER_WEIGHT = 0.5        # one point of keeper-four value is worth half a point of this season's value per game
-AGE_FACTOR = ((22, 1.4), (24, 1.25), (27, 1.1), (30, 1.0), (33, 0.75))   # age at or under -> factor; older: 0.5
+# age at or under -> factor; older: 0.5. Checked 2026-11-23 against the league's real 2027 keepers (31 still on
+# their teams): this curve picks 24 of them from current rosters, no age factor 22, milder curves 22 to 23, a
+# steeper one 24. Owners here do keep old stars (two 38-year-olds), so it is not made steeper.
+AGE_FACTOR = ((22, 1.4), (24, 1.25), (27, 1.1), (30, 1.0), (33, 0.75))
 
 
 def keeper_score(D, p):
@@ -300,6 +306,21 @@ def keeper_score(D, p):
     age = _age(p)
     f = next((x for a, x in AGE_FACTOR if age and age <= a), 0.5 if age else 1.0)
     return _vorp(D, p) * f
+
+
+def keeper_floor(D, players):
+    """The keeper score a player must beat to enter this roster's keeper four (0 if it has fewer than four)."""
+    sc = sorted((keeper_score(D, p) for p in players), reverse=True)
+    return sc[KEEPER_COUNT - 1] if len(sc) >= KEEPER_COUNT else 0.0
+
+
+def quick_fair(D, outs, give_v, get_v, floor=0.0):
+    """The cheap fairness check before a deal is built: the partner gets at least TRADE_FAIR of the value he gives up,
+    counting the most his keeper four could gain from Mike's players (each one's keeper score above `floor`, the
+    partner's fourth keeper once he has sent his players), so a deal that sends him a young keeper is not cut here;
+    the exact keeper check runs once the rosters are built. Mike never overpays past TRADE_OVERPAY."""
+    k_up = KEEPER_WEIGHT * sum(max(0.0, keeper_score(D, p) - floor) for p in outs)
+    return give_v + k_up >= TRADE_FAIR * get_v and give_v <= TRADE_OVERPAY[0] * get_v + TRADE_OVERPAY[1]
 
 
 def keeper_four(D, players):
@@ -487,7 +508,9 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
                 for k_in in (1, 2):
                     for ins in itertools.combinations(targets, k_in):
                         get_v = pv(ins)
-                        if give_v < TRADE_FAIR * get_v or give_v > TRADE_OVERPAY[0] * get_v + TRADE_OVERPAY[1]:
+                        in_ids = {p["id"] for p in ins}
+                        floor = keeper_floor(D, [p for p in teams[ot] if p["id"] not in in_ids])
+                        if not quick_fair(D, outs, give_v, get_v, floor):
                             continue
                         ra = rosters_after(ot, outs, ins)
                         if not ra:
