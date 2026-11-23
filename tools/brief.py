@@ -419,16 +419,17 @@ def strategy_text(dec):
              for m in dec.get("moves", [])])
 
 
-def switch_actions(lab):
+def switch_actions(lab, active=None):
     """Top actions from the Strategy lab: a strategy is Ready, or the active one should be switched back.
-    Nothing changes until Mike replies in chat (claude/engine/strategy-lab-spec.md section 6)."""
+    Nothing changes until Mike replies in chat (claude/engine/strategy-lab-spec.md section 6). A Ready flag for the
+    strategy already in use (a lab summary written before the switch) is dropped."""
     out = []
     sb = (lab or {}).get("switch_back")
     if sb:
         out.append({"kind": "watch", "text": f"Switch back to {strategy_name(sb['id'])}?",
                     "why": f"{sb['summary']} Reply 'switch to {sb['id']}' to approve. Nothing changes until you do."})
     r = (lab or {}).get("ready")
-    if r and r.get("edge") is not None:
+    if r and r.get("edge") is not None and r.get("id") != active:
         out.append({"kind": "watch",
                     "text": f"Ready to switch to {r.get('name') or strategy_name(r['id'])}: {r['edge']:+.1f} more "
                             f"categories a week over {r['weeks']} weeks ({r['live_weeks']} live), "
@@ -638,8 +639,11 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
         plan_rows = [{"date": d["date"], "add": {"id": str(d["id"]), "name": d["occupant"], "team": d["team"]},
                  "drop": d.get("drop"), "backups": backups_of(d.get("alternatives"))} for d in later]
         actions.append({"kind": "watch",
-                        "text": "Plan ahead: " + ("; ".join(parts) if parts else "no more streaming moves") + ".",
+                        "text": "Plan ahead: " + ("; ".join(parts) if parts else
+                                                  f"{strategy_name(cfg['active'])} picks each day's adds that morning"
+                                                  if strat else "no more streaming moves") + ".",
                         "why": ("Light days: " + ", ".join(thin) + ". " if thin else "") +
+                               ("Expect adds into the empty slots on those days. " if strat and thin else "") +
                                "Make each add in the morning, before the day's first tip. Each day has backups "
                                "in case another manager takes the planned player first.",
                         "plan": plan_rows})
@@ -684,7 +688,7 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                           "why": "Your starters with games rate higher in this matchup."})
     lab = lab_doc(bd["date"], teams)
     # an IR activation is always the first action: ESPN refuses every add until it is done
-    actions = act_first + switch_actions(lab) + first + actions
+    actions = act_first + switch_actions(lab, cfg["active"]) + first + actions
     if lu.get("open_slots"):
         n = lu["open_slots"]
         room = bd.get("roster_room") or {}
