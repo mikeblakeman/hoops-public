@@ -28,6 +28,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from . import matchup as MU
+from . import moves as MV
 from . import nextopp as NO
 
 SWAP_COST = 0.03            # category-equivalents charged per streaming add (effort + lost player)
@@ -236,6 +237,39 @@ def post_return(players, until, cap, keep=frozenset()):
     return out, {"activated": [p["name"] for p in back], "cut": [p["name"] for p in cut]}
 
 
+
+# Under a fill strategy (Mike's active strategy since 2026-11-23) only protected players are held; every other
+# active roster spot is refilled each morning with a free agent who plays that day. The trade search models those
+# spots as daily fills, so a 2-for-1 that frees a spot, or one that sends out players fill_all would churn anyway,
+# is scored the way the brief will actually play it.
+FILL_STRATEGIES = {"fill_all"}
+FILL_PROTECT_TOP = 10      # keepers plus this many by season value are never dropped (relay.strategies.protected_set)
+STREAM_AVAIL = 0.9         # share of a daily fill's games that count (late scratches, the add taken first)
+ALL_POS = set().union(*MU.SLOT_ELIG.values())
+
+
+def fill_split(D, players, keepers, cap):
+    """(held players, number of daily-fill spots) for a roster under a fill strategy. Held = keepers plus the
+    FILL_PROTECT_TOP highest season value (IR included, like strategies.protected_set); the fill spots are the
+    active spots left after the held active players (an open spot counts too)."""
+    ids = [p["id"] for p in players]
+    top = sorted(ids, key=lambda i: -MU._num((D.vals.get(i) or {}).get("vorp_season"), -999))[:FILL_PROTECT_TOP]
+    keep = (set(ids) & set(keepers)) | set(top)
+    held = [p for p in players if p["id"] in keep]
+    return held, max(0, cap - sum(1 for p in held if p.get("slot") != "IR"))
+
+
+def stream_player(fas, spots):
+    """One daily fill: the average per-game line of the best 2 x spots healthy free agents (on a given night about
+    half of them play, and the fill takes the best of those), at STREAM_AVAIL, eligible everywhere."""
+    top = sorted(fas, key=lambda p: -p["value"])[:max(2 * spots, 1)]
+    if not top:
+        return None
+    line = {c: STREAM_AVAIL * sum(p["line"].get(c, 0.0) for p in top) / len(top) for c in top[0]["line"]}
+    return {"id": "fill", "name": "Daily fill", "team": "*", "pos": set(ALL_POS), "eligible": "", "line": line,
+            "avail": 1.0, "inj": "", "ret": "", "slot": "BE", "rank": 999, "status": "FREEAGENT",
+            "value": STREAM_AVAIL * sum(p["value"] for p in top) / len(top)}
+
 def _vorp(D, p):
     """Value over replacement per game, floored at 0: with unlimited adds a replacement-level player is free."""
     return max(MU._num((D.vals.get(p["id"]) or {}).get("vorp_pg"), 0.0), 0.0)
@@ -288,8 +322,12 @@ def _screen_periods(periods):
     return pick or periods[:3]
 
 
-def trade_search(D, X, top_n=6, today=None):
+def trade_search(D, X, top_n=6, today=None, fill=None):
+    """fill: model Mike's unprotected spots as daily fills (default: when relay/strategy.json's active strategy is
+    a fill strategy)."""
     today = today or MU.today_ct()
+    if fill is None:
+        fill = MV.load_strategy()["active"] in FILL_STRATEGIES
     if isinstance(today, str):
         today = date.fromisoformat(today)
     periods, hinfo = trade_horizon(D, today)
@@ -305,13 +343,38 @@ def trade_search(D, X, top_n=6, today=None):
         teams[t], returns[t] = post_return(team_players(D, X, t), until, cap, X.keepers)
     pending ={r["player_id"] for r in D.roster if (r.get("pending_tx") or "").strip() not in ("", "[]")}
     gen = lambda p, d: p["value"]  # noqa: E731
+    fas = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")
+           for p in [mk(D, X, pid)] if p and not p["inj"]]
     zero = {c: 0.0 for c in MU.COMPONENTS}
 
-    def totals(players, pers):
+    game_sps = {sp for sp, _t in D.games}
+    streams = {}
+
+    def totals(players, pers, t=None):
+        if fill and t == me:
+            return fill_totals(players, pers)
         out = []
         for x in pers:
             m, v, _g = simulate_days(D, lambda sp: players, x["sps"], gen)
             out.append((m, v))
+        return out
+
+    def fill_totals(players, pers):
+        """Mike under a fill strategy: held players play their games; each fill spot adds a daily fill on every
+        game day, and the lineup takes them only for slots the held players leave empty."""
+        held, k = fill_split(D, players, X.keepers, cap)
+        if k not in streams:
+            streams[k] = stream_player(fas, k)
+        fills = [dict(streams[k], id=f"fill{i}") for i in range(k)] if streams[k] else []
+        out = []
+        for x in pers:
+            mean, var = blank()
+            for sp in x["sps"]:
+                d = D.sp_dates[sp]
+                avail = day_players(D, held, sp) + (fills if sp in game_sps else [])
+                st, _, _ = MU.assign(avail, D.slots, lambda p: gen(p, d))
+                add_day(mean, var, st, d)
+            out.append((mean, var))
         return out
 
     def by_cat(t, tt, pers):
@@ -340,8 +403,6 @@ def trade_search(D, X, top_n=6, today=None):
 
     protected = {p["id"] for p in teams[me] if p["id"] in X.keepers}
     my_pool = [p for p in teams[me] if p["slot"] != "IR" and p["id"] not in protected and p["id"] not in pending]
-    fas = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")
-           for p in [mk(D, X, pid)] if p and not p["inj"]]
     fa_best = max(fas, key=lambda p: p["value"]) if fas else None
     pv = lambda ps: sum(_vorp(D, p) for p in ps)  # noqa: E731
 
@@ -365,13 +426,13 @@ def trade_search(D, X, top_n=6, today=None):
             their_drop = worst(their_new, out_ids)
             if their_drop:
                 their_new = [p for p in their_new if p["id"] != their_drop["id"]]
-            if fa_best:
+            if fa_best and not fill:   # under a fill strategy the open spot is a daily fill (fill_totals)
                 new_mine.append(fa_best)
         return new_mine, their_new, my_drop, their_drop
 
     # ---- quick screen on three sample weeks
     scr = _screen_periods(periods)
-    Ts = {t: totals(pl, scr) for t, pl in teams.items()}
+    Ts = {t: totals(pl, scr, t) for t, pl in teams.items()}
     base_s = {t: strength(t, Ts, scr)[0] for t in Ts}
     screened, n = [], 0
     for ot in sorted(teams):
@@ -392,7 +453,7 @@ def trade_search(D, X, top_n=6, today=None):
                             continue
                         n += 1
                         T2 = dict(Ts)
-                        T2[me], T2[ot] = totals(ra[0], scr), totals(ra[1], scr)
+                        T2[me], T2[ot] = totals(ra[0], scr, me), totals(ra[1], scr, ot)
                         mg = strength(me, T2, scr)[0] - base_s[me]
                         tg = strength(ot, T2, scr)[0] - base_s[ot]
                         if mg > 0 and tg > 0:
@@ -400,14 +461,14 @@ def trade_search(D, X, top_n=6, today=None):
     screened.sort(key=lambda r: -r[0])
 
     # ---- full season for the best of the screen
-    T = {t: totals(pl, periods) for t, pl in teams.items()}
+    T = {t: totals(pl, periods, t) for t, pl in teams.items()}
     base = {t: strength(t, T, periods) for t in T}
     base_cat = {t: by_cat(t, T, periods)[0] for t in T}
     res = []
     for _sc, ot, outs, ins, give_v, get_v in screened[:TRADE_SCREEN]:
         new_mine, their_new, my_drop, their_drop = rosters_after(ot, outs, ins)
         T2 = dict(T)
-        T2[me], T2[ot] = totals(new_mine, periods), totals(their_new, periods)
+        T2[me], T2[ot] = totals(new_mine, periods, me), totals(their_new, periods, ot)
         sm, smp = strength(me, T2, periods)
         st, stp = strength(ot, T2, periods)
         mine_gain, their_gain = sm - base[me][0], st - base[ot][0]
@@ -452,9 +513,19 @@ def trade_search(D, X, top_n=6, today=None):
             "value_label": "even" if not r["get_v"] or ratio <= 1.15 else "they get more",
             "my_drop": r["my_drop"] and pl(r["my_drop"]),
             "their_drop": r["their_drop"] and pl(r["their_drop"]),
-            "my_add": fa_best and len(r["outs"]) > len(r["ins"]) and pl(fa_best) or None,
+            "my_add": (not fill) and fa_best and len(r["outs"]) > len(r["ins"]) and pl(fa_best) or None,
             "gets_extra_spot": len(r["outs"]) > len(r["ins"]),
+            "fill_spot": bool(fill and len(r["outs"]) > len(r["ins"])),   # the open spot becomes a daily fill
         }
+
+    def model_info():
+        """How Mike's side was scored: held players only, or held players plus daily fills (fill strategies)."""
+        if not fill:
+            return {"fill": False}
+        held, k = fill_split(D, teams[me], X.keepers, cap)
+        sp_ = streams.get(k) or stream_player(fas, k)
+        return {"fill": True, "held": sorted(p["name"] for p in held), "fill_spots": k,
+                "fill_line": brief_line(sp_) if sp_ else None}
 
     top, near, seen_team, seen_in, seen_sets = [], [], {}, {}, set()
     for r in res:
@@ -481,7 +552,7 @@ def trade_search(D, X, top_n=6, today=None):
             "bar": {"mine": TRADE_SHOW_MIN, "theirs": TRADE_PARTNER_MIN},
             "horizon": hinfo, "n_checked": n, "n_candidates": len(screened), "n_rescored": min(len(screened), TRADE_SCREEN),
             "my_returns": returns.get(me) or {"activated": [], "cut": []},
-            "top": top, "near": near}
+            "model": model_info(), "top": top, "near": near}
 
 
 # ------------------------------------------------------------------ main

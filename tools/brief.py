@@ -114,7 +114,7 @@ def trades_doc(wp, teams=None):
     return {"ideas": named(tr.get("top") or []), "near": named(tr.get("near") or []),
             "bar": tr.get("bar"), "horizon": tr.get("horizon"), "n_checked": tr.get("n_checked"),
             "n_candidates": tr.get("n_candidates"), "protected_keepers": tr.get("protected_keepers") or [],
-            "my_returns": tr.get("my_returns")}
+            "my_returns": tr.get("my_returns"), "model": tr.get("model")}
 
 
 def _keep_trades(wp, old):
