@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-22T05:32-06:00",
+ "updated_ct": "2026-11-23T05:32-06:00",
  "control": "current",
  "active": "current",
  "since": "2026-10-19",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
-  "matchup_period": 5,
-  "days_scored": 6,
-  "opponent_team_id": "1",
-  "opponent": "Team 1"
+  "matchup_period": 6,
+  "days_scored": 0,
+  "opponent_team_id": "7",
+  "opponent": "Team 7"
  },
- "decided": "2026-11-22",
+ "decided": "2026-11-23",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,25 +20,24 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 8.0,
-    "days": 6
+    "cats_won": null,
+    "days": 0
    },
    "season": {
-    "weeks": 3,
-    "live_weeks": 1,
-    "avg_cats_won": 8.5,
+    "weeks": 4,
+    "live_weeks": 2,
+    "avg_cats_won": 8.12,
     "edge": 0.0,
     "confidence": null,
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.91,
+   "adds_per_day": 0.94,
    "status": "control",
    "today": [
-    "Drop Zach LaVine, then move Ty Jerome off IR",
-    "Move Zion Williamson to IR",
-    "Add Daniel Gafford",
-    "Add Draymond Green for Devin Vassell"
+    "Move Aday Mara to IR",
+    "Add Danny Wolf",
+    "Add Quentin Grimes for Leaky Black"
    ]
   },
   {
@@ -48,27 +47,22 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.0,
-    "days": 6
+    "cats_won": null,
+    "days": 0
    },
    "season": {
-    "weeks": 3,
-    "live_weeks": 1,
-    "avg_cats_won": 9.83,
-    "edge": 1.33,
-    "confidence": 0.895,
-    "smooth_edge": 1.493,
+    "weeks": 4,
+    "live_weeks": 2,
+    "avg_cats_won": 9.88,
+    "edge": 1.75,
+    "confidence": 0.965,
+    "smooth_edge": 1.601,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.34,
-   "status": "ahead",
+   "adds_per_day": 3.36,
+   "status": "ready",
    "today": [
-    "Drop Zach LaVine, then move Ty Jerome off IR",
-    "Move Zion Williamson to IR",
-    "Add Mo Bamba",
-    "Add Jalen Smith for Leaky Black",
-    "Add Charles Bassey for Isaiah Jackson",
-    "Add Landry Shamet for Robert Williams III"
+    "Move Aday Mara to IR"
    ]
   },
   {
@@ -78,25 +72,22 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.0,
-    "days": 6
+    "cats_won": null,
+    "days": 0
    },
    "season": {
-    "weeks": 3,
-    "live_weeks": 1,
-    "avg_cats_won": 7.83,
-    "edge": -0.67,
-    "confidence": 0.514,
-    "smooth_edge": 0.044,
+    "weeks": 4,
+    "live_weeks": 2,
+    "avg_cats_won": 8.12,
+    "edge": 0.0,
+    "confidence": 0.69,
+    "smooth_edge": 0.506,
     "worst_week": -5.0
    },
-   "adds_per_day": 1.84,
-   "status": "behind",
+   "adds_per_day": 1.85,
+   "status": "testing",
    "today": [
-    "Drop Zach LaVine, then move Ty Jerome off IR",
-    "Move Zion Williamson to IR",
-    "Add Mo Bamba",
-    "Add Jalen Smith for Dylan Cardwell"
+    "Move Aday Mara to IR"
    ]
   },
   {
@@ -106,25 +97,25 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 8.0,
-    "days": 6
+    "cats_won": null,
+    "days": 0
    },
    "season": {
-    "weeks": 3,
-    "live_weeks": 1,
-    "avg_cats_won": 8.83,
-    "edge": 0.33,
-    "confidence": 0.982,
-    "smooth_edge": 0.331,
+    "weeks": 4,
+    "live_weeks": 2,
+    "avg_cats_won": 8.62,
+    "edge": 0.5,
+    "confidence": 0.997,
+    "smooth_edge": 0.356,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.44,
-   "status": "ahead",
+   "adds_per_day": 1.42,
+   "status": "ready",
    "today": [
-    "Drop Zach LaVine, then move Ty Jerome off IR",
-    "Move Zion Williamson to IR",
-    "Add Mo Bamba",
-    "Spot B: add Daniel Gafford"
+    "Move Aday Mara to IR",
+    "Add Danny Wolf",
+    "Add Quentin Grimes for Leaky Black",
+    "Spot B: add Saddiq Bey for Aday Mara"
    ]
   },
   {
@@ -134,24 +125,24 @@
    "effort": "1 to 3 adds a week",
    "is_control": false,
    "week": {
-    "cats_won": 8.0,
-    "days": 6
+    "cats_won": null,
+    "days": 0
    },
    "season": {
-    "weeks": 3,
-    "live_weeks": 1,
-    "avg_cats_won": 6.0,
-    "edge": -2.5,
-    "confidence": 0.095,
-    "smooth_edge": -1.191,
+    "weeks": 4,
+    "live_weeks": 2,
+    "avg_cats_won": 6.25,
+    "edge": -1.88,
+    "confidence": 0.094,
+    "smooth_edge": -0.861,
     "worst_week": -5.0
    },
-   "adds_per_day": 0.62,
-   "status": "behind",
+   "adds_per_day": 0.64,
+   "status": "retired",
    "today": [
-    "Drop Zach LaVine, then move Ty Jerome off IR",
-    "Move Zion Williamson to IR",
-    "Add Paul Reed"
+    "Move Aday Mara to IR",
+    "Add Danny Wolf",
+    "Add Brook Lopez for Leaky Black (4 games vs 3)"
    ]
   },
   {
@@ -161,28 +152,35 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 8.0,
-    "days": 6
+    "cats_won": null,
+    "days": 0
    },
    "season": {
-    "weeks": 3,
-    "live_weeks": 1,
-    "avg_cats_won": 6.17,
-    "edge": -2.33,
-    "confidence": 0.034,
-    "smooth_edge": -1.167,
+    "weeks": 4,
+    "live_weeks": 2,
+    "avg_cats_won": 6.12,
+    "edge": -2.0,
+    "confidence": 0.008,
+    "smooth_edge": -1.117,
     "worst_week": -3.5
    },
-   "adds_per_day": 0.25,
+   "adds_per_day": 0.27,
    "status": "reference",
    "today": [
-    "Drop Zach LaVine, then move Ty Jerome off IR",
-    "Move Zion Williamson to IR",
-    "Add Draymond Green"
+    "Move Aday Mara to IR",
+    "Add Danny Wolf"
    ]
   }
  ],
- "ready": null,
+ "ready": {
+  "id": "fill_all",
+  "name": "Fill every slot",
+  "edge": 1.75,
+  "weeks": 4,
+  "live_weeks": 2,
+  "confidence": 0.965,
+  "summary": "Fill every slot wins +1.8 categories a week over the current plan across 4 weeks (2 live), 96% sure."
+ },
  "switch_back": null,
  "notes": [
   "Weeks 1, 2, 3 were replayed from saved data (backtest). At most 2 backtest weeks count as evidence.",
