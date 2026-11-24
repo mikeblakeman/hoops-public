@@ -111,10 +111,72 @@ def trades_doc(wp, teams=None):
         return {"error": (tr or {}).get("error") if isinstance(tr, dict) else "no trade search", "ideas": [], "near": []}
     name = lambda pid: (teams.get(str(pid)) or {}).get("name") or f"Team {pid}"  # noqa: E731
     named = lambda xs: [dict(t, partner=name(t["partner_team_id"])) for t in xs]  # noqa: E731
-    return {"ideas": named(tr.get("top") or []), "near": named(tr.get("near") or []),
+    now = datetime.now(CT)
+
+    def live(o):   # an offer that lapsed since the data run is gone
+        try:
+            return not o.get("expires_ct") or datetime.fromisoformat(o["expires_ct"]) > now
+        except ValueError:
+            return True
+    offers = [dict(o, counter=(named([o["counter"]])[0] if o.get("counter") else None))
+              for o in named(tr.get("offers") or []) if live(o)]
+    return {"offers": offers, "ideas": named(tr.get("top") or []), "near": named(tr.get("near") or []),
             "bar": tr.get("bar"), "horizon": tr.get("horizon"), "n_checked": tr.get("n_checked"),
             "n_candidates": tr.get("n_candidates"), "protected_keepers": tr.get("protected_keepers") or [],
             "my_returns": tr.get("my_returns"), "model": tr.get("model")}
+
+
+VERDICT_TEXT = {"accept": "Accept", "close call": "Close call, your call", "decline": "Decline"}
+
+
+def offer_actions(tdoc, drop_ids=()):
+    """One action per open trade offer (relay/pending.py, scored in relay/weekplan.py trade_search). An offer
+    another team sent comes first in the actions: it is a decision with a deadline. An offer Mike sent goes last
+    (nothing to do but wait). Neither changes the lineup or the week plan: nothing moves unless it is accepted."""
+    first, last = [], []
+    for o in (tdoc or {}).get("offers") or []:
+        give = " + ".join(p["name"] for p in o.get("give") or []) or "nothing"
+        gets = " + ".join(p["name"] for p in o.get("gets") or []) or "nothing"
+        mine, theirs = o.get("my_cats_per_week") or 0.0, o.get("their_cats_per_week") or 0.0
+        cats = o.get("my_categories") or []
+        up = [c["cat"] for c in cats if c["delta"] > 0][:3]
+        down = [c["cat"] for c in sorted(cats, key=lambda c: c["delta"]) if c["delta"] < 0][:3]
+        why = [f"Rest of season: {mine:+.2f} categories won a week for you, {theirs:+.2f} for them"
+               + (f" (playoff weeks {o['my_playoff_cats_per_week']:+.2f} for you)"
+                  if o.get("my_playoff_cats_per_week") is not None else "") + "."]
+        if down:
+            why.append("Hurts " + ", ".join(down) + ("; helps " + ", ".join(up) if up else "") + ".")
+        elif up:
+            why.append("Helps " + ", ".join(up) + ".")
+        k = o.get("keeper") or {}
+        if k.get("my_four_out"):
+            why.append(f"{', '.join(k['my_four_out'])} would leave your projected 2028 keeper four"
+                       + (f" ({', '.join(k['my_four_in'])} would enter)" if k.get("my_four_in") else "") + ".")
+        exp = o.get("expires_ct")
+        if o.get("kind") == "offer_sent":
+            last.append({"kind": "watch", "text": f"Your trade offer to {o.get('partner')} is waiting: {give} for "
+                                                  f"{gets}. The model now says {VERDICT_TEXT.get(o.get('verdict'), '')}.".rstrip(" ."),
+                         "why": " ".join(why) + (f" It lapses {_when(exp)} CT." if exp else "") +
+                                " The brief plans on your current roster until they accept.",
+                         "gain": round(mine, 2)})
+            continue
+        c = o.get("counter")
+        if c and o.get("verdict") != "accept":
+            why.append(f"If you want a deal with them, the trade search's best is "
+                       f"{' + '.join(p['name'] for p in c.get('give') or [])} for "
+                       f"{' + '.join(p['name'] for p in c.get('gets') or [])} "
+                       f"({c.get('my_cats_per_week', 0):+.2f} for you, {c.get('their_cats_per_week', 0):+.2f} for them).")
+            gone = [p["name"] for p in c.get("give") or [] if str(p.get("id")) in {str(i) for i in drop_ids}]
+            if gone:
+                why.append(f"Today's adds drop {' and '.join(gone)}; skip that drop if you want to offer it.")
+        why.append((f"The offer lapses {_when(exp)} CT. " if exp else "") +
+                   "Nothing changes on your roster unless you accept it in ESPN.")
+        first.append({"kind": "trade_offer",
+                      "text": f"Trade offer from {o.get('partner')}: {gets} for your {give}. "
+                              f"{VERDICT_TEXT.get(o.get('verdict'), 'Your call')}.",
+                      "why": " ".join(why), "gain": round(mine, 2), "verdict": o.get("verdict"),
+                      "offer_id": o.get("id")})
+    return first, last
 
 
 def _keep_trades(wp, old):
@@ -784,6 +846,9 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                    (f", approved {cfg['since']}." if cfg.get("since") else ".")] if strat else []),
         "data_status": {"ok": status.get("ok"), "warnings": status.get("warnings", [])[:5]},
     }
+    of_first, of_last = offer_actions(doc["trades"], drop_ids)
+    if of_first or of_last:
+        doc["actions"] = of_first + doc["actions"] + of_last
     doc["matchup"]["trend"] = trend_doc(bd)
     doc["lab"] = lab
     # ids behind the lineup card, so tools/prebuild.py can rebuild the card for an alternative add

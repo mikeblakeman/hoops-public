@@ -1,8 +1,8 @@
 {
  "date": "2026-11-24",
  "kind": "prelock",
- "generated_ct": "2026-11-24T05:36-06:00",
- "data_run_ct": "2026-11-24T05:31-06:00",
+ "generated_ct": "2026-11-24T07:54-06:00",
+ "data_run_ct": "2026-11-24T07:52-06:00",
  "headline": "",
  "summary": "",
  "matchup": {
@@ -204,11 +204,6 @@
  },
  "actions": [
   {
-   "kind": "watch",
-   "text": "Trade pending: Victor Wembanyama for Franz Wagner. ESPN should process it about Wed 8:17 PM CT.",
-   "why": "The league holds accepted trades for 48 hours; 3 veto votes cancel one, and your league manager can push it through early. Until then, use your current roster as below."
-  },
-  {
    "kind": "add",
    "text": "Add Jalen Suggs (ORL), drop Leaky Black.",
    "why": "Fill every slot strategy (approved 2026-11-23): fills an empty lineup slot today. If he is taken: Caleb Martin (DAL), Bilal Coulibaly (WAS), Tristan da Silva (ORL).",
@@ -330,11 +325,6 @@
    "kind": "watch",
    "text": "3 lineup spots empty today (only 7 of your players have games).",
    "why": "Your roster is full, so filling them means dropping someone. The add above is the only drop worth it today; the lineup below already includes it."
-  },
-  {
-   "kind": "watch",
-   "text": "Fri 11/27, once the trade has processed: Drop Leaky Black, then move Dejounte Murray (NOP) off IR; Add Day'Ron Sharpe (BKN), drop Dejounte Murray (straight from IR); Add Matisse Thybulle (LAL), drop Aday Mara.",
-   "why": "Start: Matisse Thybulle, Zion Williamson, Ty Jerome, Jalen Brunson, Darius Garland, Day'Ron Sharpe, Cam Spencer, Jrue Holiday, Damian Lillard."
   }
  ],
  "lineup": {
@@ -1317,10 +1307,11 @@
    {
     "date": "2026-11-28",
     "nba_games": 5,
-    "my_starters": 4,
+    "my_starters": 3,
     "my_open_slots": [
      "SG",
-     "G",
+     "SF",
+     "C",
      "F",
      "UT",
      "UT",
@@ -1341,7 +1332,7 @@
     "my_starters": 10,
     "my_open_slots": [],
     "my_no_slot": [
-     "Damian Lillard"
+     "Kevin Huerter"
     ],
     "opp_starters": 9,
     "opp_open_slots": [
@@ -1368,6 +1359,7 @@
  },
  "next_opponent": null,
  "trades": {
+  "offers": [],
   "ideas": [
    {
     "partner_team_id": "1",
@@ -2192,8 +2184,8 @@
    ],
    "days": 119
   },
-  "n_checked": 9504,
-  "n_candidates": 1032,
+  "n_checked": 9618,
+  "n_candidates": 1038,
   "protected_keepers": [
    "Anthony Davis",
    "Donovan Mitchell",
@@ -2755,14 +2747,14 @@
  ],
  "injury_notes": [
   {
-   "name": "Kawhi Leonard",
-   "status": "Out",
-   "comment": "Leonard (knee) could return in the next few weeks, per Shams Charania of ESPN."
-  },
-  {
    "name": "Victor Wembanyama",
    "status": "Day-To-Day",
    "comment": "Wembanyama (back) won't play Monday against the Kings, Jeff McDonald of the San Antonio Express-News reports."
+  },
+  {
+   "name": "Kawhi Leonard",
+   "status": "Out",
+   "comment": "Leonard (knee) could return in the next few weeks, per Shams Charania of ESPN."
   },
   {
    "name": "Dejounte Murray",
@@ -2775,7 +2767,6 @@
  "prelock": null,
  "weekly": null,
  "notes": [
-  "Week ahead rows from Fri 11/27 on assume your trade (Victor Wembanyama for Franz Wagner) has processed.",
   "Moves follow the Fill every slot strategy, approved 2026-11-23."
  ],
  "data_status": {
@@ -2983,22 +2974,6 @@
   "activate": [],
   "activate_drop": []
  },
- "pending_trades": [
-  {
-   "id": "6618d0fc-dd51-434e-abc4-7227a9acab0b",
-   "names_out": [
-    "Victor Wembanyama"
-   ],
-   "names_in": [
-    "Franz Wagner"
-   ],
-   "accepted_ct": "2026-11-23T20:17-06:00",
-   "process_ct": "2026-11-25T20:17-06:00",
-   "source": "espn",
-   "mode": "later",
-   "effective": "2026-11-27"
-  }
- ],
  "lineup_options": {
   "3138160": {
    "scoring_period": 36,
@@ -9937,9 +9912,9 @@
  "prebuilt": {
   "for_date": "2026-11-24",
   "kind": "prelock",
-  "built_ct": "2026-11-24T05:38-06:00",
-  "clock_ct": "2026-11-24T05:36-06:00",
-  "data_run_ct": "2026-11-24T05:31-06:00",
+  "built_ct": "2026-11-24T07:54-06:00",
+  "clock_ct": "2026-11-24T07:54-06:00",
+  "data_run_ct": "2026-11-24T07:52-06:00",
   "error": null
  }
 }

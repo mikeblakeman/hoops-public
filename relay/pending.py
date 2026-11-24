@@ -1,4 +1,4 @@
-"""Trades accepted in ESPN but still in the review period.
+"""Trades accepted in ESPN but still in the review period, and trade offers waiting on an answer.
 
 ESPN holds an accepted trade for the league's review period (48 hours here; 3 veto votes cancel it) and only
 then moves the players. Until then the data feed shows the old rosters, so a brief built on it plans around
@@ -14,6 +14,13 @@ Sources, merged by trade id:
      {"trades": [{"id": "...", "accepted_ct": "2026-11-02T14:30-06:00", "process_ct": "2026-11-04T14:30-06:00",
                   "out": ["6442", "4683021"], "in": ["6583"], "partner_team_id": "3", "note": "..."}]}
      `out` leave Mike's team, `in` arrive. process_ct may be left out: accepted_ct + the league's review hours.
+
+Offers are not trades. ESPN lists a proposal nobody has accepted yet (type TRADE_PROPOSAL, status PENDING) next to
+accepted trades in review (type TRADE_ACCEPT, with acceptedDate and processDate). Until 2026-11-24 both were treated
+as accepted, so a brief planned around losing players in an offer Mike had not answered (an incoming offer for his
+best player). `extract_espn` now tags each entry with `kind`: "accepted", "offer_received" (another team proposed it
+to Mike; `proposer_team_id`) or "offer_sent" (Mike proposed it). Only accepted trades go in "trades"; offers go in
+"offers" and never change a roster. relay/weekplan.py trade_search scores each offer and gives a verdict.
 
 A trade is active only while every `out` player is still on Mike's team and every `in` player is still on the
 partner's team in rosters.csv. Once ESPN processes it (or a trade is canceled and the players move elsewhere)
@@ -31,6 +38,22 @@ from zoneinfo import ZoneInfo
 CT = ZoneInfo("America/Chicago")
 DONE = {"EXECUTED", "CANCELED", "CANCELLED", "FAILED", "VETOED", "REJECTED", "DECLINED", "EXPIRED"}
 OVERDUE_HOURS = 12
+ACCEPTED, OFFER_RECEIVED, OFFER_SENT = "accepted", "offer_received", "offer_sent"
+OFFERS = (OFFER_RECEIVED, OFFER_SENT)
+
+
+def kind_of(tx, my_tid):
+    """accepted | offer_received | offer_sent. ESPN: TRADE_PROPOSAL = proposed, not yet accepted; its teamId is the
+    proposing team. Any other trade type (TRADE_ACCEPT, or an older shape without a type suffix) is an accepted trade
+    in review."""
+    ttype = str(tx.get("type") or "").upper()
+    if "PROPOSAL" not in ttype:
+        return ACCEPTED
+    return OFFER_SENT if str(tx.get("teamId")) == str(my_tid) else OFFER_RECEIVED
+
+
+def is_offer(t):
+    return (t or {}).get("kind") in OFFERS
 
 
 def _rows(p):
@@ -98,17 +121,29 @@ def extract_espn(payloads, my_tid, review_hours, seen=None, now=None):
                                    if not isinstance(v, (dict, list)) or k == "items"}
             dates = {k: _dt(v) for k, v in tx.items() if k.lower().endswith("date") and v}
             seen.setdefault(tid, _iso(now))
-            accepted = dates.get("acceptedDate") or dates.get("proposedDate") or _dt(seen[tid])
-            process = dates.get("processDate") or dates.get("expirationDate") or (
-                accepted + timedelta(hours=review_hours or 48) if accepted else None)
-            found[tid] = {
-                "id": tid, "source": "espn", "status": status or None,
-                "accepted_ct": _iso(accepted), "process_ct": _iso(process),
+            kind = kind_of(tx, my_tid)
+            row = {
+                "id": tid, "source": "espn", "status": status or None, "kind": kind,
                 "out": [p for p, f, _ in moves if f == str(my_tid)],
                 "in": [p for p, _, t in moves if t == str(my_tid)],
                 "partner_team_id": next((t for t in teams if t != str(my_tid)), None),
             }
+            if kind == ACCEPTED:
+                accepted = dates.get("acceptedDate") or dates.get("proposedDate") or _dt(seen[tid])
+                process = dates.get("processDate") or (
+                    accepted + timedelta(hours=review_hours or 48) if accepted else None)
+                row.update(accepted_ct=_iso(accepted), process_ct=_iso(process))
+            else:   # an offer: nothing moves unless it is accepted; ESPN's expirationDate is when the offer lapses
+                row.update(proposer_team_id=str(tx.get("teamId")) if tx.get("teamId") is not None else None,
+                           proposed_ct=_iso(dates.get("proposedDate") or _dt(seen[tid])),
+                           expires_ct=_iso(dates.get("expirationDate")))
+            found[tid] = row
     return list(found.values()), probe
+
+
+def split(entries):
+    """(accepted trades, offers)."""
+    return [t for t in entries if not is_offer(t)], [t for t in entries if is_offer(t)]
 
 
 # ------------------------------------------------------------------ brief side
@@ -124,9 +159,40 @@ def load(snap, extra=None):
         except ValueError:
             continue
         for t in (data.get("trades") if isinstance(data, dict) else data) or []:
-            if t.get("out") or t.get("in"):
+            if (t.get("out") or t.get("in")) and not is_offer(t):   # an offer is not a trade until accepted
                 out.setdefault(str(t.get("id") or len(out)), t)
     return list(out.values())
+
+
+def load_offers(snap, my_tid, now=None):
+    """Open trade offers involving Mike (snapshots/pending_trades.json "offers"), still valid: every player is still
+    where the offer found him and the offer has not expired. Each gets `names_out` / `names_in`."""
+    snap = Path(snap)
+    now = now or datetime.now(CT)
+    src = snap / "pending_trades.json"
+    try:
+        data = json.loads(src.read_text()) if src.exists() else {}
+    except ValueError:
+        data = {}
+    entries = (data.get("offers") or []) + [t for t in (data.get("trades") or []) if is_offer(t)]
+    owner = {r["player_id"]: str(r["team_id"]) for r in _rows(snap / "rosters.csv")}
+    names = {r["player_id"]: r["name"] for r in _rows(snap / "valuations.csv")}
+    keep, ids = [], set()
+    for t in entries:
+        t = dict(t, out=[str(p) for p in t.get("out", [])], **{"in": [str(p) for p in t.get("in", [])]})
+        partner = str(t.get("partner_team_id") or "")
+        if not t["out"] and not t["in"] or t.get("id") in ids:
+            continue
+        if not all(owner.get(p) == str(my_tid) for p in t["out"]) or not all(owner.get(p) == partner for p in t["in"]):
+            continue
+        exp = _dt(t.get("expires_ct"))
+        if exp and now > exp:
+            continue
+        t["names_out"] = [names.get(p, p) for p in t["out"]]
+        t["names_in"] = [names.get(p, p) for p in t["in"]]
+        ids.add(t.get("id"))
+        keep.append(t)
+    return keep
 
 
 def active(snap, trades, my_tid, review_hours=48, now=None):

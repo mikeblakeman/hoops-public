@@ -20,6 +20,12 @@ Follow `playbook/common.md` first.
   from it and never recommend a next-week move that costs this week more than `carry.max_cost`.
 - Pickups: `snapshots/brief_data.json` `week_plan` first, then moves and alternatives, plus `snapshots/valuations.csv` (free agents by
   `vorp_pg`, `team_games_this_matchup`). Explain in categories.
+- Trade offers ("someone offered me X", "is this a good deal?"): start from `week_plan.trades.offers` (each open
+  ESPN offer scored over the rest of the season with a `verdict`: accept, close call or decline, plus `keeper` and
+  `counter`). An offer nobody has accepted is not a pending trade: never add it to `claude/league/pending-trades.json`
+  and never plan the roster around it. If the offer is not in the data yet (it came in after the last run), score it
+  with `relay.weekplan.trade_search(D, X, offers=[{"id", "kind": "offer_received", "partner_team_id", "out", "in"}])`.
+  Only after Mike says he accepted does it go in the pending-trades file.
 - Trades: start from `week_plan.trades.top` (ideas that clearly help both sides: Mike +0.20 and the partner +0.10
   categories a week or more, rest of season from the first week a trade agreed today could count, playoff weeks
   double; 1-for-1 up to 2-for-2) and `week_plan.trades.near`, then check rest-of-season value (`vorp_season`), category fit, games during fantasy playoff weeks

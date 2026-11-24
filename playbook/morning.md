@@ -20,6 +20,12 @@ Follow `playbook/common.md` first.
    card): `trades.ideas` passed both bars (clearly helps Mike and clearly helps the partner), `trades.near` are the
    closest misses. Do not invent trades and do not edit this block; if news rules out a player in an idea for weeks
    (new long injury), add one note saying that idea is off until he returns.
+   `trades.offers` are open trade offers from ESPN (since 2026-11-24): `kind` `offer_received` (another team proposed
+   it; Mike has not answered) or `offer_sent` (Mike proposed it). An offer is NOT an accepted trade: never plan
+   around it, never call it "pending" or say it will process. brief.py puts a "Trade offer" action first (kind
+   `trade_offer`) with the model's verdict (accept, close call or decline), the rest-of-season gain for each side, the
+   categories it moves, any keeper-four change, the best counter idea with that team, and when it lapses. Keep that
+   action as written; if news changes a player in it (new long injury), add one sentence to its `why`.
 1c. Next opponent (last 3 days of a matchup only): `out/brief.json` has a `next_opponent` block (forecast vs next
    week's opponent, games by day, how they have played, their key players and injuries) and the page shows it as the
    "Next opponent" card. Rule (Mike, 2026-10-24): this week comes first. The only next-week move is the streaming
@@ -67,6 +73,8 @@ Follow `playbook/common.md` first.
    - `headline`: one sentence on what matters most today (mention any game that tips before 6 PM Central).
    - `summary`: two or three sentences on the matchup state and the plan, including any light day ahead (a day with 4+
      empty slots) and the next planned add.
+   - Any day with an `offer_received` in `trades.offers`: one summary sentence with the offer and the verdict
+     (for example "<partner> offered X for Y: decline, it costs you about 0.8 categories a week"). It is Mike's call.
    - Mondays and the first day of a matchup: if `trades.ideas` is not empty, mention the best idea in one summary
      sentence (partner, who goes, who comes). The Trades card has the details. Trades are Mike's call; never imply
      they are urgent.

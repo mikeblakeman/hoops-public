@@ -368,9 +368,22 @@ def _screen_periods(periods):
     return pick or periods[:3]
 
 
-def trade_search(D, X, top_n=6, today=None, fill=None):
+def offer_verdict(mine, keeper):
+    """accept | close call | decline for a trade offer, from Mike's rest-of-season gain (categories a week) and the
+    change in his projected 2028 keeper four. A deal that pushes one of his keeper four out is one step less
+    attractive: a helpful deal becomes a close call and an even one a decline."""
+    v = "accept" if mine >= TRADE_SHOW_MIN else ("decline" if mine < -TRADE_MIN_GAIN else "close call")
+    if keeper and keeper.get("my_four_out") and keeper.get("mine", 0) < 0:
+        v = {"accept": "close call", "close call": "decline"}.get(v, v)
+    return v
+
+
+def trade_search(D, X, top_n=6, today=None, fill=None, offers=None, accepted_tx=None):
     """fill: model Mike's unprotected spots as daily fills (default: when relay/strategy.json's active strategy is
-    a fill strategy)."""
+    a fill strategy). offers: open trade offers (relay/pending.py load_offers); each is scored the same way as an
+    idea, with no fairness filter or bar, and returned in `offers` with a verdict. accepted_tx: ids of trades accepted
+    and in ESPN's review; only their players are held out of the search (None: every player with a pending
+    transaction, the behavior before offers were told apart)."""
     today = today or MU.today_ct()
     if fill is None:
         fill = MV.load_strategy()["active"] in FILL_STRATEGIES
@@ -379,7 +392,7 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
     periods, hinfo = trade_horizon(D, today)
     teams = {r["team_id"]: [] for r in D.roster}
     me = D.my_tid
-    empty = {"baseline_cats_per_week": {}, "protected_keepers": [], "n_checked": 0, "n_candidates": 0,
+    empty = {"baseline_cats_per_week": {}, "offers": [], "protected_keepers": [], "n_checked": 0, "n_candidates": 0,
              "n_rescored": 0, "top": [], "near": [], "bar": {"mine": TRADE_SHOW_MIN, "theirs": TRADE_PARTNER_MIN},
              "horizon": hinfo}
     if not periods or me not in teams or len(teams) < 3:
@@ -387,7 +400,11 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
     until, cap, returns = periods[-1]["end"] or "", active_cap(D), {}
     for t in teams:
         teams[t], returns[t] = post_return(team_players(D, X, t), until, cap, X.keepers)
-    pending ={r["player_id"] for r in D.roster if (r.get("pending_tx") or "").strip() not in ("", "[]")}
+    def _tx(r):
+        raw = (r.get("pending_tx") or "").strip()
+        return {x.strip(" '\"[]") for x in raw.replace(",", ";").split(";") if x.strip(" '\"[]")}
+    # players in an accepted trade are spoken for; an open offer holds nobody back (it may never be accepted)
+    pending = {r["player_id"] for r in D.roster if _tx(r) and (accepted_tx is None or _tx(r) & set(accepted_tx))}
     gen = lambda p, d: p["value"]  # noqa: E731
     fas = [p for pid, v in D.vals.items() if v.get("status") in ("FREEAGENT", "WAIVERS")
            for p in [mk(D, X, pid)] if p and not p["inj"]]
@@ -600,6 +617,38 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
         return {"fill": True, "held": sorted(p["name"] for p in held), "fill_spots": k,
                 "fill_line": brief_line(sp_) if sp_ else None, "stream_share": stream_shares()}
 
+    # ---- open offers: the deal exactly as proposed, scored like an idea (no fairness filter, no bar)
+    def score_offer(o):
+        ot = str(o.get("partner_team_id") or "")
+        if ot not in teams or ot == me:
+            return None
+        by_id = {p["id"]: p for p in teams[me] + teams[ot]}
+        outs = [by_id.get(str(i)) for i in o.get("out", [])]
+        ins = [by_id.get(str(i)) for i in o.get("in", [])]
+        if not all(outs) or not all(ins):
+            return None
+        ra = rosters_after(ot, outs, ins)
+        if not ra:
+            return None
+        new_mine, their_new, my_drop, their_drop = ra
+        T2 = dict(T)
+        T2[me], T2[ot] = totals(new_mine, periods, me), totals(their_new, periods, ot)
+        sm, smp = strength(me, T2, periods)
+        st, stp = strength(ot, T2, periods)
+        r = {"ot": ot, "outs": outs, "ins": ins, "my_drop": my_drop, "their_drop": their_drop,
+             "mine": sm - base[me][0], "theirs": st - base[ot][0], "give_v": pv(outs), "get_v": pv(ins),
+             "mine_po": None if smp is None else smp - base[me][1],
+             "theirs_po": None if stp is None else stp - base[ot][1],
+             "keeper": keeper_info(ot, new_mine, their_new), "T2": (T2[me], T2[ot])}
+        return r
+
+    offer_rows = []
+    for o in offers or []:
+        r = score_offer(o)
+        if r is None:
+            continue
+        offer_rows.append((o, r))
+
     top, near, seen_team, seen_in, seen_sets = [], [], {}, {}, set()
     for r in res:
         sig = r["mine"] >= TRADE_SHOW_MIN and r["theirs"] >= TRADE_PARTNER_MIN
@@ -620,7 +669,16 @@ def trade_search(D, X, top_n=6, today=None, fill=None):
         elif not sig and len(near) < 3 and r["theirs"] >= TRADE_PARTNER_MIN / 2:
             seen_sets.add(key)
             near.append(describe(r))
+    offers_out = []
+    for o, r in offer_rows:
+        d = describe(r)
+        verdict = offer_verdict(r["mine"], r["keeper"])
+        counter = next((x for x in top + near if x["partner_team_id"] == r["ot"]), None)
+        d.update({k: o.get(k) for k in ("id", "kind", "proposer_team_id", "proposed_ct", "expires_ct")})
+        d.update(verdict=verdict, counter=counter)
+        offers_out.append(d)
     return {"baseline_cats_per_week": {t: round(v[0], 2) for t, v in base.items()},
+            "offers": offers_out,
             "protected_keepers": sorted(p["name"] for p in teams[me] if p["id"] in protected),
             "bar": {"mine": TRADE_SHOW_MIN, "theirs": TRADE_PARTNER_MIN},
             "horizon": hinfo, "n_checked": n, "n_candidates": len(screened), "n_rescored": min(len(screened), TRADE_SCREEN),
@@ -880,7 +938,10 @@ def plan(snap, today=None, D=None, with_trades=True, with_next=True, my_roster=N
            "next_opponent": nxt}
     if with_trades:
         try:
-            out["trades"] = trade_search(D, X, today=today)
+            from . import pending as PEND
+            accepted_tx = {str(t.get("id")) for t in PEND.load(snap)}
+            offers = PEND.load_offers(snap, D.my_tid)
+            out["trades"] = trade_search(D, X, today=today, offers=offers, accepted_tx=accepted_tx)
         except Exception as e:  # trades are a bonus; never lose the daily plan
             out["trades"] = {"error": f"{type(e).__name__}: {e}", "top": []}
     return out

@@ -102,7 +102,8 @@ def run(out_dir, client, my_swid):
         write_csv(out / "draft_picks.csv", picks[0])
         write_json(out / "draft_meta.json", picks[1])
 
-    # trades accepted but still in ESPN's review period (relay/pending.py); best effort, never blocks the run
+    # trades accepted but still in ESPN's review period, and open offers (relay/pending.py); best effort, never
+    # blocks the run
     def pending():
         from . import pending as P
         payloads = [league]
@@ -115,10 +116,13 @@ def run(out_dir, client, my_swid):
         seen_path = out / "pending_seen.json"
         seen = json.loads(seen_path.read_text()) if seen_path.exists() else {}
         hours = (settings.get("trade") or {}).get("review_hours") or 48
-        trades, probe = P.extract_espn(payloads, status.get("my_team_id"), hours, seen)
-        write_json(seen_path, {k: v for k, v in seen.items() if k in {t["id"] for t in trades}})
-        write_json(out / "pending_trades.json", {"trades": trades})
+        found, probe = P.extract_espn(payloads, status.get("my_team_id"), hours, seen)
+        write_json(seen_path, {k: v for k, v in seen.items() if k in {t["id"] for t in found}})
+        trades, offers = P.split(found)   # offers waiting on an answer never move a player
+        write_json(out / "pending_trades.json", {"trades": trades, "offers": offers})
         write_json(out / "debug" / "pending_probe.json", probe)
+        if offers:
+            status["trade_offers"] = len(offers)
         return len(trades)
     n_pending = step("pending_trades", pending)
     if n_pending:
