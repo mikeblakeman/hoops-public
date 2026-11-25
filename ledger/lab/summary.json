@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-24T05:35-06:00",
+ "updated_ct": "2026-11-25T05:33-06:00",
  "control": "current",
  "active": "fill_all",
  "since": "2026-11-23",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 6,
-  "days_scored": 1,
+  "days_scored": 2,
   "opponent_team_id": "7",
   "opponent": "Team 7"
  },
- "decided": "2026-11-24",
+ "decided": "2026-11-25",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 9.0,
-    "days": 1
+    "cats_won": 10.0,
+    "days": 2
    },
    "season": {
     "weeks": 4,
@@ -35,8 +35,9 @@
    "adds_per_day": 0.97,
    "status": "control",
    "today": [
-    "Drop Damian Lillard, then move Aday Mara off IR",
-    "Add Jalen Suggs for Quentin Grimes"
+    "Move Aday Mara to IR",
+    "Add Klay Thompson",
+    "Add Matas Buzelis for Jalen Suggs"
    ]
   },
   {
@@ -46,8 +47,8 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.0,
-    "days": 1
+    "cats_won": 10.5,
+    "days": 2
    },
    "season": {
     "weeks": 4,
@@ -58,15 +59,13 @@
     "smooth_edge": 1.601,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.26,
+   "adds_per_day": 3.31,
    "status": "ahead",
    "today": [
-    "Move Aday Mara off IR",
-    "Add Jalen Suggs for Leaky Black",
-    "Add Neemias Queta for Aday Mara",
-    "Add Cameron Johnson for Jrue Holiday",
-    "Add Kevin Huerter for Damian Lillard",
-    "Add Naji Marshall for Cam Spencer"
+    "Add Day'Ron Sharpe for Naji Marshall",
+    "Add Draymond Green for Kevin Huerter",
+    "Add Klay Thompson for Jalen Suggs",
+    "Add Matas Buzelis for Cameron Johnson"
    ]
   },
   {
@@ -76,8 +75,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.0,
-    "days": 1
+    "cats_won": 10.5,
+    "days": 2
    },
    "season": {
     "weeks": 4,
@@ -88,13 +87,11 @@
     "smooth_edge": 0.506,
     "worst_week": -5.0
    },
-   "adds_per_day": 1.79,
+   "adds_per_day": 1.83,
    "status": "testing",
    "today": [
-    "Move Aday Mara off IR",
-    "Add Cameron Johnson for Leaky Black",
-    "Add Jalen Suggs for Aday Mara",
-    "Add Neemias Queta for Jrue Holiday"
+    "Add Jalen Smith for Jalen Suggs",
+    "Add Draymond Green for Cameron Johnson"
    ]
   },
   {
@@ -104,8 +101,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.0,
-    "days": 1
+    "cats_won": 10.0,
+    "days": 2
    },
    "season": {
     "weeks": 4,
@@ -116,11 +113,11 @@
     "smooth_edge": 0.356,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.44,
+   "adds_per_day": 1.43,
    "status": "ready",
    "today": [
-    "Add Jalen Suggs for Quentin Grimes",
-    "Spot B: add Cameron Johnson"
+    "Add Matas Buzelis for Jalen Suggs",
+    "Spot B: add Klay Thompson"
    ]
   },
   {
@@ -130,7 +127,7 @@
    "effort": "1 to 3 adds a week",
    "is_control": false,
    "week": {
-    "cats_won": 10.0,
+    "cats_won": 7.0,
     "days": 1
    },
    "season": {
@@ -154,7 +151,7 @@
    "is_control": false,
    "week": {
     "cats_won": 10.0,
-    "days": 1
+    "days": 2
    },
    "season": {
     "weeks": 4,
@@ -168,7 +165,8 @@
    "adds_per_day": 0.29,
    "status": "reference",
    "today": [
-    "Drop Leaky Black, then move Aday Mara off IR"
+    "Move Aday Mara to IR",
+    "Add Pelle Larsson"
    ]
   }
  ],
