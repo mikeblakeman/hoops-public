@@ -1,8 +1,8 @@
 {
  "date": "2026-11-26",
  "kind": "prelock",
- "generated_ct": "2026-11-26T05:33-06:00",
- "data_run_ct": "2026-11-26T05:32-06:00",
+ "generated_ct": "2026-11-26T09:51-06:00",
+ "data_run_ct": "2026-11-26T09:50-06:00",
  "headline": "",
  "summary": "",
  "matchup": {
@@ -239,12 +239,6 @@
   ]
  },
  "actions": [
-  {
-   "kind": "ir",
-   "text": "Drop Klay Thompson, then move Zach LaVine (SAC) off IR.",
-   "why": "ESPN blocks every add until a healthy player leaves IR. Zach has no game today. About +0.01 expected categories this week.",
-   "activate": true
-  },
   {
    "kind": "watch",
    "text": "Plan ahead: Fill every slot picks each day's adds that morning.",
@@ -609,10 +603,7 @@
     ]
    }
   ],
-  "open_slots": 10,
-  "after_moves": [
-   "Zach LaVine off IR for Klay Thompson"
-  ]
+  "open_slots": 10
  },
  "moves": [],
  "alternatives": [],
@@ -620,63 +611,7 @@
   "empty": 0,
   "via_ir": []
  },
- "ir_activations": [
-  {
-   "player": {
-    "id": "3064440",
-    "name": "Zach LaVine",
-    "team": "SAC",
-    "pos": "SG/SF",
-    "inj": "DAY_TO_DAY",
-    "rank": 72,
-    "line": {
-     "PTS": 17.86,
-     "REB": 3.89,
-     "AST": 2.67,
-     "STL": 0.85,
-     "BLK": 0.46,
-     "3PM": 2.43,
-     "DD": 0.0
-    },
-    "helps": [
-     "REB",
-     "3PM",
-     "AST"
-    ]
-   },
-   "drop": {
-    "id": "6475",
-    "name": "Klay Thompson",
-    "team": "MIA",
-    "pos": "SG/SF",
-    "inj": "",
-    "rank": 130,
-    "line": {
-     "PTS": 13.16,
-     "REB": 1.61,
-     "AST": 2.0,
-     "STL": 0.28,
-     "BLK": 0.74,
-     "3PM": 3.5,
-     "DD": 0.0
-    },
-    "helps": [
-     "3PM",
-     "REB",
-     "3PT%"
-    ]
-   },
-   "gain": 0.008,
-   "plays_today": false,
-   "tip": null,
-   "game": null,
-   "blocked": false,
-   "options": [],
-   "status": "DAY_TO_DAY",
-   "return_date": "2026-11-29",
-   "reason": "ESPN shows him day to day (return date 2026-11-29), so he cannot stay on IR, and ESPN blocks every add until he leaves it."
-  }
- ],
+ "ir_activations": [],
  "ir_returns_later": [
   {
    "player": {
@@ -1870,11 +1805,6 @@
  ],
  "injury_notes": [
   {
-   "name": "Zach LaVine",
-   "status": "Day-To-Day",
-   "comment": "LaVine (knee) is listed as out for Wednesday's game versus the Warriors."
-  },
-  {
    "name": "Kawhi Leonard",
    "status": "Out",
    "comment": "Leonard has begun individual on-court workouts following treatment to address swelling in his left knee, and he will be re-evaluated in one week, Marc J. Spears of ESPN.com reports."
@@ -1883,6 +1813,11 @@
    "name": "Dejounte Murray",
    "status": "Out",
    "comment": "Murray (ankle) is out for Friday's game against Memphis."
+  },
+  {
+   "name": "Zach LaVine",
+   "status": "Day-To-Day",
+   "comment": "LaVine (knee) is listed as out for Wednesday's game versus the Warriors."
   }
  ],
  "news": [],
@@ -2062,20 +1997,16 @@
   "drop": [],
   "ir": [],
   "bench": [],
-  "activate": [
-   "3064440"
-  ],
-  "activate_drop": [
-   "6475"
-  ]
+  "activate": [],
+  "activate_drop": []
  },
  "lineup_options": {},
  "prebuilt": {
   "for_date": "2026-11-26",
   "kind": "prelock",
-  "built_ct": "2026-11-26T05:33-06:00",
-  "clock_ct": "2026-11-26T05:33-06:00",
-  "data_run_ct": "2026-11-26T05:32-06:00",
+  "built_ct": "2026-11-26T09:51-06:00",
+  "clock_ct": "2026-11-26T09:51-06:00",
+  "data_run_ct": "2026-11-26T09:50-06:00",
   "error": null
  }
 }
