@@ -1,12 +1,12 @@
 {
- "updated_ct": "2026-11-25T05:33-06:00",
+ "updated_ct": "2026-11-26T05:32-06:00",
  "control": "current",
  "active": "fill_all",
  "since": "2026-11-23",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
  "week": {
   "matchup_period": 6,
-  "days_scored": 2,
+  "days_scored": 3,
   "opponent_team_id": "7",
   "opponent": "Team 7"
  },
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 10.0,
-    "days": 2
+    "cats_won": 8.0,
+    "days": 3
    },
    "season": {
     "weeks": 4,
@@ -32,13 +32,9 @@
     "smooth_edge": 0.0,
     "worst_week": 0.0
    },
-   "adds_per_day": 0.97,
+   "adds_per_day": 1.0,
    "status": "control",
-   "today": [
-    "Move Aday Mara to IR",
-    "Add Klay Thompson",
-    "Add Matas Buzelis for Jalen Suggs"
-   ]
+   "today": []
   },
   {
    "id": "fill_all",
@@ -47,8 +43,8 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 10.5,
-    "days": 2
+    "cats_won": 9.5,
+    "days": 3
    },
    "season": {
     "weeks": 4,
@@ -56,17 +52,12 @@
     "avg_cats_won": 9.88,
     "edge": 1.75,
     "confidence": 0.965,
-    "smooth_edge": 1.601,
+    "smooth_edge": 1.599,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.31,
+   "adds_per_day": 3.33,
    "status": "ahead",
-   "today": [
-    "Add Day'Ron Sharpe for Naji Marshall",
-    "Add Draymond Green for Kevin Huerter",
-    "Add Klay Thompson for Jalen Suggs",
-    "Add Matas Buzelis for Cameron Johnson"
-   ]
+   "today": []
   },
   {
    "id": "smart_fill",
@@ -75,8 +66,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 10.5,
-    "days": 2
+    "cats_won": 10.0,
+    "days": 3
    },
    "season": {
     "weeks": 4,
@@ -84,15 +75,12 @@
     "avg_cats_won": 8.12,
     "edge": 0.0,
     "confidence": 0.69,
-    "smooth_edge": 0.506,
+    "smooth_edge": 0.504,
     "worst_week": -5.0
    },
    "adds_per_day": 1.83,
    "status": "testing",
-   "today": [
-    "Add Jalen Smith for Jalen Suggs",
-    "Add Draymond Green for Cameron Johnson"
-   ]
+   "today": []
   },
   {
    "id": "two_spots",
@@ -101,8 +89,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 10.0,
-    "days": 2
+    "cats_won": 7.5,
+    "days": 3
    },
    "season": {
     "weeks": 4,
@@ -113,12 +101,9 @@
     "smooth_edge": 0.356,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.43,
+   "adds_per_day": 1.42,
    "status": "ready",
-   "today": [
-    "Add Matas Buzelis for Jalen Suggs",
-    "Spot B: add Klay Thompson"
-   ]
+   "today": []
   },
   {
    "id": "schedule_stack",
@@ -127,7 +112,7 @@
    "effort": "1 to 3 adds a week",
    "is_control": false,
    "week": {
-    "cats_won": 7.0,
+    "cats_won": 3.0,
     "days": 1
    },
    "season": {
@@ -136,7 +121,7 @@
     "avg_cats_won": 6.25,
     "edge": -1.88,
     "confidence": 0.094,
-    "smooth_edge": -0.861,
+    "smooth_edge": -0.862,
     "worst_week": -5.0
    },
    "adds_per_day": 0.68,
@@ -150,8 +135,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 10.0,
-    "days": 2
+    "cats_won": 9.5,
+    "days": 3
    },
    "season": {
     "weeks": 4,
@@ -162,12 +147,9 @@
     "smooth_edge": -1.117,
     "worst_week": -3.5
    },
-   "adds_per_day": 0.29,
+   "adds_per_day": 0.31,
    "status": "reference",
-   "today": [
-    "Move Aday Mara to IR",
-    "Add Pelle Larsson"
-   ]
+   "today": []
   }
  ],
  "ready": null,
