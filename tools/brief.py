@@ -234,6 +234,18 @@ def coverage_after(snap, day, add_ids, drop_ids, ir_ids, current_streamer, strea
         return None
 
 
+def returns_after(snap, day, dec):
+    """IR returns later this matchup on the roster after an active strategy's moves today
+    (relay.matchup.returns_after); [] if it fails, so the rest of the brief stands."""
+    try:
+        from datetime import date as _date
+        from relay import matchup
+        return matchup.returns_after(snap, _date.fromisoformat(day), dec.get("adds", []), dec.get("drops", []),
+                                     dec.get("ir", []), dec.get("activate_ids", []), dec.get("activate_drop_ids", []))
+    except Exception:  # noqa: BLE001
+        return []
+
+
 def _first_name(name):
     return (name or "").split(" ")[0] or name
 
@@ -678,13 +690,22 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
     # Phase 3: relay/strategy.json names the strategy Mike approved. `current` is the logic above; any other
     # strategy decides today's moves itself (relay.strategies.real_decision) and replaces the actions so far.
     cfg = load_strategy()
-    strat, strat_note = None, None
+    strat, strat_note, strat_rets = None, None, []
     if cfg["active"] != "current":
         strat = active_decision(snap, bd["date"], cfg["active"])
         if strat is None:
             strat_note = (f"The active strategy ({strategy_name(cfg['active'])}) could not run today, so the actions "
                           "follow the current plan.")
         else:
+            # IR players due back later this matchup, planned on the strategy's roster (spec items 5 and 6): a
+            # "Plan ahead" action for each, the Week ahead rows count him from that day, and a short IR stash
+            # made today says it is temporary
+            strat_rets = returns_after(snap, bd["date"], strat)
+            by_ret = {str(r["player"]["id"]): r for r in strat_rets if r.get("short")}
+            for p in strat.get("ir_players") or []:
+                r = by_ret.get(str((p or {}).get("id")))
+                if r:
+                    p["return"] = {"date": r["date"], "drop": r["drop"], "blocked": r["blocked"]}
             actions = strategy_actions(strat, inj, cfg)
             # a player the strategy activates and then drops the same morning is simply dropped from IR (Nov 24
             # build: "Move Aday Mara off IR", then "Add Jalen Suggs, drop Aday Mara"); the add's text already says it
@@ -703,7 +724,10 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
             bd["strategy_moves"] = strat      # the ledger logs these moves
             if wp_ok:
                 cov = coverage_after(snap, bd["date"], strat["adds"], strat["drops"], strat["ir"], None, None,
-                                     strat.get("activate_ids", []), strat.get("activate_drop_ids", []))
+                                     strat.get("activate_ids", []), strat.get("activate_drop_ids", []),
+                                     [{"id": r["player"]["id"], "date": r["date"],
+                                       "drop_id": (r.get("drop") or {}).get("id")}
+                                      for r in strat_rets if not r.get("blocked")])
                 apply_coverage(wp, cov)
     if step:
         where = (f"Add {step['occupant']} ({step['team']}), drop {step['drop']}" if step.get("drop")
@@ -746,6 +770,8 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
                         "plan": plan_rows})
     if not strat:
         actions += return_actions(bd)
+    else:
+        actions += return_actions({"ir_returns_later": [r for r in strat_rets if not r.get("short")]})
     for m in top:
         a, d = m["add"], m["drop"]
         today = "plays today, " if m["plays_today"] else ""
@@ -823,7 +849,8 @@ def build(snap, kind="morning", teams=None, plan="daily", pending=None, _nested=
             [plan_move(step, a) for a in step["alternatives"]] if step else ([] if wp_ok else bd["alternatives"])),
         "roster_room": bd.get("roster_room"),
         "ir_activations": strat.get("activations", []) if strat else bd.get("ir_activations", []),
-        "ir_returns_later": bd.get("ir_returns_later", []),
+        "ir_returns_later": ([r for r in strat_rets if not r.get("short")] if strat
+                             else bd.get("ir_returns_later", [])),
         "week": dict(week_doc(wp_doc, teams, plan), plan_date=replanned or bd.get("week_plan_date") or bd["date"],
                      strategy=cfg["active"]) if wp_ok else None,
         "next_opponent": next_opp_doc(wp_doc, teams, plan) if wp_ok else None,

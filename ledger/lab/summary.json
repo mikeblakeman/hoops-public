@@ -1,9 +1,9 @@
 {
- "updated_ct": "2026-11-27T05:33-06:00",
+ "updated_ct": "2026-11-27T11:18-06:00",
  "control": "current",
  "active": "fill_all",
  "since": "2026-11-23",
- "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the current plan, and is 90% likely to be better, not lucky.",
+ "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the previous plan, is 90% likely to be better, not lucky, and also wins 0.5+ more a week than the plan in use.",
  "week": {
   "matchup_period": 6,
   "days_scored": 3,
@@ -15,8 +15,8 @@
  "strategies": [
   {
    "id": "current",
-   "name": "Current: one streaming spot",
-   "summary": "Week planner streams one spot almost daily (what the brief recommends)",
+   "name": "One streaming spot",
+   "summary": "Week planner streams one spot almost daily (the brief's plan until Nov 23)",
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
@@ -58,7 +58,7 @@
     "worst_week": 0.5
    },
    "adds_per_day": 3.33,
-   "status": "ahead",
+   "status": "proven",
    "today": [
     "Add Kel'el Ware for Matas Buzelis"
    ]
@@ -91,7 +91,7 @@
   {
    "id": "two_spots",
    "name": "Two streaming spots",
-   "summary": "Current plan plus a second streaming spot planned the same way",
+   "summary": "One streaming spot plus a second spot planned the same way",
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
@@ -108,7 +108,7 @@
     "worst_week": 0.0
    },
    "adds_per_day": 1.42,
-   "status": "ready",
+   "status": "trails_active",
    "today": [
     "Add Matisse Thybulle for Matas Buzelis",
     "Spot B: add Klay Thompson"

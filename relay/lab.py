@@ -48,7 +48,7 @@ DAY_FIELDS = ["date", "matchup_period", "strategy", "mode", "starters", "games"]
 WEEK_FIELDS = ["matchup_period", "strategy", "mode", "start", "end", "days", "decided_days", "opponent_team_id"] + \
     COMP + ["FG%", "FT%", "3PT%", "cats_won", "smooth", "adds", "edge", "smooth_edge"]
 RULE = ("A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the "
-        "current plan, and is 90% likely to be better, not lucky.")
+        "previous plan, is 90% likely to be better, not lucky, and also wins 0.5+ more a week than the plan in use.")
 LIMITS = ("Limits: other managers do not react to paper moves, paper teams cannot react to late news the way the "
           "5:03 PM check can, and paper totals will differ from your real results. These apply to every paper team "
           "equally, so the comparison stays fair.")
@@ -746,6 +746,7 @@ def summary(hist, lab=None, now=None):
                      "edge": float(w["edge"] or 0), "smooth_edge": float(w["smooth_edge"] or 0), "start": w["start"]}
                     for w in mine if w["matchup_period"] in ctl]
         season, status = evaluate(paired_w, int(st.get("violations") or 0))
+        proven = status == "ready"
         if sid == control:
             status = "control"
             season.update(edge=0.0, confidence=None)
@@ -754,8 +755,9 @@ def summary(hist, lab=None, now=None):
         elif sid == active:
             # in use after a switch: never flagged or retired; "Switch back?" when it trails the previous strategy
             # by 0.5+ categories a week over 3+ live weeks since the switch with 90% confidence (spec section 6)
-            status = "ahead" if (season.get("edge") or 0) > 0 else "behind" if (season.get("edge") or 0) < 0 \
-                else "testing"
+            # it passed the proof rule against the previous plan: "Proven", not "Ahead, not proven" (Nov 27)
+            status = "proven" if proven else "ahead" if (season.get("edge") or 0) > 0 \
+                else "behind" if (season.get("edge") or 0) < 0 else "testing"
             since = [w for w in paired_w if w["mode"] == "live" and (not cfg["since"] or w["start"] >= cfg["since"])]
             m, _p_up, p_down = paired([w["smooth_edge"] for w in since])
             edge_live = sum(w["edge"] for w in since) / len(since) if since else 0.0
@@ -787,10 +789,15 @@ def summary(hist, lab=None, now=None):
     # After a switch every edge is measured against the previous plan (the control), so a Ready strategy must also
     # beat the active one by MIN_EDGE. Otherwise a test that only beats the old plan is offered as a "switch" to a
     # worse strategy (Nov 23: two_spots +0.5 flagged while fill_all, in use, was +1.75).
-    if best and control != active:
+    if control != active:
         act_edge = next(((x["season"] or {}).get("edge") for x in out_s if x["id"] == active), None)
-        if act_edge is not None and best[1]["edge"] < act_edge + MIN_EDGE:
-            best = None
+        if act_edge is not None:
+            if best and best[1]["edge"] < act_edge + MIN_EDGE:
+                best = None
+            # the row says so too: Nov 27 the card showed two_spots "Ready to switch" while it trailed fill_all
+            for x in out_s:
+                if x["status"] == "ready" and x["id"] != active and (x["season"]["edge"] or 0) < act_edge + MIN_EDGE:
+                    x["status"] = "trails_active"
     ready = None
     if best:
         sid, se = best

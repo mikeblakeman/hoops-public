@@ -22,13 +22,15 @@ ORDER = ["current", "fill_all", "smart_fill", "two_spots", "schedule_stack", "ho
 CONTROL = "current"
 REFERENCE = {"hold"}
 INFO = {
-    "current": ("Current: one streaming spot", "Week planner streams one spot almost daily (what the brief recommends)",
+    # the id stays "current" (strategy.json, lab state files); the label no longer says Current, because since the
+    # Nov 23 switch to fill_all it is the previous plan, not what the brief recommends
+    "current": ("One streaming spot", "Week planner streams one spot almost daily (the brief's plan until Nov 23)",
                 "About 1 add a day"),
     "fill_all": ("Fill every slot", "Fill every open lineup slot daily with the best free agent who plays",
                  "2 to 5 adds a day"),
     "smart_fill": ("Smart fill", "Fill open slots only when an add gains 0.02+ expected categories; protect close "
                                  "percentages late in the week", "1 to 3 adds a day"),
-    "two_spots": ("Two streaming spots", "Current plan plus a second streaming spot planned the same way",
+    "two_spots": ("Two streaming spots", "One streaming spot plus a second spot planned the same way",
                   "About 2 adds a day"),
     "schedule_stack": ("Monday schedule stack", "Monday: swap holds for free agents with the most games, then hold",
                        "1 to 3 adds a week"),

@@ -742,6 +742,28 @@ def returns_later(D, snap, today, sps, stream_days=None, protected=None, players
     return out
 
 
+def returns_after(snap, today, add_ids=(), drop_ids=(), ir_ids=(), activate_ids=(), activate_drop_ids=(),
+                  protected=None):
+    """IR returns later this matchup, planned on the roster after an active strategy's moves today (its IR
+    activations, adds, drops and IR moves). Under fill_all build()'s `ir_returns_later` is planned on the `current`
+    plan's roster, which the brief no longer follows, so the brief asks here instead (spec items 5 and 6).
+    Returns [{player, date, drop, gain, blocked, options, short}]; `short` marks a player moved to IR today who is
+    due back within SHORT_STASH_DAYS (the IR action says the stash is temporary)."""
+    D = post_activation(Data(snap), activate_ids, activate_drop_ids)
+    ctx = _context(D, today)
+    if not ctx or not ctx["sps"]:
+        return []
+    drops, to_ir = {str(i) for i in drop_ids}, {str(i) for i in ir_ids}
+    rows = [dict(r, slot="IR") if r["player_id"] in to_ir else dict(r) for r in D.roster
+            if r["team_id"] == D.my_tid and r["player_id"] not in drops]
+    D2 = D.with_my_roster(rows)
+    soon = (today + timedelta(days=SHORT_STASH_DAYS)).isoformat()
+    out = returns_later(D2, snap, today, ctx["sps"], None, protected, add_ids=[str(a) for a in add_ids])
+    for r in out:
+        r["short"] = str(r["player"]["id"]) in to_ir and r["date"] <= soon
+    return out
+
+
 # ---------------------------------------------------------------- main
 def _context(D, today):
     """Everything the lineup and move search share: period, both rosters, scores, the opponent's simulated
