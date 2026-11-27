@@ -469,7 +469,8 @@ def trade_search(D, X, top_n=6, today=None, fill=None, offers=None, accepted_tx=
         return sum(a.values()), (sum(po.values()) if po is not None else None)
 
     protected = {p["id"] for p in teams[me] if p["id"] in X.keepers}
-    my_pool = [p for p in teams[me] if p["slot"] != "IR" and p["id"] not in protected and p["id"] not in pending]
+    my_pool = [p for p in teams[me] if p["slot"] != "IR" and p["id"] not in protected and p["id"] not in pending
+               and not p.get("unvalued")]   # a waived player with no stats is never offered
     fa_best = max(fas, key=lambda p: p["value"]) if fas else None
     pv = lambda ps: sum(_vorp(D, p) for p in ps)  # noqa: E731
 

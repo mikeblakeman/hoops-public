@@ -1,6 +1,6 @@
 {
- "generated_ct": "2026-11-27T05:32-06:00",
- "data_run_ct": "2026-11-27T05:32-06:00",
+ "generated_ct": "2026-11-27T07:46-06:00",
+ "data_run_ct": "2026-11-27T07:46-06:00",
  "date": "2026-11-27",
  "matchup_period": 6,
  "period": {
@@ -471,6 +471,25 @@
     ]
    },
    {
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
+    "pos": "C",
+    "inj": "",
+    "rank": 999,
+    "why": "out",
+    "line": {
+     "PTS": 0.0,
+     "REB": 0.0,
+     "AST": 0.0,
+     "STL": 0.0,
+     "BLK": 0.0,
+     "3PM": 0.0,
+     "DD": 0.0
+    },
+    "helps": []
+   },
+   {
     "id": "4065732",
     "name": "De'Andre Hunter",
     "team": "SAC",
@@ -544,11 +563,11 @@
  },
  "roster_room": {
   "empty": 0,
-  "via_ir": []
+  "via_ir": [
+   "Hunter Dickinson"
+  ]
  },
- "fills": [],
- "fill_alternatives": [],
- "moves": [
+ "fills": [
   {
    "add": {
     "id": "5105623",
@@ -573,7 +592,7 @@
      "DD"
     ]
    },
-   "gain": 0.468,
+   "gain": 0.483,
    "games_left": 2,
    "plays_today": true,
    "helps": [
@@ -581,32 +600,10 @@
     "3PM",
     "DD"
    ],
-   "drop": {
-    "id": "4065732",
-    "name": "De'Andre Hunter",
-    "team": "SAC",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 106,
-    "matchup_value": 0.1914,
-    "line": {
-     "PTS": 15.32,
-     "REB": 4.56,
-     "AST": 2.38,
-     "STL": 0.57,
-     "BLK": 0.18,
-     "3PM": 2.14,
-     "DD": 0.0
-    },
-    "helps": [
-     "3PM",
-     "REB",
-     "AST"
-    ]
-   }
+   "after_ir_move": "Hunter Dickinson"
   }
  ],
- "alternatives": [
+ "fill_alternatives": [
   {
    "add": {
     "id": "5107173",
@@ -631,37 +628,14 @@
      "AST"
     ]
    },
-   "gain": 0.38,
+   "gain": 0.392,
    "games_left": 2,
    "plays_today": true,
    "helps": [
     "REB",
     "3PM",
     "AST"
-   ],
-   "drop": {
-    "id": "4065732",
-    "name": "De'Andre Hunter",
-    "team": "SAC",
-    "pos": "SF/PF",
-    "inj": "",
-    "rank": 106,
-    "matchup_value": 0.1914,
-    "line": {
-     "PTS": 15.32,
-     "REB": 4.56,
-     "AST": 2.38,
-     "STL": 0.57,
-     "BLK": 0.18,
-     "3PM": 2.14,
-     "DD": 0.0
-    },
-    "helps": [
-     "3PM",
-     "REB",
-     "AST"
-    ]
-   }
+   ]
   },
   {
    "add": {
@@ -687,7 +661,141 @@
      "AST"
     ]
    },
-   "gain": 0.286,
+   "gain": 0.3,
+   "games_left": 2,
+   "plays_today": true,
+   "helps": [
+    "REB",
+    "3PM",
+    "AST"
+   ]
+  },
+  {
+   "add": {
+    "id": "4398207",
+    "name": "Jalen Slawson",
+    "team": "IND",
+    "pos": "SF",
+    "inj": "",
+    "rank": 209,
+    "matchup_value": 0.1504,
+    "line": {
+     "PTS": 5.26,
+     "REB": 3.89,
+     "AST": 1.14,
+     "STL": 0.85,
+     "BLK": 1.11,
+     "3PM": 0.58,
+     "DD": 0.1
+    },
+    "helps": [
+     "REB",
+     "BLK",
+     "3PM"
+    ]
+   },
+   "gain": 0.295,
+   "games_left": 2,
+   "plays_today": true,
+   "helps": [
+    "REB",
+    "BLK",
+    "3PM"
+   ]
+  },
+  {
+   "add": {
+    "id": "5175643",
+    "name": "Egor Demin",
+    "team": "BKN",
+    "pos": "PG/SG",
+    "inj": "",
+    "rank": 180,
+    "matchup_value": 0.1554,
+    "line": {
+     "PTS": 12.13,
+     "REB": 3.13,
+     "AST": 3.43,
+     "STL": 0.95,
+     "BLK": 0.28,
+     "3PM": 2.33,
+     "DD": 0.01
+    },
+    "helps": [
+     "3PM",
+     "REB",
+     "AST"
+    ]
+   },
+   "gain": 0.283,
+   "games_left": 2,
+   "plays_today": true,
+   "helps": [
+    "3PM",
+    "REB",
+    "AST"
+   ]
+  },
+  {
+   "add": {
+    "id": "3912848",
+    "name": "Dean Wade",
+    "team": "PHL",
+    "pos": "PF",
+    "inj": "",
+    "rank": 290,
+    "matchup_value": 0.1361,
+    "line": {
+     "PTS": 5.17,
+     "REB": 4.46,
+     "AST": 1.43,
+     "STL": 0.76,
+     "BLK": 0.55,
+     "3PM": 1.17,
+     "DD": 0.0
+    },
+    "helps": [
+     "REB",
+     "3PM",
+     "BLK"
+    ]
+   },
+   "gain": 0.281,
+   "games_left": 2,
+   "plays_today": true,
+   "helps": [
+    "REB",
+    "3PM",
+    "BLK"
+   ]
+  }
+ ],
+ "moves": [
+  {
+   "add": {
+    "id": "5107173",
+    "name": "Danny Wolf",
+    "team": "BKN",
+    "pos": "PF/C",
+    "inj": "",
+    "rank": 174,
+    "matchup_value": 0.1936,
+    "line": {
+     "PTS": 9.87,
+     "REB": 4.84,
+     "AST": 2.09,
+     "STL": 0.38,
+     "BLK": 0.37,
+     "3PM": 1.85,
+     "DD": 0.07
+    },
+    "helps": [
+     "REB",
+     "3PM",
+     "AST"
+    ]
+   },
+   "gain": 0.392,
    "games_left": 2,
    "plays_today": true,
    "helps": [
@@ -696,27 +804,77 @@
     "AST"
    ],
    "drop": {
-    "id": "4065732",
-    "name": "De'Andre Hunter",
-    "team": "SAC",
-    "pos": "SF/PF",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
+    "pos": "C",
     "inj": "",
-    "rank": 106,
-    "matchup_value": 0.1914,
+    "rank": 999,
+    "matchup_value": 0.0,
     "line": {
-     "PTS": 15.32,
-     "REB": 4.56,
-     "AST": 2.38,
-     "STL": 0.57,
-     "BLK": 0.18,
-     "3PM": 2.14,
+     "PTS": 0.0,
+     "REB": 0.0,
+     "AST": 0.0,
+     "STL": 0.0,
+     "BLK": 0.0,
+     "3PM": 0.0,
      "DD": 0.0
     },
+    "helps": []
+   }
+  }
+ ],
+ "alternatives": [
+  {
+   "add": {
+    "id": "4066383",
+    "name": "Miles Bridges",
+    "team": "PHO",
+    "pos": "SF/PF",
+    "inj": "",
+    "rank": 116,
+    "matchup_value": 0.2322,
+    "line": {
+     "PTS": 13.44,
+     "REB": 6.83,
+     "AST": 3.33,
+     "STL": 0.95,
+     "BLK": 0.55,
+     "3PM": 1.46,
+     "DD": 0.17
+    },
     "helps": [
-     "3PM",
      "REB",
+     "3PM",
      "AST"
     ]
+   },
+   "gain": 0.3,
+   "games_left": 2,
+   "plays_today": true,
+   "helps": [
+    "REB",
+    "3PM",
+    "AST"
+   ],
+   "drop": {
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
+    "pos": "C",
+    "inj": "",
+    "rank": 999,
+    "matchup_value": 0.0,
+    "line": {
+     "PTS": 0.0,
+     "REB": 0.0,
+     "AST": 0.0,
+     "STL": 0.0,
+     "BLK": 0.0,
+     "3PM": 0.0,
+     "DD": 0.0
+    },
+    "helps": []
    }
   },
   {
@@ -743,7 +901,7 @@
      "3PM"
     ]
    },
-   "gain": 0.28,
+   "gain": 0.295,
    "games_left": 2,
    "plays_today": true,
    "helps": [
@@ -752,27 +910,23 @@
     "3PM"
    ],
    "drop": {
-    "id": "4065732",
-    "name": "De'Andre Hunter",
-    "team": "SAC",
-    "pos": "SF/PF",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
+    "pos": "C",
     "inj": "",
-    "rank": 106,
-    "matchup_value": 0.1914,
+    "rank": 999,
+    "matchup_value": 0.0,
     "line": {
-     "PTS": 15.32,
-     "REB": 4.56,
-     "AST": 2.38,
-     "STL": 0.57,
-     "BLK": 0.18,
-     "3PM": 2.14,
+     "PTS": 0.0,
+     "REB": 0.0,
+     "AST": 0.0,
+     "STL": 0.0,
+     "BLK": 0.0,
+     "3PM": 0.0,
      "DD": 0.0
     },
-    "helps": [
-     "3PM",
-     "REB",
-     "AST"
-    ]
+    "helps": []
    }
   },
   {
@@ -799,7 +953,7 @@
      "AST"
     ]
    },
-   "gain": 0.272,
+   "gain": 0.283,
    "games_left": 2,
    "plays_today": true,
    "helps": [
@@ -808,27 +962,23 @@
     "AST"
    ],
    "drop": {
-    "id": "4065732",
-    "name": "De'Andre Hunter",
-    "team": "SAC",
-    "pos": "SF/PF",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
+    "pos": "C",
     "inj": "",
-    "rank": 106,
-    "matchup_value": 0.1914,
+    "rank": 999,
+    "matchup_value": 0.0,
     "line": {
-     "PTS": 15.32,
-     "REB": 4.56,
-     "AST": 2.38,
-     "STL": 0.57,
-     "BLK": 0.18,
-     "3PM": 2.14,
+     "PTS": 0.0,
+     "REB": 0.0,
+     "AST": 0.0,
+     "STL": 0.0,
+     "BLK": 0.0,
+     "3PM": 0.0,
      "DD": 0.0
     },
-    "helps": [
-     "3PM",
-     "REB",
-     "AST"
-    ]
+    "helps": []
    }
   },
   {
@@ -855,7 +1005,7 @@
      "BLK"
     ]
    },
-   "gain": 0.268,
+   "gain": 0.281,
    "games_left": 2,
    "plays_today": true,
    "helps": [
@@ -864,31 +1014,98 @@
     "BLK"
    ],
    "drop": {
-    "id": "4065732",
-    "name": "De'Andre Hunter",
-    "team": "SAC",
-    "pos": "SF/PF",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
+    "pos": "C",
     "inj": "",
-    "rank": 106,
-    "matchup_value": 0.1914,
+    "rank": 999,
+    "matchup_value": 0.0,
     "line": {
-     "PTS": 15.32,
-     "REB": 4.56,
-     "AST": 2.38,
-     "STL": 0.57,
-     "BLK": 0.18,
-     "3PM": 2.14,
+     "PTS": 0.0,
+     "REB": 0.0,
+     "AST": 0.0,
+     "STL": 0.0,
+     "BLK": 0.0,
+     "3PM": 0.0,
      "DD": 0.0
     },
+    "helps": []
+   }
+  },
+  {
+   "add": {
+    "id": "3134907",
+    "name": "Kyle Kuzma",
+    "team": "MIL",
+    "pos": "SF/PF",
+    "inj": "",
+    "rank": 214,
+    "matchup_value": 0.1407,
+    "line": {
+     "PTS": 13.07,
+     "REB": 4.65,
+     "AST": 2.09,
+     "STL": 0.76,
+     "BLK": 0.28,
+     "3PM": 1.75,
+     "DD": 0.03
+    },
     "helps": [
-     "3PM",
      "REB",
+     "3PM",
      "AST"
     ]
+   },
+   "gain": 0.277,
+   "games_left": 2,
+   "plays_today": true,
+   "helps": [
+    "REB",
+    "3PM",
+    "AST"
+   ],
+   "drop": {
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
+    "pos": "C",
+    "inj": "",
+    "rank": 999,
+    "matchup_value": 0.0,
+    "line": {
+     "PTS": 0.0,
+     "REB": 0.0,
+     "AST": 0.0,
+     "STL": 0.0,
+     "BLK": 0.0,
+     "3PM": 0.0,
+     "DD": 0.0
+    },
+    "helps": []
    }
   }
  ],
- "ir_moves": [],
+ "ir_moves": [
+  {
+   "id": "4432180",
+   "name": "Hunter Dickinson",
+   "team": "FA",
+   "pos": "C",
+   "inj": "",
+   "rank": 999,
+   "line": {
+    "PTS": 0.0,
+    "REB": 0.0,
+    "AST": 0.0,
+    "STL": 0.0,
+    "BLK": 0.0,
+    "3PM": 0.0,
+    "DD": 0.0
+   },
+   "helps": []
+  }
+ ],
  "opp_injuries": [
   {
    "id": "4396993",
@@ -1880,10 +2097,10 @@
     }
    },
    "second_spot": {
-    "drop": "Zach LaVine",
-    "drop_weekly_cost_cats": 0.162,
-    "expected_cats_with_two_spots": 8.53,
-    "net_gain_vs_one_spot": 0.462,
+    "drop": "Hunter Dickinson",
+    "drop_weekly_cost_cats": 0.0,
+    "expected_cats_with_two_spots": 8.68,
+    "net_gain_vs_one_spot": 0.606,
     "days": [
      {
       "date": "2026-11-27",
@@ -2533,6 +2750,7 @@
      "Dejounte Murray"
     ],
     "cut": [
+     "Hunter Dickinson",
      "Draymond Green"
     ]
    },
@@ -3030,7 +3248,28 @@
     ]
    },
    "date": "2026-11-29",
-   "drop": null,
+   "drop": {
+    "id": "4432194",
+    "name": "Day'Ron Sharpe",
+    "team": "BKN",
+    "pos": "C",
+    "inj": "",
+    "rank": 101,
+    "line": {
+     "PTS": 8.93,
+     "REB": 7.88,
+     "AST": 3.62,
+     "STL": 1.14,
+     "BLK": 0.92,
+     "3PM": 0.29,
+     "DD": 0.31
+    },
+    "helps": [
+     "DD",
+     "REB",
+     "BLK"
+    ]
+   },
    "gain": 0.14,
    "blocked": false,
    "options": []

@@ -1,8 +1,8 @@
 {
  "date": "2026-11-27",
  "kind": "prelock",
- "generated_ct": "2026-11-27T05:33-06:00",
- "data_run_ct": "2026-11-27T05:32-06:00",
+ "generated_ct": "2026-11-27T07:48-06:00",
+ "data_run_ct": "2026-11-27T07:46-06:00",
  "headline": "",
  "summary": "",
  "matchup": {
@@ -259,7 +259,7 @@
  "actions": [
   {
    "kind": "add",
-   "text": "Add Kel'el Ware (MIL) to your open roster spot; no drop needed.",
+   "text": "Add Kel'el Ware (MIL), drop Hunter Dickinson.",
    "why": "Fill every slot strategy (approved 2026-11-23): fills an empty lineup slot today. If he is taken: Quentin Grimes (LAL), Neemias Queta (BOS), Brook Lopez (LAC).",
    "player_id": "5105623",
    "backups": [
@@ -760,7 +760,7 @@
   ],
   "open_slots": 0,
   "after_moves": [
-   "add Kel'el Ware",
+   "add Kel'el Ware for Hunter Dickinson",
    "add Miles Bridges for De'Andre Hunter",
    "add Mo Bamba for Matas Buzelis"
   ]
@@ -781,9 +781,9 @@
    "plays_today": true,
    "helps": [],
    "drop": {
-    "id": "",
-    "name": "no one (open spot)",
-    "team": "",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
     "pos": "",
     "inj": "",
     "line": {},
@@ -855,9 +855,9 @@
    "plays_today": true,
    "helps": [],
    "drop": {
-    "id": "",
-    "name": "no one (open spot)",
-    "team": "",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
     "pos": "",
     "inj": "",
     "line": {},
@@ -880,9 +880,9 @@
    "plays_today": true,
    "helps": [],
    "drop": {
-    "id": "",
-    "name": "no one (open spot)",
-    "team": "",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
     "pos": "",
     "inj": "",
     "line": {},
@@ -905,9 +905,9 @@
    "plays_today": true,
    "helps": [],
    "drop": {
-    "id": "",
-    "name": "no one (open spot)",
-    "team": "",
+    "id": "4432180",
+    "name": "Hunter Dickinson",
+    "team": "FA",
     "pos": "",
     "inj": "",
     "line": {},
@@ -1068,7 +1068,9 @@
  ],
  "roster_room": {
   "empty": 0,
-  "via_ir": []
+  "via_ir": [
+   "Hunter Dickinson"
+  ]
  },
  "ir_activations": [],
  "ir_returns_later": [
@@ -1096,7 +1098,28 @@
     ]
    },
    "date": "2026-11-29",
-   "drop": null,
+   "drop": {
+    "id": "4432194",
+    "name": "Day'Ron Sharpe",
+    "team": "BKN",
+    "pos": "C",
+    "inj": "",
+    "rank": 101,
+    "line": {
+     "PTS": 8.93,
+     "REB": 7.88,
+     "AST": 3.62,
+     "STL": 1.14,
+     "BLK": 0.92,
+     "3PM": 0.29,
+     "DD": 0.31
+    },
+    "helps": [
+     "DD",
+     "REB",
+     "BLK"
+    ]
+   },
    "gain": 0.14,
    "blocked": false,
    "options": []
@@ -2214,6 +2237,7 @@
     "Dejounte Murray"
    ],
    "cut": [
+    "Hunter Dickinson",
     "Draymond Green"
    ]
   },
@@ -2397,9 +2421,9 @@
   "notes": []
  },
  "model_check": {
-  "through": "2026-11-25",
-  "days": 36,
-  "player_games": 5827,
+  "through": "2026-11-26",
+  "days": 37,
+  "player_games": 5829,
   "min_games_needed": 600,
   "active": true,
   "raw_ratio": {
@@ -2407,9 +2431,9 @@
    "REB": 0.9362,
    "AST": 0.9396,
    "STL": 0.9336,
-   "BLK": 0.905,
+   "BLK": 0.9051,
    "3PM": 0.9658,
-   "3PA": 0.9795,
+   "3PA": 0.9796,
    "FGM": 0.9122,
    "FGA": 0.9301,
    "FTM": 0.9512,
@@ -2523,9 +2547,9 @@
  ],
  "injury_notes": [
   {
-   "name": "Dejounte Murray",
+   "name": "Kawhi Leonard",
    "status": "Out",
-   "comment": "Murray (ankle) is out for Friday's game against Memphis."
+   "comment": "Leonard has begun individual on-court workouts following treatment to address swelling in his left knee, and he will be re-evaluated in one week, Marc J. Spears of ESPN.com reports."
   },
   {
    "name": "Zach LaVine",
@@ -2533,9 +2557,9 @@
    "comment": "LaVine (knee) is listed as out for Wednesday's game versus the Warriors."
   },
   {
-   "name": "Kawhi Leonard",
+   "name": "Dejounte Murray",
    "status": "Out",
-   "comment": "Leonard has begun individual on-court workouts following treatment to address swelling in his left knee, and he will be re-evaluated in one week, Marc J. Spears of ESPN.com reports."
+   "comment": "Murray (ankle) is out for Friday's game against Memphis."
   }
  ],
  "news": [],
@@ -2726,6 +2750,7 @@
    "4277919"
   ],
   "drop": [
+   "4432180",
    "4065732",
    "4711294"
   ],
@@ -3153,7 +3178,7 @@
    ],
    "open_slots": 0,
    "after_moves": [
-    "add Quentin Grimes"
+    "add Quentin Grimes for Hunter Dickinson"
    ]
   },
   "4397424": {
@@ -3574,7 +3599,7 @@
    ],
    "open_slots": 0,
    "after_moves": [
-    "add Neemias Queta"
+    "add Neemias Queta for Hunter Dickinson"
    ]
   },
   "3448": {
@@ -3995,7 +4020,7 @@
    ],
    "open_slots": 0,
    "after_moves": [
-    "add Brook Lopez"
+    "add Brook Lopez for Hunter Dickinson"
    ]
   },
   "6475": {
@@ -6865,6 +6890,25 @@
       "DD",
       "BLK"
      ]
+    },
+    {
+     "id": "4432180",
+     "name": "Hunter Dickinson",
+     "team": "FA",
+     "pos": "C",
+     "inj": "",
+     "rank": 999,
+     "why": "out",
+     "line": {
+      "PTS": 0.0,
+      "REB": 0.0,
+      "AST": 0.0,
+      "STL": 0.0,
+      "BLK": 0.0,
+      "3PM": 0.0,
+      "DD": 0.0
+     },
+     "helps": []
     }
    ],
    "ir": [
@@ -7756,9 +7800,9 @@
  "prebuilt": {
   "for_date": "2026-11-27",
   "kind": "prelock",
-  "built_ct": "2026-11-27T05:33-06:00",
-  "clock_ct": "2026-11-27T05:33-06:00",
-  "data_run_ct": "2026-11-27T05:32-06:00",
+  "built_ct": "2026-11-27T07:48-06:00",
+  "clock_ct": "2026-11-27T07:48-06:00",
+  "data_run_ct": "2026-11-27T07:46-06:00",
   "error": null
  }
 }

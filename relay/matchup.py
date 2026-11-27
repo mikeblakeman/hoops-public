@@ -199,7 +199,7 @@ def avail_on(p, d):
 def make_player(D, pid, slot=None):
     v = D.vals.get(str(pid))
     if not v:
-        return None
+        return unvalued_player(D, pid, slot)
     inj = v.get("injury_status") or ""
     return {"id": str(pid), "name": v["name"], "team": v["pro_team"],
             "pos": set((v.get("eligible") or "").split("/")) - {""},
@@ -207,6 +207,22 @@ def make_player(D, pid, slot=None):
             "avail": availability(inj), "inj": inj if inj not in ("ACTIVE", "NORMAL") else "",
             "value": _num(v.get("value"), -99), "rank": int(_num(v.get("rank"), 999)),
             "slot": slot, "status": v.get("status"), "ret": getattr(D, "ret", {}).get(str(pid), "")}
+
+
+def unvalued_player(D, pid, slot=None):
+    """A rostered player with no valuations row (ESPN's player pool leaves out players with no NBA team, e.g. one
+    waived after Mike added him). He still takes a roster spot, so he must count: zero line, never available, the
+    lowest value, so he is never started and is the first idle drop. Nov 27 2026: Hunter Dickinson (waived) was
+    skipped, the roster looked like 13 of 14, and fill_all said "no drop needed" for an add ESPN refused.
+    Returns None for a player on no fantasy roster."""
+    r = next((x for x in D.roster if x["player_id"] == str(pid)), None)
+    if r is None:
+        return None
+    elig = (r.get("eligible") or r.get("pos") or "").replace(",", "/")
+    return {"id": str(pid), "name": r.get("name") or str(pid), "team": r.get("pro_team") or "FA",
+            "pos": set(elig.split("/")) - {""}, "eligible": elig, "line": player_line({}), "avail": 0.0, "inj": "",
+            "value": -99.0, "rank": 999, "slot": slot if slot is not None else r.get("slot"), "status": "ONTEAM",
+            "ret": "", "unvalued": True}
 
 
 def team_players(D, tid):
