@@ -20,7 +20,8 @@ Follow `playbook/common.md` first.
    and the player tips later tonight, say so.
 3c. IR check: confirm every player in `lineup.ir` is still out. If one is healthy now (or the pre-lock build has an
    `activate` action the morning did not), the first note is "Drop X, then move Y off IR" (the pre-lock build names
-   X). ESPN blocks every add until that is done, so never put an add ahead of it.
+   X). ESPN blocks every add until that is done, so never put an add ahead of it. If a "Plan ahead: <day>: X is
+   expected back" action is for tomorrow, check his status and add a note if it changed (back early, or out longer).
 4. Compare with the morning brief. Write `prelock = {checked_ct, notes[]}` with only what changed: a starter now out
    and who replaces him, a better pickup for tonight, a bench swap. If nothing changed, notes = [].
    If the lineup changed, also replace `lineup` and `actions` with the pre-lock versions.

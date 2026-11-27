@@ -55,7 +55,9 @@ Follow `playbook/common.md` first.
    action, pick the drop the same way (a non-protected player; ask `tools/ask.py` in interactive sessions), and
    cancel any add that the drop would need. If the activation says "your call" (every drop is a keeper or top 10),
    leave the adds out until Mike chooses. "Plan ahead: <day>: X is expected back" actions name the drop for the
-   day an IR player returns; an IR move marked "short stash" means the add into his spot is temporary.
+   day an IR player returns; an IR move marked "short stash" means the add into his spot is temporary. Both hold
+   under every strategy (since 2026-11-27 also under fill_all, planned on the roster after today's adds); keep
+   them, and the morning brief on that day decides the final drop.
    IR moves: an `ir` action is only valid while ESPN shows the player Out. Check his current status in the news
    check (rest-night designations often flip to day-to-day by morning). If he is day-to-day, remove the IR action
    and the open-spot add that depends on it, and fix `lineup` to match.
@@ -83,7 +85,9 @@ Follow `playbook/common.md` first.
 4b. Strategy lab: `out/brief.json` already has `lab` from the data job, and `strategy` says which strategy the actions
    follow (`relay/strategy.json`, Mike approves every switch). If `lab.ready` is set, brief.py already put the "Ready
    to switch" action at the top; mention it in the summary. If `lab.switch_back` is set, the "Switch back?" action is
-   at the top; mention that too. Never switch strategies on your own. Mondays: add one line to the weekly review with
+   at the top; mention that too. Never switch strategies on your own. Row statuses: `proven` = the strategy in use
+   passes the proof rule against the previous plan; `trails_active` = it beats the previous plan but not the plan
+   in use by 0.5, so it is not a switch candidate (never call it ready). Mondays: add one line to the weekly review with
    each strategy's edge and status. When the active strategy is not `current`, the actions come from that strategy
    and the Week ahead card shows no streaming plan; if news changes one of its moves, edit `actions` and `lineup`
    together as in step 2.
