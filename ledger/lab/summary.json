@@ -1,16 +1,16 @@
 {
- "updated_ct": "2026-11-27T11:18-06:00",
+ "updated_ct": "2026-11-28T05:33-06:00",
  "control": "current",
  "active": "fill_all",
  "since": "2026-11-23",
  "rule": "A test is flagged when it has 4+ weeks of evidence (2+ live), wins 0.5+ more categories a week than the previous plan, is 90% likely to be better, not lucky, and also wins 0.5+ more a week than the plan in use.",
  "week": {
   "matchup_period": 6,
-  "days_scored": 3,
+  "days_scored": 4,
   "opponent_team_id": "7",
   "opponent": "Team 7"
  },
- "decided": "2026-11-27",
+ "decided": "2026-11-28",
  "decision_mode": "live",
  "strategies": [
   {
@@ -20,8 +20,8 @@
    "effort": "About 1 add a day",
    "is_control": true,
    "week": {
-    "cats_won": 8.0,
-    "days": 3
+    "cats_won": 7.5,
+    "days": 4
    },
    "season": {
     "weeks": 4,
@@ -35,7 +35,7 @@
    "adds_per_day": 1.0,
    "status": "control",
    "today": [
-    "Add Matisse Thybulle for Matas Buzelis"
+    "Add Grayson Allen for Matisse Thybulle"
    ]
   },
   {
@@ -45,8 +45,8 @@
    "effort": "2 to 5 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 9.5,
-    "days": 3
+    "cats_won": 8.5,
+    "days": 4
    },
    "season": {
     "weeks": 4,
@@ -57,10 +57,12 @@
     "smooth_edge": 1.599,
     "worst_week": 0.5
    },
-   "adds_per_day": 3.33,
+   "adds_per_day": 3.27,
    "status": "proven",
    "today": [
-    "Add Kel'el Ware for Matas Buzelis"
+    "Add Tristan da Silva for Draymond Green",
+    "Add Buddy Hield for Klay Thompson",
+    "Add Danny Wolf for Neemias Queta"
    ]
   },
   {
@@ -70,8 +72,8 @@
    "effort": "1 to 3 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 10.0,
-    "days": 3
+    "cats_won": 8.0,
+    "days": 4
    },
    "season": {
     "weeks": 4,
@@ -82,10 +84,13 @@
     "smooth_edge": 0.504,
     "worst_week": -5.0
    },
-   "adds_per_day": 1.83,
+   "adds_per_day": 1.81,
    "status": "testing",
    "today": [
-    "Add Klay Thompson for Jalen Smith"
+    "Move Damian Lillard to IR",
+    "Add Tristan da Silva",
+    "Add Nic Claxton for Draymond Green",
+    "Add Buddy Hield for Klay Thompson"
    ]
   },
   {
@@ -95,8 +100,8 @@
    "effort": "About 2 adds a day",
    "is_control": false,
    "week": {
-    "cats_won": 7.5,
-    "days": 3
+    "cats_won": 7.0,
+    "days": 4
    },
    "season": {
     "weeks": 4,
@@ -107,11 +112,13 @@
     "smooth_edge": 0.356,
     "worst_week": 0.0
    },
-   "adds_per_day": 1.42,
+   "adds_per_day": 1.41,
    "status": "trails_active",
    "today": [
-    "Add Matisse Thybulle for Matas Buzelis",
-    "Spot B: add Klay Thompson"
+    "Move Damian Lillard to IR",
+    "Add Tristan da Silva",
+    "Add Grayson Allen for Matisse Thybulle",
+    "Spot B: add Buddy Hield"
    ]
   },
   {
@@ -144,8 +151,8 @@
    "effort": "Under 1 add a week",
    "is_control": false,
    "week": {
-    "cats_won": 9.5,
-    "days": 3
+    "cats_won": 8.0,
+    "days": 4
    },
    "season": {
     "weeks": 4,
@@ -156,9 +163,12 @@
     "smooth_edge": -1.117,
     "worst_week": -3.5
    },
-   "adds_per_day": 0.31,
+   "adds_per_day": 0.3,
    "status": "reference",
-   "today": []
+   "today": [
+    "Move Damian Lillard to IR",
+    "Add Tristan da Silva"
+   ]
   }
  ],
  "ready": null,
